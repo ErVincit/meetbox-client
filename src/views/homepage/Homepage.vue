@@ -4,16 +4,16 @@
       <Logo class="logo" />
       <div class="homepage__buttons">
         <router-link to="/login">
-          <NeuButton value="Accedi" color="#2F80ED" />
+          <NeuButton class="m-2" color="#2F80ED">Accedi</NeuButton>
         </router-link>
         <router-link to="/signup">
           <NeuButton
-            value="Registrati"
+            class="m-2"
             backgroundColor="#2F80ED"
             color="white"
-            :radius="2"
-            :blur="6"
-          />
+            :shadowRadius="2"
+            :shadowBlur="6"
+          >Registrati</NeuButton>
         </router-link>
       </div>
     </header>
@@ -22,23 +22,46 @@
         Collabora in modo
         <br />semplice e veloce
       </h1>
-      <img id="draw-left" src="../../assets/homepage-draw-left.svg" />
-      <img id="draw-right" src="../../assets/homepage-draw-right.svg" />
+      <img id="draw-left" src="@/assets/homepage-draw-left.svg" />
+      <img id="draw-right" src="@/assets/homepage-draw-right.svg" />
+      <div class="homepage__section d-flex justify-content-between">
+        <NeuContainer class="p-2 m-2">
+          <img src="@/assets/homepage-drive.svg" />
+          <h3>Archivia</h3>
+          <p>Conserva foto, progetti, disegni, registrazioni, video e molto altro</p>
+        </NeuContainer>
+        <NeuContainer class="p-2 m-2">
+          <img src="@/assets/homepage-drive.svg" />
+          <h3>Archivia</h3>
+          <p>Conserva foto, progetti, disegni, registrazioni, video e molto altro</p>
+        </NeuContainer>
+        <NeuContainer class="p-2 m-2">
+          <img src="@/assets/homepage-drive.svg" />
+          <h3>Archivia</h3>
+          <p>Conserva foto, progetti, disegni, registrazioni, video e molto altro</p>
+        </NeuContainer>
+        <NeuContainer class="p-2 m-2">
+          <img src="@/assets/homepage-drive.svg" />
+          <h3>Archivia</h3>
+          <p>Conserva foto, progetti, disegni, registrazioni, video e molto altro</p>
+        </NeuContainer>
+      </div>
     </main>
   </div>
 </template>
 
 <script>
-import Logo from "../../components/logo/Logo";
-import NeuButton from "../../components/neu-button/NeuButton";
+import Logo from "@/components/logo/Logo";
+import NeuButton from "@/components/neu-button/NeuButton";
+import NeuContainer from "@/components/neu-button/NeuContainer";
 
 export default {
   name: "Homepage",
-  components: { Logo, NeuButton }
+  components: { Logo, NeuButton, NeuContainer }
 };
 </script>
 
-<style>
+<style scoped>
 main {
   position: relative;
 }
@@ -71,13 +94,23 @@ header {
   padding: 5px 10px;
 }
 
+div.homepage__buttons {
+  display: flex;
+}
+
 .neu-button {
-  margin: 0px 5px;
-  width: 200px;
-  height: 50px;
-  line-height: 50px;
-  font-size: 24px;
-  padding: 0;
-  font-weight: 600;
+  width: 180px;
+}
+
+.neu-container {
+  width: 300px;
+  text-align: center;
+}
+
+div.homepage__section {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 </style>
