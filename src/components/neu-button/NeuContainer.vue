@@ -1,5 +1,12 @@
 <template>
-  <div class="neu-container" :style="style">
+  <div
+    class="neu-container"
+    :class="{
+      'neu-container--hover': !disableHover,
+      'neu-container--always-hover': alwaysHover
+    }"
+    :style="style"
+  >
     <slot />
   </div>
 </template>
@@ -12,7 +19,9 @@ export default {
     color: { type: String, default: "#787878" },
     borderRadius: { type: Number, default: 10 },
     shadowRadius: { type: Number, default: 9 },
-    shadowBlur: { type: Number, default: 16 }
+    shadowBlur: { type: Number, default: 16 },
+    disableHover: { type: Boolean, default: false },
+    alwaysHover: { type: Boolean, default: false }
   },
   computed: {
     style() {
@@ -61,11 +70,21 @@ export default {
   border-radius: var(--border-radius);
 }
 
-.neu-container:hover {
+.neu-container--hover:hover {
   box-shadow: inset var(--shadow-radius) var(--shadow-radius) var(--shadow-blur)
       var(--dark-color),
     inset calc(0px - var(--shadow-radius)) calc(0px - var(--shadow-radius))
       var(--shadow-blur) var(--light-color);
   color: var(--color);
+}
+
+.neu-container--always-hover {
+  background-color: var(--background-color);
+  color: var(--color);
+  box-shadow: inset var(--shadow-radius) var(--shadow-radius) var(--shadow-blur)
+      var(--dark-color),
+    inset calc(0px - var(--shadow-radius)) calc(0px - var(--shadow-radius))
+      var(--shadow-blur) var(--light-color);
+  border-radius: var(--border-radius);
 }
 </style>
