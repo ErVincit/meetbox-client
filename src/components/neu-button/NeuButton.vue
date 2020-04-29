@@ -7,7 +7,7 @@
     :borderRadius="10"
     class="neu-button"
   >
-    <button type="button" class="btn p-0 m-0 container-fluid">
+    <button class="btn p-0 m-0 container-fluid">
       <slot />
     </button>
   </NeuContainer>

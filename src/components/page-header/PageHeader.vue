@@ -1,5 +1,7 @@
 <template>
-  <header class="container-fluid d-flex flex-row justify-content-between align-items-center">
+  <header
+    class="container-fluid d-flex flex-row justify-content-between align-items-center"
+  >
     <Logo />
     <WorkgroupSelector />
   </header>
@@ -15,5 +17,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

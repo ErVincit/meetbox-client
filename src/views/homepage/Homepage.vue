@@ -1,6 +1,8 @@
 <template>
   <div class="homepage h-100 d-flex flex-column">
-    <header class="container-fluid d-flex flex-row justify-content-between align-items-center">
+    <header
+      class="container-fluid d-flex flex-row justify-content-between align-items-center"
+    >
       <Logo class="logo" />
       <div class="homepage__buttons">
         <router-link to="/login">
@@ -13,7 +15,8 @@
             color="white"
             :shadowRadius="2"
             :shadowBlur="6"
-          >Registrati</NeuButton>
+            >Registrati</NeuButton
+          >
         </router-link>
       </div>
     </header>
@@ -28,22 +31,30 @@
         <NeuContainer class="p-2 m-2">
           <img src="@/assets/homepage-drive.svg" />
           <h3>Archivia</h3>
-          <p>Conserva foto, progetti, disegni, registrazioni, video e molto altro</p>
+          <p>
+            Conserva foto, progetti, disegni, registrazioni, video e molto altro
+          </p>
         </NeuContainer>
         <NeuContainer class="p-2 m-2">
           <img src="@/assets/homepage-drive.svg" />
           <h3>Archivia</h3>
-          <p>Conserva foto, progetti, disegni, registrazioni, video e molto altro</p>
+          <p>
+            Conserva foto, progetti, disegni, registrazioni, video e molto altro
+          </p>
         </NeuContainer>
         <NeuContainer class="p-2 m-2">
           <img src="@/assets/homepage-drive.svg" />
           <h3>Archivia</h3>
-          <p>Conserva foto, progetti, disegni, registrazioni, video e molto altro</p>
+          <p>
+            Conserva foto, progetti, disegni, registrazioni, video e molto altro
+          </p>
         </NeuContainer>
         <NeuContainer class="p-2 m-2">
           <img src="@/assets/homepage-drive.svg" />
           <h3>Archivia</h3>
-          <p>Conserva foto, progetti, disegni, registrazioni, video e molto altro</p>
+          <p>
+            Conserva foto, progetti, disegni, registrazioni, video e molto altro
+          </p>
         </NeuContainer>
       </div>
     </main>
