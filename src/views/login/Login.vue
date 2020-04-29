@@ -49,11 +49,18 @@ export default {
   data() {
     return { email: "", password: "" };
   },
+  created() {
+    fetch(`${process.env.VUE_APP_SERVER_ADDRESS}/api/login/validate`, {
+      method: "GET",
+      credentials: "include"
+    }).then(value => {
+      if (value.status === 200) this.$router.push("/17/drive");
+    });
+  },
   methods: {
     onSubmit() {
       const { email, password } = this;
       if (email && password) {
-        console.log(process.env.VUE_APP_SERVER_ADDRESS);
         fetch(`${process.env.VUE_APP_SERVER_ADDRESS}/api/login`, {
           method: "POST",
           body: JSON.stringify({ email, password }),
