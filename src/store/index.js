@@ -7,13 +7,14 @@ export default new Vuex.Store({
   state: {},
   mutations: {
     usersInformation: (state, info) => {
-      if (info && Object.keys(info).length > 0) 
-        state.usersInformation = info;
+      if (info && Object.keys(info).length > 0) state.usersInformation = info;
     }
   },
   actions: {},
   modules: {},
   getters: {
-    usersInformation: state => {return state.usersInformation;},
+    usersInformation: state => {
+      return state.usersInformation;
+    }
   }
 });
