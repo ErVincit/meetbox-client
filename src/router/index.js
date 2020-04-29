@@ -5,6 +5,7 @@ import Homepage from "../views/homepage/Homepage";
 import Login from "@/views/login/Login";
 import Signup from "@/views/signup/Signup";
 import Activity from "@/views/activity/Activity";
+import Calendar from "@/views/calendar/Calendar";
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,10 @@ const routes = [
 	{
 		path: "/:workgroupId/activity",
 		component: Activity
+	},
+	{
+		path: "/:workgroupId/calendar",
+		component: Calendar
 	}
 ];
 

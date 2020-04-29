@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import Store from '@/store/index';
+
 export default {
 	name: "Login",
 	data() {
@@ -33,8 +35,12 @@ export default {
 					body: JSON.stringify({ email, password }),
 					headers: { "Content-Type": "application/json" },
 					credentials: "include"
-				}).then(async () => {
-					console.log("Logged in...");
+				}).then(async (value) => {
+					const message = await value.json();
+					console.log("Logged in...", message);
+					if (message.data) {
+						Store.commit('usersInformation', message.data);
+					}
 				});
 			}
 		}
