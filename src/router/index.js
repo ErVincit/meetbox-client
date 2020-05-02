@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import Homepage from "../views/homepage/Homepage";
+import Homepage from "@/views/homepage/Homepage";
 import Login from "@/views/login/Login";
 import Signup from "@/views/signup/Signup";
 import Activity from "@/views/activity/Activity";

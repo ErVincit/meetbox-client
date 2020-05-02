@@ -1,18 +1,23 @@
 <template>
   <NeuContainer class="task">
-    <div class="task__label"></div>
-    {{ title }}
+    <Label :name="label" />
+    <p class="m-0 my-1">{{ title }}</p>
   </NeuContainer>
 </template>
 
 <script>
 import NeuContainer from "@/components/neu-button/NeuContainer";
+import Label from "./Label";
 
 export default {
   name: "Task",
   props: ["title", "label"],
-  components: { NeuContainer }
+  components: { NeuContainer, Label }
 };
 </script>
 
-<style></style>
+<style>
+.task {
+  cursor: pointer;
+}
+</style>

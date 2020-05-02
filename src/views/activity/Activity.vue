@@ -3,12 +3,12 @@
     <PageHeader />
     <div id="page-content" class="row flex-grow-1">
       <Recents currentPage="activity" />
-      <main class="col col-lg-9">
+      <main class="col col-lg-9 d-flex flex-column">
         <p class="m-0">Attività</p>
         <hr class="mt-0 mb-2" />
-        <div class="d-flex">
+        <div class="row p-2 pb-4 flex-grow-1 align-items-start">
           <Section
-            class="mx-2 p-2"
+            class="mx-2 p-3"
             v-for="section in sections"
             :key="section.id"
             :title="section.title"
