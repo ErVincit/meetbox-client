@@ -29,6 +29,10 @@ export default {
 </script>
 
 <style scoped>
+.neu-container {
+  height: 50px;
+}
+
 .neu-button {
   text-align: center;
 }
@@ -39,8 +43,7 @@ button:hover {
   border: none;
   border-radius: var(--border-radius);
   color: var(--color);
-  height: 50px;
-  line-height: 50px;
+  height: 100%;
   font-size: 24px;
   font-weight: 600;
 }

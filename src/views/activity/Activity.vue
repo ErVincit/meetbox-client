@@ -7,6 +7,7 @@
         <p class="m-0">Attività</p>
         <hr class="mt-0 mb-2" />
         <div class="row p-2 pb-4 flex-grow-1 align-items-start">
+          <p v-if="!sections">Caricamento...</p>
           <Section
             class="mx-2 p-3"
             v-for="section in sections"
@@ -33,7 +34,7 @@ export default {
   name: "Activity",
   data() {
     return {
-      sections: []
+      sections: null
     };
   },
   components: { PageHeader, Recents, Section },
@@ -44,11 +45,9 @@ export default {
       method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" }
-    }).then(async value => {
-      const data = await value.json();
-      console.log(data);
-      this.sections = data.data;
-    });
+    })
+      .then(data => data.json())
+      .then(json => (this.sections = json.data));
   }
 };
 </script>
