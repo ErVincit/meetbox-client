@@ -19,6 +19,6 @@ export default {
   height: 100%;
   /* width: calc((100 * ((24 * 60) / 5)) / (24 * 60)); */
   width: 2%;
-  background-color: grey;
+  border-right: 1px solid black;
 }
 </style>
