@@ -14,6 +14,7 @@
         v-for="task in list"
         :key="task.id"
         :title="task.title"
+        :members="task.members"
         :disableHover="dragging"
       />
     </draggable>
@@ -24,14 +25,22 @@
     >
       <div class="d-flex mb-2">
         <SmallAddButton>Etichetta</SmallAddButton>
-        <SmallAddButton>Membro</SmallAddButton>
+        <SmallAddButton
+          @click="
+            newTaskMembers.push({
+              id: 12345,
+              firstname: 'Mario',
+              lastname: 'Gialli'
+            })
+          "
+          >Membro</SmallAddButton
+        >
       </div>
       <form @submit.prevent="handleAddingTask">
         <NeuTextarea
           v-model="newTaskTitle"
           placeholder="Inserisci il titolo per questa attività..."
           class="add-task__title mb-2"
-          @blur="handleAddingTask"
           @keyup="handleTextareaKeyup"
           autofocus
         />
@@ -43,6 +52,14 @@
         <p class="add-task__close m-0 mx-2" @click="exitAddingTask">
           &times;
         </p>
+        <div class="flex-grow-1 d-flex justify-content-end">
+          <Avatar
+            v-for="member in newTaskMembers"
+            :key="member.id"
+            :firstname="member.firstname"
+            :lastname="member.lastname"
+          />
+        </div>
       </div>
     </NeuContainer>
     <BigAddButton v-if="!addingTask" @click="addTask"
@@ -58,6 +75,7 @@ import Task from "@/components/task/Task";
 import BigAddButton from "./BigAddButton";
 import SmallAddButton from "./SmallAddButton";
 import draggable from "vuedraggable";
+import Avatar from "@/components/avatar/Avatar";
 
 export default {
   name: "Section",
@@ -68,13 +86,14 @@ export default {
     BigAddButton,
     SmallAddButton,
     NeuTextarea,
+    Avatar,
     draggable
   },
   data() {
     return {
       list: this.tasks,
       newTaskTitle: "",
-      newTaskDescription: "",
+      newTaskMembers: [],
       addingTask: false,
       dragging: false
     };
@@ -87,13 +106,20 @@ export default {
       this.addingTask = false;
       this.newTaskTitle = this.newTaskTitle.trim();
       if (this.newTaskTitle.length !== 0) {
-        this.tasks.push({ id: 123, title: this.newTaskTitle, label: null });
+        this.tasks.push({
+          id: 123 + Math.random() * 100,
+          title: this.newTaskTitle,
+          label: null,
+          members: this.newTaskMembers
+        });
         this.newTaskTitle = "";
+        this.newTaskMembers = [];
       }
     },
     exitAddingTask() {
       this.addingTask = false;
       this.newTaskTitle = "";
+      this.newTaskMembers = [];
     },
     handleTextareaKeyup(event) {
       if (event.keyCode === 13) this.handleAddingTask();
@@ -105,7 +131,6 @@ export default {
 <style>
 .activity__section {
   width: 300px;
-  height: auto;
 }
 .activity__section > p:first-child {
   color: #1c4885;
@@ -132,7 +157,6 @@ export default {
 .add-task__container {
   border: 1px solid #1c4885;
 }
-
 .add-task__save,
 .add-task__save:focus {
   background-color: #1c4885;
