@@ -1,45 +1,42 @@
 <template>
   <button
-    class="activity__add d-flex justify-content-center align-items-center mt-3"
+    class="small-add-btn d-flex justify-content-center align-items-center m-1 my-2 px-1 rounded-pill"
     @click="$emit('click', $event)"
   >
     <svg
-      width="24"
-      height="24"
+      width="20"
+      height="20"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path d="M19 11H13V5H11V11H5V13H11V19H13V13H19V11Z" />
     </svg>
-    <p class="m-0 p-2">Aggiungi una nuova attività</p>
+    <p class="m-0 p-1"><slot /></p>
   </button>
 </template>
 
 <script>
-export default {
-  name: "AddTask"
-};
+export default {};
 </script>
 
 <style scoped>
-button.activity__add {
-  width: 100%;
+button.small-add-btn {
   color: var(--color);
   text-align: center;
   cursor: pointer;
-  border-radius: 10px;
-  border: 1px solid lightgrey;
+  font-size: 11px;
+  border: 1px dashed var(--color);
   fill: var(--color);
   outline: none;
   transition: transform 200ms;
   white-space: nowrap;
 }
-button.activity__add:active {
+button.small-add-btn:active {
   transform: scale(0.9);
 }
-button.activity__add:hover {
-  fill: #2f80ed;
-  color: #2f80ed;
-  border-color: #2f80ed;
+button.small-add-btn:hover {
+  fill: #1c4885;
+  color: #1c4885;
+  border-color: #1c4885;
 }
 </style>

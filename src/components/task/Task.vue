@@ -19,5 +19,7 @@ export default {
 <style>
 .task {
   cursor: pointer;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 </style>
