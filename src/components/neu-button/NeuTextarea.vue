@@ -41,7 +41,7 @@ textarea:focus {
   outline: none;
   box-shadow: none;
   height: 50px;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
 }
 </style>
