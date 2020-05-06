@@ -16,13 +16,12 @@ export default {
 .day_container {
   width: 200px;
   /* border: 1px solid black; */
-
+  height: 100%;
   padding: 0;
   margin: 0;
 
   color: #787878;
-  line-height: 100px;
-  font-size: 24px;
+  line-height: 80px;
   font-weight: 600;
   margin: auto;
 }

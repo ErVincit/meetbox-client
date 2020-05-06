@@ -88,3 +88,88 @@ exports.dateToString = date => {
     date.getFullYear()
   );
 };
+
+exports.handleEventCollision = events => {
+  const list = [];
+  for (var i = 0; i < events.length; i++) {
+    if (list.length === 0) list.push([]);
+    if (events[i].timestampEnd) {
+      var superCollision = true;
+      for (var j = 0; j < list.length; j++) {
+        var collision = this.inCollision(list[j], events[i]);
+        if (!collision) {
+          list[j].push(events[i]);
+          superCollision = false;
+          break;
+        }
+      }
+      //Se non si può mettere in nessuna delle row esistenti
+      if (superCollision) {
+        const newRow = [];
+        newRow.push(events[i]);
+        list.push(newRow);
+      }
+    }
+
+    //TODO: Riordinare righe in base a larghezza
+  }
+  // var z = 0;
+  // list.forEach(j => {
+  //   z++;
+  //   j.forEach(element => {
+  //     console.log(
+  //       z,
+  //       element.id,
+  //       "\n",
+  //       element.timestampBegin,
+  //       "\n",
+  //       element.timestampEnd
+  //     );
+  //   });
+  // });
+  // console.log("Events rowEventsContainer:", events, superCollision);
+  // console.log("List:", list);
+  return list;
+};
+
+exports.inCollision = (list, event) => {
+  var collision = false;
+  for (let listElement = 0; listElement < list.length; listElement++) {
+    // se contiene timestampEnd
+    if (
+      list[listElement].timestampEnd > event.timestampBegin &&
+      list[listElement].timestampEnd < event.timestampEnd
+    ) {
+      collision = true;
+      // console.log("CONDIZIONE 1", event.id);
+      break;
+    } else if (
+      list[listElement].timestampEnd > event.timestampEnd &&
+      list[listElement].timestampBegin < event.timestampEnd
+    ) {
+      collision = true;
+      // console.log("CONDIZIONE 2", event.id);
+      break;
+    } else if (
+      list[listElement].timestampBegin <= event.timestampBegin &&
+      list[listElement].timestampEnd >= event.timestampEnd
+    ) {
+      collision = true;
+      // console.log("CONDIZIONE 3", event.id);
+      break;
+    }
+  }
+  return collision;
+};
+
+exports.positionToHours = (x, rowSizeX) => {
+  const solution = (24 * 60 * x) / rowSizeX;
+  const hours = solution / 60;
+  const minutes = solution % 60;
+  console.log(
+    "Hours:",
+    Number.parseInt(hours),
+    "Minutes:",
+    Number.parseInt(minutes)
+  );
+};
