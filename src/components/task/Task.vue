@@ -1,10 +1,15 @@
 <template>
-  <NeuContainer class="task" :disableHover="disableHover">
+  <NeuContainer
+    class="task"
+    :disableHover="disableHover"
+    v-bind="$attrs"
+    v-on="$listeners"
+  >
     <Label name="prova" />
-    <p class="m-0 my-1">{{ title }}</p>
+    <p class="m-0 my-1">{{ task.title }}</p>
     <div class="d-flex justify-content-end">
       <Avatar
-        v-for="member in members"
+        v-for="member in task.members"
         :key="member.id"
         :firstname="member.firstname"
         :lastname="member.lastname"
@@ -20,7 +25,17 @@ import Avatar from "@/components/avatar/Avatar";
 
 export default {
   name: "Task",
-  props: { title: String, members: Array, disableHover: Boolean },
+  props: {
+    task: {
+      title: String,
+      description: String,
+      label: Number,
+      deadline: Date,
+      members: Array,
+      attachments: Array
+    },
+    disableHover: Boolean
+  },
   components: { NeuContainer, Label, Avatar }
 };
 </script>

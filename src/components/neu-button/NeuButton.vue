@@ -35,6 +35,8 @@ export default {
 <style scoped>
 .neu-container {
   height: 50px;
+  cursor: pointer;
+  transition: transform 200ms;
 }
 
 .neu-button {
@@ -43,7 +45,6 @@ export default {
 
 button,
 button:hover {
-  transition: 1s all;
   border: none;
   border-radius: var(--border-radius);
   color: var(--color);
@@ -57,5 +58,9 @@ button:focus {
   box-shadow: inset var(--radius) var(--radius) var(--blur) var(--dark-color),
     inset calc(0px - var(--radius)) calc(0px - var(--radius)) var(--blur)
       var(--light-color);
+}
+
+.neu-container:active {
+  transform: scale(0.9);
 }
 </style>

@@ -7,9 +7,6 @@
     v-tooltip="fullname"
   >
     <p class="m-0">{{ firstLetters }}</p>
-    <!-- <p v-if="showTooltip" class="avatar__tooltip">
-      {{ fullname }}
-    </p> -->
   </div>
 </template>
 
@@ -55,13 +52,4 @@ export default {
 .avatar:hover {
   z-index: 100;
 }
-
-/* .avatar__tooltip {
-  background-color: #333;
-  color: white;
-  height: 20px;
-  white-space: nowrap;
-  z-index: 1000;
-  margin-left: 50%;
-} */
 </style>
