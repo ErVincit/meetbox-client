@@ -14,8 +14,14 @@
             :key="section.id"
             :title="section.title"
             :tasks="section.tasks"
+            @showTask="showTask"
           />
         </div>
+        <TaskInspector
+          v-if="showTaskInspector"
+          ref="task-inspector"
+          :task="taskToShow"
+        />
       </main>
       <div
         class="col col-lg-1 d-none d-lg-block"
@@ -29,15 +35,24 @@
 import PageHeader from "@/components/page-header/PageHeader";
 import Recents from "@/components/recents/Recents";
 import Section from "@/components/section/Section";
+import TaskInspector from "@/components/task/TaskInspector";
+
+const handleOutsideClick = function(event) {
+  if (!this.showTaskInspector) return;
+  const taskInspector = this.$refs["task-inspector"].$vnode.elm;
+  if (!taskInspector.contains(event.target)) this.showTaskInspector = false;
+};
 
 export default {
   name: "Activity",
   data() {
     return {
-      sections: null
+      sections: null,
+      showTaskInspector: false,
+      taskToShow: null
     };
   },
-  components: { PageHeader, Recents, Section },
+  components: { PageHeader, Recents, Section, TaskInspector },
   created() {
     const { workgroupId } = this.$route.params;
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/section/`;
@@ -48,6 +63,18 @@ export default {
     })
       .then(data => data.json())
       .then(json => (this.sections = json.data));
+  },
+  methods: {
+    showTask(task) {
+      this.taskToShow = task;
+      this.showTaskInspector = true;
+    }
+  },
+  mounted() {
+    document.addEventListener("click", handleOutsideClick.bind(this));
+  },
+  destroyed() {
+    document.removeEventListener("click", handleOutsideClick.bind(this));
   }
 };
 </script>

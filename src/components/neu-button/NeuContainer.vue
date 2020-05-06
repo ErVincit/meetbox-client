@@ -6,6 +6,8 @@
       'neu-container--always-hover': alwaysHover
     }"
     :style="style"
+    v-bind="$attrs"
+    v-on="$listeners"
   >
     <slot />
   </div>

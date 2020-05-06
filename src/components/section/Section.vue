@@ -13,9 +13,9 @@
         class="mt-3 p-2"
         v-for="task in list"
         :key="task.id"
-        :title="task.title"
-        :members="task.members"
+        :task="task"
         :disableHover="dragging"
+        @click.stop="$emit('showTask', task)"
       />
     </draggable>
     <div class="add-task__container" ref="add-task__container">
