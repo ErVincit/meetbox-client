@@ -78,3 +78,13 @@ exports.getMonthName = number => {
   ];
   return month[number];
 };
+
+exports.dateToString = date => {
+  return (
+    date.getDate() +
+    " " +
+    this.getMonthName(date.getMonth()) +
+    " " +
+    date.getFullYear()
+  );
+};
