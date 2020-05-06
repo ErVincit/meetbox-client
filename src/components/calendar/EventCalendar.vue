@@ -1,5 +1,7 @@
 <template>
-  <div ref="event" class="position-absolute event"></div>
+  <div ref="event" class="position-absolute event">
+    {{ event.title }}
+  </div>
 </template>
 
 <script>
@@ -52,11 +54,18 @@ export default {
 <style scoped>
 .event {
   width: 100px;
-  height: 25px;
-  background-color: green;
-  border: 1px solid black;
-
+  /* height: 25px; */
+  height: 25%;
+  background-color: #2f80ed;
+  border: 1px solid white;
+  overflow: hidden;
   padding: 0;
   margin: 0;
+  border-radius: 8px;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

@@ -3,7 +3,7 @@
     <PageHeader />
     <div id="page-content" class="row flex-grow-1">
       <Recents currentPage="calendar" />
-      <main class="main_column_calendar col col-lg-9">
+      <main class="main_column_calendar d-flex flex-column col-lg-9">
         <p class="m-0">Attività</p>
         <hr class="mt-0 mb-2" />
         <div class="days_controller d-flex">
@@ -18,20 +18,22 @@
           </NeuButton>
         </div>
         <hr class="mt-0 mb-2" />
-        <CalendarRow
-          class="ciotto"
-          v-for="day in days"
-          :key="day.day"
-          :dataprops="day.events"
-          :rowSizeX="rowSizeX"
-          :nameDay="day.nameDay"
-          :day="day.day"
-        >
-        </CalendarRow>
+        <div class="flex-grow-1">
+          <CalendarRow
+            class="ciotto"
+            v-for="day in days"
+            :key="day.day"
+            :dataprops="day.events"
+            :rowSizeX="rowSizeX"
+            :nameDay="day.nameDay"
+            :day="day.day"
+          >
+          </CalendarRow>
+        </div>
       </main>
       <div
         class="col col-lg-1 d-none d-lg-block"
-        style="background-color: red"
+        style="background-color: grey"
       ></div>
     </div>
   </div>
@@ -190,8 +192,9 @@ export default {
 
 <style scoped>
 .ciotto {
-  display: flex;
+  /* display: flex;
   width: 100%;
+  height: 12vh; */
 }
 
 .days_controller {

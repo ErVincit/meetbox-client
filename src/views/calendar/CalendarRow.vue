@@ -1,18 +1,18 @@
 <template>
   <div class="calendar__row container-fluid d-flex flex-row position-relative">
     <WeeksDay :nameDay="nameDay" :day="day" />
-    <RowEvents :events="dataprops" :rowSizeX="rowSizeX" />
+    <RowEventsContainer :events="dataprops" :rowSizeX="rowSizeX" />
   </div>
 </template>
 
 <script>
-import RowEvents from "@/components/calendar/RowEvents";
+import RowEventsContainer from "@/components/calendar/RowEventsContainer";
 import WeeksDay from "@/components/calendar/WeeksDay";
 
 export default {
   name: "CalendarRow",
   props: ["dataprops", "rowSizeX", "nameDay", "day"],
-  components: { WeeksDay, RowEvents },
+  components: { WeeksDay, RowEventsContainer },
   methods: {
     handleMousedown(e) {
       console.log("Mousedown event:", e);
@@ -27,13 +27,19 @@ export default {
       console.log("Mouseup event:", e);
     }
   },
-  updated() {}
+  updated() {},
+  watch: {
+    dataprops: function(val) {
+      console.log("updated dataprops in calendarRow", val);
+    }
+  }
 };
 </script>
 
 <style scoped>
 .calendar__row {
-  height: 100px;
+  /* height: 100px; */
+  height: calc(100% / 7);
   /* border: 1px solid grey; */
 
   padding: 0;
