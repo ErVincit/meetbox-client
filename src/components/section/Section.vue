@@ -18,53 +18,51 @@
         :disableHover="dragging"
       />
     </draggable>
-    <NeuContainer
-      v-if="addingTask"
-      class="add-task__container mt-3 p-2"
-      disableHover
-    >
-      <div class="d-flex mb-2">
-        <SmallAddButton>Etichetta</SmallAddButton>
-        <SmallAddButton
-          @click="
-            newTaskMembers.push({
-              id: 12345,
-              firstname: 'Mario',
-              lastname: 'Gialli'
-            })
-          "
-          >Membro</SmallAddButton
-        >
-      </div>
-      <form @submit.prevent="handleAddingTask">
-        <NeuTextarea
-          v-model="newTaskTitle"
-          placeholder="Inserisci il titolo per questa attività..."
-          class="add-task__title mb-2"
-          @keyup="handleTextareaKeyup"
-          autofocus
-        />
-      </form>
-      <div class="d-flex align-items-center">
-        <button class="add-task__save px-4 py-1" @click="handleAddingTask">
-          Salva
-        </button>
-        <p class="add-task__close m-0 mx-2" @click="exitAddingTask">
-          &times;
-        </p>
-        <div class="flex-grow-1 d-flex justify-content-end">
-          <Avatar
-            v-for="member in newTaskMembers"
-            :key="member.id"
-            :firstname="member.firstname"
-            :lastname="member.lastname"
-          />
+    <div class="add-task__container" ref="add-task__container">
+      <NeuContainer v-if="addingTask" class="add-task mt-3 p-2" disableHover>
+        <div class="d-flex mb-2">
+          <SmallAddButton>Etichetta</SmallAddButton>
+          <SmallAddButton
+            @click="
+              newTaskMembers.push({
+                id: 12345,
+                firstname: 'Mario',
+                lastname: 'Gialli'
+              })
+            "
+            >Membro</SmallAddButton
+          >
         </div>
-      </div>
-    </NeuContainer>
-    <BigAddButton v-if="!addingTask" @click="addTask"
-      >Aggiungi una nuova attività</BigAddButton
-    >
+        <form @submit.prevent="handleAddingTask">
+          <NeuTextarea
+            v-model="newTaskTitle"
+            placeholder="Inserisci il titolo per questa attività..."
+            class="add-task__title mb-2"
+            @keyup="handleTextareaKeyup"
+            autofocus
+          />
+        </form>
+        <div class="d-flex align-items-center">
+          <button class="add-task__save px-4 py-1" @click="handleAddingTask">
+            Salva
+          </button>
+          <p class="add-task__close m-0 mx-2" @click="exitAddingTask">
+            &times;
+          </p>
+          <div class="flex-grow-1 d-flex justify-content-end">
+            <Avatar
+              v-for="member in newTaskMembers"
+              :key="member.id"
+              :firstname="member.firstname"
+              :lastname="member.lastname"
+            />
+          </div>
+        </div>
+      </NeuContainer>
+      <BigAddButton v-else @click.stop="addingTask = true"
+        >Aggiungi una nuova attività</BigAddButton
+      >
+    </div>
   </NeuContainer>
 </template>
 
@@ -76,6 +74,12 @@ import BigAddButton from "./BigAddButton";
 import SmallAddButton from "./SmallAddButton";
 import draggable from "vuedraggable";
 import Avatar from "@/components/avatar/Avatar";
+
+const handleOutsideClick = function(event) {
+  if (!this.addingTask) return;
+  const addTaskContainer = this.$refs["add-task__container"];
+  if (!addTaskContainer.contains(event.target)) this.addingTask = false;
+};
 
 export default {
   name: "Section",
@@ -98,10 +102,13 @@ export default {
       dragging: false
     };
   },
+  mounted() {
+    document.addEventListener("click", handleOutsideClick.bind(this));
+  },
+  destroyed() {
+    document.removeEventListener("click", handleOutsideClick.bind(this));
+  },
   methods: {
-    addTask() {
-      this.addingTask = true;
-    },
     handleAddingTask() {
       this.addingTask = false;
       this.newTaskTitle = this.newTaskTitle.trim();
@@ -154,7 +161,7 @@ export default {
   min-height: 80px !important;
 }
 
-.add-task__container {
+.add-task {
   border: 1px solid #1c4885;
 }
 .add-task__save,
