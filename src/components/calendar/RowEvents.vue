@@ -1,5 +1,5 @@
 <template>
-  <div class="row_events">
+  <div class="row_events ">
     <EventCalendar
       v-for="element in row"
       :key="element.id"
@@ -26,6 +26,11 @@ export default {
     const rowElement = document.querySelector(".row__events");
     this.rowSizeX = rowElement.scrollWidth - 30;
     this.rowSizeY = rowElement.scrollHeight;
+  },
+  watch: {
+    row: function(newVal) {
+      this.row = newVal;
+    }
   }
 };
 </script>
@@ -33,7 +38,6 @@ export default {
 <style>
 .row_events {
   height: 25%;
-  max-height: 50px;
   width: 100%;
   overflow: hidden;
   padding: 0;

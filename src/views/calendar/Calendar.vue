@@ -4,7 +4,7 @@
     <div id="page-content" class="row flex-grow-1">
       <Recents currentPage="calendar" />
       <main class="main_column_calendar d-flex flex-column col-lg-9">
-        <p class="m-0">Attività</p>
+        <p class="m-0 title_page">Calendario</p>
         <hr class="mt-0 mb-2" />
         <div class="days_controller d-flex">
           <NeuButton @click="handlePrevious" class="calendar_button cb_left">
@@ -45,45 +45,23 @@ import Recents from "@/components/recents/Recents";
 import CalendarRow from "./CalendarRow";
 import NeuButton from "@/components/neu-button/NeuButton";
 
+import { mapGetters, mapActions } from "vuex";
+
 import calendarUtils from "./calendar_utils";
 
 export default {
   name: "Calendar",
   created() {
-    if (!this.calendar) {
-      var tmpDate = new Date();
-      const range = 10;
-      const actualYear = tmpDate.getFullYear();
-      const tempCalendar = calendarUtils.createCalendar();
-      fetch(
-        `${
-          process.env.VUE_APP_SERVER_ADDRESS
-        }/api/workgroup/17/calendar/events?from=${actualYear -
-          range}-01-01 00:00:00`,
-        {
-          method: "GET",
-          credentials: "include"
-        }
-      ).then(async value => {
-        const message = await value.json();
-        for (var i = 0; i < message.data.length; i++) {
-          let event = message.data[i];
-          let tempDate = new Date(event.timestampBegin);
-          tempCalendar[tempDate.getFullYear()][tempDate.getMonth()][
-            tempDate.getDate()
-          ].events.push(event);
-          if (event.timestampBegin)
-            event.timestampBegin = new Date(event.timestampBegin);
-          if (event.timestampEnd)
-            event.timestampEnd = new Date(event.timestampEnd);
-        }
-        this.calendar = tempCalendar;
-        this.calendarIdentifier = calendarUtils.calendarWeeklyPosition(
-          this.currentDate
-        );
-        console.log("Eventi caricati");
-      });
-    }
+    // var tmpDate = new Date();
+    // const range = 10;
+    // const actualYear = tmpDate.getFullYear();
+    // const tempCalendar = calendarUtils.createCalendar();
+    this.initCalendar();
+    this.fetchEvents();
+
+    this.calendarIdentifier = calendarUtils.calendarWeeklyPosition(
+      this.currentDate
+    );
   },
   components: { PageHeader, Recents, CalendarRow, NeuButton },
   methods: {
@@ -111,9 +89,11 @@ export default {
           this.currentDate
         );
       }
-    }
+    },
+    ...mapActions(["initCalendar", "fetchEvents"])
   },
   computed: {
+    ...mapGetters(["calendar"]),
     days: function() {
       const settimana = [];
       let today = this.currentDate;
@@ -181,7 +161,6 @@ export default {
       rowSizeY: { type: Number, default: 0 },
       defaultNoEnd: 60,
       isMonthView: false,
-      calendar: null,
       weeklyView: true,
       currentDate: new Date("2020-6-25"),
       calendarIdentifier: null
@@ -191,11 +170,11 @@ export default {
 </script>
 
 <style scoped>
-.ciotto {
-  /* display: flex;
+/* .ciotto {
+  display: flex;
   width: 100%;
-  height: 12vh; */
-}
+  height: 12vh;
+} */
 
 .days_controller {
   justify-content: center;
@@ -213,5 +192,10 @@ export default {
 
 .calendar_button {
   width: 50px;
+}
+
+.title_page {
+  color: #1c4885;
+  font-size: 24px;
 }
 </style>

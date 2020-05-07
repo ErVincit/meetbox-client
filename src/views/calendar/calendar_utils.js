@@ -166,10 +166,16 @@ exports.positionToHours = (x, rowSizeX) => {
   const solution = (24 * 60 * x) / rowSizeX;
   const hours = solution / 60;
   const minutes = solution % 60;
-  console.log(
-    "Hours:",
-    Number.parseInt(hours),
-    "Minutes:",
-    Number.parseInt(minutes)
-  );
+  // console.log(
+  //   "Hours:",
+  //   Number.parseInt(hours),
+  //   "Minutes:",
+  //   Number.parseInt(minutes)
+  // );
+  return { hours, minutes };
+};
+
+exports.endTimestampCalculator = (begin, newBegin, end) => {
+  const diff = end.getTime() - begin.getTime();
+  return new Date(newBegin.getTime() + diff);
 };

@@ -1,30 +1,60 @@
 <template>
-  <div ref="event" class="position-absolute event">
+  <div
+    ref="event"
+    class="position-absolute event"
+    @mousedown="handleMousedown($event, event)"
+  >
+    <div class="event_resizer" @mousedown="handleResizingLeft"></div>
     {{ event.title }}
+    <div class="event_resizer"></div>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
+import calendarUtils from "@/views/calendar/calendar_utils";
+
 export default {
   name: "EventCalendar",
   props: ["eventProps", "rowWidth"],
+  mounted() {
+    const max =
+      ((this.event.timestampBegin.getHours() * 60 +
+        this.event.timestampBegin.getMinutes()) *
+        this.rowWidth) /
+      (24 * 60);
+    // console.log("MAX", max);
+
+    this.$refs.event.style.left = `${max}px`;
+    if (this.event.timestampEnd) {
+      const length =
+        ((this.event.timestampEnd.getHours() * 60 +
+          this.event.timestampEnd.getMinutes()) *
+          this.rowWidth) /
+        (24 * 60);
+      this.$refs.event.style.width = `${length - max}px`;
+    }
+  },
   data() {
     return {
       totalTime: 24 * 60,
       rowSizeX: this.rowWidth,
-      event: this.eventProps
+      event: this.eventProps,
+      newHour: 0,
+      newMinutes: 0,
+      newEndHour: 0,
+      newEndMinutes: 0
     };
   },
   watch: {
     rowWidth: function(val) {
-      // console.log("Watchout:", val);
       this.rowSizeX = val;
       const max =
         ((this.event.timestampBegin.getHours() * 60 +
           this.event.timestampBegin.getMinutes()) *
           val) /
         (24 * 60);
-      // console.log("MAX", max);
 
       this.$refs.event.style.left = `${max}px`;
       if (this.event.timestampEnd) {
@@ -38,23 +68,112 @@ export default {
     }
   },
   methods: {
-    handleMousedownEvent(e) {
-      console.log("MousedownEvent event:", e);
+    handleMousedown(e, event) {
+      console.log("MouseDown!", e, event);
+      // Elimina la possibilità all'utente di selezionare testo
+      document.body.style.userSelect = "none";
+      if (e.path[0].className.split(" ").includes("event")) {
+        this.offSet = e.offsetX;
+        this.target = e.target;
+        document.onmouseup = async () => {
+          console.log("MouseUp!");
+          // Fare cose se selezionato un evento : OK
+          // Fare cose viene selezionata la row : TODO
+          document.onmouseup = null;
+          document.onmousemove = null;
+          this.target = null;
+          document.body.style.userSelect = "initial";
+
+          // Gestisco store per eventuali modifiche
+          const { workgroupId } = this.$route.params;
+          const timestampBegin = new Date(event.timestampBegin);
+          console.log(
+            "Selected: hour:",
+            this.newHour,
+            "minute",
+            this.newMinutes
+          );
+          timestampBegin.setHours(this.newHour, this.newMinutes);
+          const timestampEnd = calendarUtils.endTimestampCalculator(
+            event.timestampBegin,
+            timestampBegin,
+            event.timestampEnd
+          );
+          const newEvent = {
+            id: event.id,
+            timestampBegin,
+            timestampEnd
+          };
+          await this.$store.dispatch("editEvent", {
+            workgroupId,
+            event: newEvent,
+            oldDate: event.timestampBegin
+          });
+        };
+        document.onmousemove = this.handleMousemove;
+        // } else if (e.target.className.split(" ").includes("event_resizer")) {
+        //   document.onmousemove = this.resizeMoovig;
+        //   document.onmouseup = () => {
+        //     console.log("MouseUp!");
+        //     // Fare cose se selezionato un evento : OK
+        //     // Fare cose viene selezionata la row : TODO
+        //     document.onmouseup = null;
+        //     document.onmousemove = null;
+        //     this.target = null;
+        //     document.body.style.userSelect = "initial";
+        //     // console.log("TIMESTAMP:", this.event.timestampBegin);
+        //     // this.$emit("changedEvent", "someValue");
+        //   };
+        //   this.handleResizingLeft(e);
+      }
     },
-    handleClickEvent(e) {
-      console.log("ClickEvent event:", e);
+    handleMousemove(e) {
+      const toLeft =
+        document.getElementsByClassName("row__events")[0].offsetLeft +
+        document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
+      // console.log(this.offSet, this.target, toLeft);s
+      const newPos = e.clientX - toLeft - this.offSet - 15;
+      if (0 <= newPos) {
+        this.target.style.left = newPos + "px";
+        const { hours, minutes } = calendarUtils.positionToHours(
+          newPos,
+          this.rowSizeX
+        );
+        this.newHour = hours;
+        this.newMinutes = minutes;
+      } else if (newPos <= 0) {
+        this.target.style.left = 0 + "px";
+      }
     },
-    handleMouseupEvent(e) {
-      console.log("MouseupEvent event:", e);
+    handleResizingLeft(e) {
+      // e.preventDeafult();
+      console.log(e.path[1]);
+      e.preventDefault();
     }
-  }
+    // resizeMoovig(e) {
+    //   const toLeft =
+    //     document.getElementsByClassName("row__events")[0].offsetLeft +
+    //     document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
+    //   const newPos = e.clientX - toLeft - this.offSet - 15;
+    //   if (0 <= newPos) {
+    //     e.path[1].style.left = newPos + "px";
+    //     /*const { hours, minutes } = */ calendarUtils.positionToHours(
+    //       newPos,
+    //       this.rowSizeX
+    //     );
+    //     // console.log(hours, minutes, this.event);
+    //   } else if (newPos <= 0) {
+    //     this.target.style.left = 0 + "px";
+    //   }
+    // }
+  },
+  computed: mapActions(["editEvent"])
 };
 </script>
 
 <style scoped>
 .event {
   width: 100px;
-  /* height: 25px; */
   height: 25%;
   background-color: #2f80ed;
   border: 1px solid white;
@@ -67,5 +186,14 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  cursor: pointer;
+}
+
+.event_resizer {
+  position: absolute;
+  height: 100%;
+  width: 25px;
+  cursor: col-resize;
+  z-index: 25;
 }
 </style>
