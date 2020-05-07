@@ -29,9 +29,9 @@ export default {
   },
   updated() {},
   watch: {
-    dataprops: function(val) {
-      console.log("updated dataprops in calendarRow", val);
-    }
+    // dataprops: function(val) {
+    //   console.log("updated dataprops in calendarRow", val);
+    // }
   }
 };
 </script>
@@ -41,6 +41,7 @@ export default {
   /* height: 100px; */
   height: calc(100% / 7);
   /* border: 1px solid grey; */
+  overflow: hidden;
 
   padding: 0;
   margin: 0;

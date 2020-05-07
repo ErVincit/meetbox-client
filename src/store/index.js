@@ -1,6 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
+import calendar from "./calendar";
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -11,7 +13,9 @@ export default new Vuex.Store({
     }
   },
   actions: {},
-  modules: {},
+  modules: {
+    calendar
+  },
   getters: {
     usersInformation: state => {
       return state.usersInformation;
