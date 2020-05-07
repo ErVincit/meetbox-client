@@ -7,21 +7,38 @@
         <p class="m-0">Attività</p>
         <hr class="mt-0 mb-2" />
         <div class="row p-2 pb-4 flex-grow-1 align-items-start">
-          <p v-if="!sections">Caricamento...</p>
+          <p v-if="!allTasks">Caricamento...</p>
           <Section
             class="mx-2 p-3"
-            v-for="section in sections"
+            v-for="section in allTasks"
             :key="section.id"
+            :id="section.id"
             :title="section.title"
             :tasks="section.tasks"
-            @showTask="showTask"
+            @showTask="showTask(section.id, ...arguments)"
+            @drag-start="handleDragStart(section.id, ...arguments)"
+            @drag-end="dragging = false"
           />
         </div>
         <TaskInspector
           v-if="showTaskInspector"
           ref="task-inspector"
           :task="taskToShow"
+          :sectionId="sectionToShow"
+          @hide="showTaskInspector = false"
         />
+        <NeuContainer
+          v-if="dragging"
+          class="trash"
+          ref="trash"
+          @drop="removeTask"
+          @dragover.prevent
+          disableHover
+        >
+          <p class="m-0 px-3">
+            Rilascia le attività qui per eliminarle
+          </p>
+        </NeuContainer>
       </main>
       <div
         class="col col-lg-1 d-none d-lg-block"
@@ -35,7 +52,10 @@
 import PageHeader from "@/components/page-header/PageHeader";
 import Recents from "@/components/recents/Recents";
 import Section from "@/components/section/Section";
+import NeuContainer from "@/components/neu-button/NeuContainer";
 import TaskInspector from "@/components/task/TaskInspector";
+
+import { mapGetters, mapActions } from "vuex";
 
 const handleOutsideClick = function(event) {
   if (!this.showTaskInspector) return;
@@ -49,25 +69,39 @@ export default {
     return {
       sections: null,
       showTaskInspector: false,
-      taskToShow: null
+      taskToShow: null,
+      sectionToShow: null,
+      dragging: false,
+      draggingItemInfo: null
     };
   },
-  components: { PageHeader, Recents, Section, TaskInspector },
+  components: {
+    PageHeader,
+    Recents,
+    Section,
+    TaskInspector,
+    NeuContainer
+  },
+  computed: mapGetters(["allTasks"]),
   created() {
     const { workgroupId } = this.$route.params;
-    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/section/`;
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" }
-    })
-      .then(data => data.json())
-      .then(json => (this.sections = json.data));
+    this.fetchTasks(workgroupId);
   },
   methods: {
-    showTask(task) {
+    ...mapActions(["fetchTasks", "deleteTask"]),
+    showTask(section, task) {
       this.taskToShow = task;
+      this.sectionToShow = section;
       this.showTaskInspector = true;
+    },
+    handleDragStart(sectionIndex, taskIndex) {
+      this.draggingItemInfo = { section: sectionIndex, task: taskIndex };
+      this.dragging = true;
+    },
+    removeTask() {
+      const { section, task } = this.draggingItemInfo;
+      const { workgroupId } = this.$route.params;
+      this.deleteTask({ workgroupId, sectionId: section, taskId: task.id });
     }
   },
   mounted() {
@@ -79,4 +113,24 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.trash {
+  width: 100%;
+  min-height: 100px;
+  height: auto !important;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 10px;
+  right: 10px;
+  border: 2px dashed rgb(252, 109, 109);
+  color: black !important;
+  border-radius: 30px;
+}
+
+.trash p {
+  font-size: 30px;
+  color: rgb(252, 109, 109);
+}
+</style>

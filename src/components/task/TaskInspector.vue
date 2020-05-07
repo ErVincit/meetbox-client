@@ -1,6 +1,11 @@
 <template>
   <NeuContainer class="task-inspector w-50 px-5 py-4" disableHover>
-    <h3 class="hightlight font-weight-bold my-2">{{ task.title }}</h3>
+    <div class="d-flex align-items-center">
+      <h3 class="hightlight font-weight-bold my-2 flex-grow-1">
+        {{ task.title }}
+      </h3>
+      <NeuButton class="px-2" @click="onDelete">Elimina</NeuButton>
+    </div>
     <p class="my-4 mb-5">{{ task.description }}</p>
     <div class="d-flex justify-content-between my-2 mb-5">
       <div class="flex-grow-1 pr-2">
@@ -57,12 +62,15 @@ import BigAddButton from "@/components/section/BigAddButton";
 import Avatar from "@/components/avatar/Avatar";
 
 import calendarUtils from "@/views/calendar/calendar_utils";
+import { mapActions } from "vuex";
 
 export default {
   name: "TaskInspector",
   components: { NeuContainer, NeuButton, BigAddButton, Avatar },
   props: {
+    sectionId: Number,
     task: {
+      id: Number,
       title: String,
       description: String,
       label: Number,
@@ -79,6 +87,16 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["deleteTask"]),
+    onDelete() {
+      const { workgroupId } = this.$route.params;
+      this.deleteTask({
+        workgroupId,
+        sectionId: this.sectionId,
+        taskId: this.task.id
+      });
+      this.$emit("hide");
+    },
     removeMember(index) {
       this.task.members.splice(index, 1);
     }

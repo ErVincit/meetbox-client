@@ -2,16 +2,17 @@
   <NeuContainer class="activity__section" disableHover>
     <p class="m-0">{{ title }}</p>
     <draggable
-      v-model="list"
+      :list="tasks"
       :animation="200"
       group="tasks"
-      @start="dragging = true"
-      @end="dragging = false"
+      @start="handleDragStart"
+      @change="handleTaskMove"
+      @end="handleDragEnd"
       draggable=".task"
     >
       <Task
         class="mt-3 p-2"
-        v-for="task in list"
+        v-for="task in tasks"
         :key="task.id"
         :task="task"
         :disableHover="dragging"
@@ -75,6 +76,8 @@ import SmallAddButton from "./SmallAddButton";
 import draggable from "vuedraggable";
 import Avatar from "@/components/avatar/Avatar";
 
+import { mapActions } from "vuex";
+
 const handleOutsideClick = function(event) {
   if (!this.addingTask) return;
   const addTaskContainer = this.$refs["add-task__container"];
@@ -83,7 +86,7 @@ const handleOutsideClick = function(event) {
 
 export default {
   name: "Section",
-  props: { title: String, tasks: Array },
+  props: { id: Number, title: String, tasks: Array },
   components: {
     NeuContainer,
     Task,
@@ -95,7 +98,6 @@ export default {
   },
   data() {
     return {
-      list: this.tasks,
       newTaskTitle: "",
       newTaskMembers: [],
       addingTask: false,
@@ -109,15 +111,20 @@ export default {
     document.removeEventListener("click", handleOutsideClick.bind(this));
   },
   methods: {
+    ...mapActions(["addTask", "editTask"]),
     handleAddingTask() {
       this.addingTask = false;
       this.newTaskTitle = this.newTaskTitle.trim();
       if (this.newTaskTitle.length !== 0) {
-        this.tasks.push({
-          id: 123 + Math.random() * 100,
-          title: this.newTaskTitle,
-          label: null,
-          members: this.newTaskMembers
+        const { workgroupId } = this.$route.params;
+        this.addTask({
+          workgroupId,
+          sectionId: this.id,
+          task: {
+            title: this.newTaskTitle,
+            label: null,
+            members: this.newTaskMembers
+          }
         });
         this.newTaskTitle = "";
         this.newTaskMembers = [];
@@ -130,6 +137,36 @@ export default {
     },
     handleTextareaKeyup(event) {
       if (event.keyCode === 13) this.handleAddingTask();
+    },
+    handleDragStart({ oldDraggableIndex }) {
+      this.dragging = true;
+      this.$emit("drag-start", this.tasks[oldDraggableIndex]);
+    },
+    async handleTaskMove({ added, moved }) {
+      const { workgroupId } = this.$route.params;
+      if (added) {
+        // Change task's section
+        await this.editTask({
+          workgroupId,
+          sectionId: added.element.section,
+          taskId: added.element.id,
+          editObject: { section: this.id, index: added.newIndex }
+        });
+      }
+
+      if (moved) {
+        // Change task's index
+        this.editTask({
+          workgroupId,
+          sectionId: this.id,
+          taskId: moved.element.id,
+          editObject: { index: moved.newIndex }
+        });
+      }
+    },
+    handleDragEnd() {
+      this.dragging = false;
+      this.$emit("drag-end");
     }
   }
 };
