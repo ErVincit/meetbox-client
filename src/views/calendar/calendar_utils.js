@@ -179,3 +179,19 @@ exports.endTimestampCalculator = (begin, newBegin, end) => {
   const diff = end.getTime() - begin.getTime();
   return new Date(newBegin.getTime() + diff);
 };
+
+exports.dateToDateType = date => {
+  return (
+    date.getFullYear() +
+    "-" +
+    (date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth()) +
+    "-" +
+    date.getDate()
+  );
+};
+
+exports.dateToTimeType = date => {
+  let h = date.getHours();
+  let m = date.getMinutes();
+  return (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m);
+};

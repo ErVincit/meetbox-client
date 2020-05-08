@@ -1,7 +1,11 @@
 <template>
   <div class="calendar__row container-fluid d-flex flex-row position-relative">
     <WeeksDay :nameDay="nameDay" :day="day" />
-    <RowEventsContainer :events="dataprops" :rowSizeX="rowSizeX" />
+    <RowEventsContainer
+      :events="dataprops"
+      :rowSizeX="rowSizeX"
+      @showEvent="handleShowEvent"
+    />
   </div>
 </template>
 
@@ -14,6 +18,9 @@ export default {
   props: ["dataprops", "rowSizeX", "nameDay", "day"],
   components: { WeeksDay, RowEventsContainer },
   methods: {
+    handleShowEvent(event) {
+      this.$emit("showEvent", event);
+    },
     handleMousedown(e) {
       console.log("Mousedown event:", e);
       if (this.hitted(e.x, e.y)) {

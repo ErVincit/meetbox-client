@@ -3,6 +3,8 @@
     ref="event"
     class="position-absolute event"
     @mousedown="handleMousedown($event, event)"
+    @click.stop="handleShowEvent"
+    v-on="$listeners"
   >
     <div class="event_resizer" @mousedown="handleResizingLeft"></div>
     {{ event.title }}
@@ -44,7 +46,8 @@ export default {
       newHour: 0,
       newMinutes: 0,
       newEndHour: 0,
-      newEndMinutes: 0
+      newEndMinutes: 0,
+      disableClick: false
     };
   },
   watch: {
@@ -109,6 +112,7 @@ export default {
             event: newEvent,
             oldDate: event.timestampBegin
           });
+          this.disableClick = false;
         };
         document.onmousemove = this.handleMousemove;
         // } else if (e.target.className.split(" ").includes("event_resizer")) {
@@ -144,12 +148,13 @@ export default {
       } else if (newPos <= 0) {
         this.target.style.left = 0 + "px";
       }
+      this.disableClick = true;
     },
     handleResizingLeft(e) {
       // e.preventDeafult();
       console.log(e.path[1]);
       e.preventDefault();
-    }
+    },
     // resizeMoovig(e) {
     //   const toLeft =
     //     document.getElementsByClassName("row__events")[0].offsetLeft +
@@ -166,6 +171,9 @@ export default {
     //     this.target.style.left = 0 + "px";
     //   }
     // }
+    handleShowEvent() {
+      if (!this.disableClick) this.$emit("showEvent", this.event);
+    }
   },
   computed: mapActions(["editEvent"])
 };

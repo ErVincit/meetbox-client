@@ -1,6 +1,12 @@
 <template>
   <div class="row__events container-fluid position-relative">
-    <RowEvents v-for="row in rows" :key="row[0].id" :row="row"> </RowEvents>
+    <RowEvents
+      v-for="row in rows"
+      :key="row[0].id"
+      :row="row"
+      @showEvent="handleShowEvent"
+    >
+    </RowEvents>
   </div>
 </template>
 
@@ -38,6 +44,9 @@ export default {
     }
   },
   methods: {
+    handleShowEvent(event) {
+      this.$emit("showEvent", event);
+    }
     // handleMousedown(e) {
     //   console.log("MouseDown!", e);
     //   // Elimina la possibilità all'utente di selezionare testo

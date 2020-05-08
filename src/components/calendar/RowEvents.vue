@@ -5,6 +5,7 @@
       :key="element.id"
       :eventProps="element"
       :rowWidth="rowSizeX"
+      @showEvent="handleShowEvent"
     />
   </div>
 </template>
@@ -30,6 +31,11 @@ export default {
   watch: {
     row: function(newVal) {
       this.row = newVal;
+    }
+  },
+  methods: {
+    handleShowEvent(event) {
+      this.$emit("showEvent", event);
     }
   }
 };

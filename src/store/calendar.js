@@ -76,7 +76,11 @@ const mutations = {
       if (event.timestampBegin)
         event.timestampBegin = new Date(event.timestampBegin);
       if (event.timestampEnd) event.timestampEnd = new Date(event.timestampEnd);
+      state.calendar[tempDate.getFullYear()][tempDate.getMonth()][
+        tempDate.getDate()
+      ].events.sort((a, b) => (a.id > b.id ? 1 : -1));
     }
+
     console.log("Eventi caricati");
   },
   setCalendar: (state, calendar) => (state.calendar = calendar),
@@ -87,20 +91,38 @@ const mutations = {
   changeEvent: (state, { event, oldDate }) => {
     const newDate = new Date(event.timestampBegin);
     const id = event.id;
+    // let added = false;
     //Rimuovere evento precedente nel calendario
     const events =
       state.calendar[oldDate.getFullYear()][oldDate.getMonth()][
         oldDate.getDate()
       ].events;
     for (let i = 0; i < events.length; i++)
-      if (events[i].id == id)
+      if (events[i].id == id) {
+        // let eventListDate = events[i].timestampBegin;
+        // if (
+        //   eventListDate.getFullYear() !== oldDate.getFullYear() ||
+        //   eventListDate.getMonth() !== oldDate.getMonth() ||
+        //   eventListDate.getDate() !== oldDate.getDate()
+        // ) {
         state.calendar[oldDate.getFullYear()][oldDate.getMonth()][
           oldDate.getDate()
         ].events.splice(i, 1);
+        // } else {
+        //   state.calendar[oldDate.getFullYear()][oldDate.getMonth()][
+        //     oldDate.getDate()
+        //   ].events.splice(i, 0, event);
+        //   added = true;
+        // }
+      }
     //Aggiungere nuovo evento nel calendario
+    // if (!added)
     state.calendar[newDate.getFullYear()][newDate.getMonth()][
       newDate.getDate()
     ].events.push(event);
+    state.calendar[newDate.getFullYear()][newDate.getMonth()][
+      newDate.getDate()
+    ].events.sort((a, b) => (a.id > b.id ? 1 : -1));
   }
 };
 

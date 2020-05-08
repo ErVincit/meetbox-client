@@ -27,6 +27,7 @@
             :rowSizeX="rowSizeX"
             :nameDay="day.nameDay"
             :day="day.day"
+            @showEvent="showEvent(...arguments)"
           >
           </CalendarRow>
         </div>
@@ -36,6 +37,13 @@
         style="background-color: grey"
       ></div>
     </div>
+
+    <EventInspector
+      v-if="showEventInspector"
+      ref="event-inspector"
+      :event="eventToShow"
+      @hide="showEventInspector = false"
+    />
   </div>
 </template>
 
@@ -44,10 +52,17 @@ import PageHeader from "@/components/page-header/PageHeader";
 import Recents from "@/components/recents/Recents";
 import CalendarRow from "./CalendarRow";
 import NeuButton from "@/components/neu-button/NeuButton";
+import EventInspector from "@/components/calendar/EventInspector";
 
 import { mapGetters, mapActions } from "vuex";
 
 import calendarUtils from "./calendar_utils";
+
+const handleOutsideClick = function(event) {
+  if (!this.showEventInspector) return;
+  const eventInspector = this.$refs["event-inspector"].$vnode.elm;
+  if (!eventInspector.contains(event.target)) this.showEventInspector = false;
+};
 
 export default {
   name: "Calendar",
@@ -63,7 +78,7 @@ export default {
       this.currentDate
     );
   },
-  components: { PageHeader, Recents, CalendarRow, NeuButton },
+  components: { PageHeader, Recents, CalendarRow, NeuButton, EventInspector },
   methods: {
     handlePrevious() {
       if (this.weeklyView) {
@@ -89,6 +104,11 @@ export default {
           this.currentDate
         );
       }
+    },
+    showEvent(event) {
+      // console.log(event);
+      this.showEventInspector = true;
+      this.eventToShow = event;
     },
     ...mapActions(["initCalendar", "fetchEvents"])
   },
@@ -163,8 +183,16 @@ export default {
       isMonthView: false,
       weeklyView: true,
       currentDate: new Date("2020-6-25"),
-      calendarIdentifier: null
+      calendarIdentifier: null,
+      showEventInspector: false,
+      eventToShow: null
     };
+  },
+  mounted() {
+    document.addEventListener("click", handleOutsideClick.bind(this));
+  },
+  destroyed() {
+    document.removeEventListener("click", handleOutsideClick.bind(this));
   }
 };
 </script>
