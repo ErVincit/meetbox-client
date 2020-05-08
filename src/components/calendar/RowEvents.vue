@@ -1,5 +1,5 @@
 <template>
-  <div class="row_events ">
+  <div class="row_events position-relative">
     <EventCalendar
       v-for="element in row"
       :key="element.id"
@@ -24,8 +24,8 @@ export default {
     };
   },
   mounted() {
-    const rowElement = document.querySelector(".row__events");
-    this.rowSizeX = rowElement.scrollWidth - 30;
+    const rowElement = document.querySelector(".row__events_container");
+    this.rowSizeX = rowElement.scrollWidth; //Attention if padding or margin
     this.rowSizeY = rowElement.scrollHeight;
   },
   watch: {

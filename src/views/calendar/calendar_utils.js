@@ -10,6 +10,7 @@ exports.createCalendar = () => {
       for (var day = 1; day <= this.daysInMonth(month, year); day++) {
         tempCalendar[year][month][day] = {
           events: [],
+          fullDayEvents: [],
           nameDay: this.getNameDay(new Date(year, month, day)),
           day
         };
@@ -194,4 +195,60 @@ exports.dateToTimeType = date => {
   let h = date.getHours();
   let m = date.getMinutes();
   return (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m);
+};
+
+exports.checkSameDay = (d1, d2) => {
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+  );
+};
+
+exports.checkFullDayEvent = (d1, d2) => {
+  return (
+    d1.getHours() == 0 &&
+    d1.getMinutes() == 0 &&
+    d2.getHours() == 23 &&
+    d2.getMinutes() == 59
+  );
+};
+
+exports.interpolateCalendarEvents = (calendar, events) => {
+  for (var i = 0; i < events.length; i++) {
+    let event = events[i];
+    let tempDate = new Date(event.timestampBegin);
+    let tempEndDate = new Date(event.timestampEnd);
+    event.timestampBegin = tempDate;
+    event.timestampEnd = tempEndDate;
+    event.hasNext = false;
+    event.hasPrevious = false;
+    // Verify what kind of event is this
+    if (this.checkSameDay(tempDate, tempEndDate)) {
+      // fullDayEvents
+      if (this.checkFullDayEvent(tempDate, tempEndDate)) {
+        calendar[tempDate.getFullYear()][tempDate.getMonth()][
+          tempDate.getDate()
+        ].fullDayEvents.push(event);
+      }
+      // Others events
+      else {
+        calendar[tempDate.getFullYear()][tempDate.getMonth()][
+          tempDate.getDate()
+        ].events.push(event);
+      }
+    }
+    // Events to separate
+    // else {
+    //   console.log("evento da splittare");
+    //   calendar[tempDate.getFullYear()][tempDate.getMonth()][
+    //     tempDate.getDate()
+    //   ].events.push(event);
+    // }
+    // Order list for fixing the moovement
+    calendar[tempDate.getFullYear()][tempDate.getMonth()][
+      tempDate.getDate()
+    ].events.sort((a, b) => (a.id > b.id ? 1 : -1));
+  }
+  return calendar;
 };

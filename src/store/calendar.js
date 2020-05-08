@@ -67,19 +67,10 @@ const actions = {
 };
 const mutations = {
   setEvents: (state, events) => {
-    for (var i = 0; i < events.length; i++) {
-      let event = events[i];
-      let tempDate = new Date(event.timestampBegin);
-      state.calendar[tempDate.getFullYear()][tempDate.getMonth()][
-        tempDate.getDate()
-      ].events.push(event);
-      if (event.timestampBegin)
-        event.timestampBegin = new Date(event.timestampBegin);
-      if (event.timestampEnd) event.timestampEnd = new Date(event.timestampEnd);
-      state.calendar[tempDate.getFullYear()][tempDate.getMonth()][
-        tempDate.getDate()
-      ].events.sort((a, b) => (a.id > b.id ? 1 : -1));
-    }
+    state.calendar = calendarUtils.interpolateCalendarEvents(
+      state.calendar,
+      events
+    );
 
     console.log("Eventi caricati");
   },

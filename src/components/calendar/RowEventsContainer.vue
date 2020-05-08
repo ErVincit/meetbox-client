@@ -1,5 +1,5 @@
 <template>
-  <div class="row__events container-fluid position-relative">
+  <div class="row__events_container container-fluid position-relative">
     <RowEvents
       v-for="row in rows"
       :key="row[0].id"
@@ -20,7 +20,7 @@ export default {
   props: ["events"],
   components: { RowEvents },
   mounted() {
-    const rowElement = document.querySelector(".row__events");
+    const rowElement = document.querySelector(".row__events_container");
     this.rowSizeX = rowElement.scrollWidth - 30; // TODO: Prendere quello senza margin
     this.rowSizeY = rowElement.scrollHeight;
     // console.log("Mounted RowEventsContainer:", this.rowSizeX, this.rowSizeY);
@@ -85,8 +85,8 @@ export default {
 </script>
 
 <style>
-.row__events {
-  height: 100%;
+.row__events_container {
+  height: auto;
   padding: 0;
   margin: 0;
 }

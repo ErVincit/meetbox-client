@@ -1,22 +1,26 @@
 <template>
-  <div class="calendar__row container-fluid d-flex flex-row position-relative">
+  <div
+    class="calendar__row container-fluid d-flex flex-row position-relative w-100"
+  >
     <WeeksDay :nameDay="nameDay" :day="day" />
     <RowEventsContainer
       :events="dataprops"
       :rowSizeX="rowSizeX"
       @showEvent="handleShowEvent"
     />
+    <FullDay :events="fullDayEvents" @showEvent="handleShowEvent" />
   </div>
 </template>
 
 <script>
 import RowEventsContainer from "@/components/calendar/RowEventsContainer";
 import WeeksDay from "@/components/calendar/WeeksDay";
+import FullDay from "@/components/calendar/FullDay";
 
 export default {
   name: "CalendarRow",
-  props: ["dataprops", "rowSizeX", "nameDay", "day"],
-  components: { WeeksDay, RowEventsContainer },
+  props: ["dataprops", "rowSizeX", "nameDay", "day", "fullDayEvents"],
+  components: { WeeksDay, RowEventsContainer, FullDay },
   methods: {
     handleShowEvent(event) {
       this.$emit("showEvent", event);
@@ -45,7 +49,6 @@ export default {
 
 <style scoped>
 .calendar__row {
-  /* height: 100px; */
   height: calc(100% / 7);
   /* border: 1px solid grey; */
   overflow: hidden;

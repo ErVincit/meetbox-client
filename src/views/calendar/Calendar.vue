@@ -24,6 +24,7 @@
             v-for="day in days"
             :key="day.day"
             :dataprops="day.events"
+            :fullDayEvents="day.fullDayEvents"
             :rowSizeX="rowSizeX"
             :nameDay="day.nameDay"
             :day="day.day"
