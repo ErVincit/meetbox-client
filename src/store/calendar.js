@@ -71,8 +71,6 @@ const mutations = {
       state.calendar,
       events
     );
-
-    console.log("Eventi caricati");
   },
   setCalendar: (state, calendar) => (state.calendar = calendar),
   newEvent: (state, event) => {

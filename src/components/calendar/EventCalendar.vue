@@ -75,7 +75,10 @@ export default {
       // console.log("MouseDown!");
       // Elimina la possibilità all'utente di selezionare testo
       document.body.style.userSelect = "none";
-      if (e.path[0].className.split(" ").includes("event")) {
+      if (
+        e.path[0].className.split(" ").includes("event") &&
+        calendarUtils.verifyAloneEvent(event)
+      ) {
         this.offSet = e.offsetX;
         this.target = e.target;
         document.onmouseup = async () => {
@@ -107,6 +110,7 @@ export default {
             timestampEnd.setDate(timestampEnd.getDate() - 1);
             timestampEnd.setHours(23, 59);
           }
+          console.log("End:", timestampEnd);
           const newEvent = {
             id: event.id,
             timestampBegin,
@@ -142,12 +146,10 @@ export default {
         document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
       // console.log(this.offSet, this.target, toLeft);s
       const newPos = e.clientX - toLeft - this.offSet - 15;
-      if (
-        0 <= newPos &&
-        newPos <=
-          this.rowSizeX -
-            Number.parseInt(this.target.style.width.replace("px", ""))
-      ) {
+      const superMax =
+        this.rowSizeX -
+        Number.parseInt(this.target.style.width.replace("px", ""));
+      if (0 <= newPos && newPos <= superMax) {
         this.target.style.left = newPos + "px";
         const { hours, minutes } = calendarUtils.positionToHours(
           newPos,
@@ -157,6 +159,11 @@ export default {
         this.newMinutes = minutes;
       } else if (newPos <= 0) {
         this.target.style.left = 0 + "px";
+        this.newHour = 0;
+        this.newMinutes = 0;
+      } else if (newPos >= superMax) {
+        this.target.style.left = superMax + "px";
+        // TODO: Assegnare valore massimi
       }
       this.disableClick = true;
     },

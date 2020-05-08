@@ -50,7 +50,7 @@ export default {
 <style scoped>
 .calendar__row {
   height: calc(100% / 7);
-  /* border: 1px solid grey; */
+  border-bottom: 1px solid grey;
   overflow: hidden;
 
   padding: 0;

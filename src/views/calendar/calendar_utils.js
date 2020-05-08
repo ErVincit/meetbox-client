@@ -218,37 +218,90 @@ exports.interpolateCalendarEvents = (calendar, events) => {
   for (var i = 0; i < events.length; i++) {
     let event = events[i];
     let tempDate = new Date(event.timestampBegin);
-    let tempEndDate = new Date(event.timestampEnd);
-    event.timestampBegin = tempDate;
-    event.timestampEnd = tempEndDate;
-    event.hasNext = false;
-    event.hasPrevious = false;
-    // Verify what kind of event is this
-    if (this.checkSameDay(tempDate, tempEndDate)) {
-      // fullDayEvents
-      if (this.checkFullDayEvent(tempDate, tempEndDate)) {
-        calendar[tempDate.getFullYear()][tempDate.getMonth()][
-          tempDate.getDate()
-        ].fullDayEvents.push(event);
+    if (event.timestampEnd) {
+      let tempEndDate = new Date(event.timestampEnd);
+      event.timestampBegin = tempDate;
+      event.timestampEnd = tempEndDate;
+      event.hasNext = false;
+      event.hasPrevious = false;
+      // Verify what kind of event is this
+      if (this.checkSameDay(tempDate, tempEndDate)) {
+        // fullDayEvents
+        if (this.checkFullDayEvent(tempDate, tempEndDate)) {
+          calendar[tempDate.getFullYear()][tempDate.getMonth()][
+            tempDate.getDate()
+          ].fullDayEvents.push(event);
+        }
+        // Others events who start&finish on same day
+        else {
+          calendar[tempDate.getFullYear()][tempDate.getMonth()][
+            tempDate.getDate()
+          ].events.push(event);
+        }
       }
-      // Others events
+      // Events to separate
       else {
-        calendar[tempDate.getFullYear()][tempDate.getMonth()][
-          tempDate.getDate()
-        ].events.push(event);
+        const dateBegin = new Date(tempDate);
+        const dateEnd = new Date(tempEndDate);
+        const dateChecker = new Date(dateEnd);
+        dateChecker.setDate(dateChecker.getDate() + 1);
+        while (!this.checkSameDay(dateBegin, dateChecker)) {
+          // Se primo evento
+          const eventChunk = {
+            id: event.id,
+            workgroup: event.workgroup,
+            members: event.members,
+            timestampBegin: dateBegin,
+            timestampEnd: dateEnd,
+            title: event.title,
+            description: event.description,
+            hasNext: false,
+            hasPrevious: false
+          };
+          if (this.checkSameDay(dateBegin, tempDate)) {
+            eventChunk.timestampEnd = new Date(dateBegin);
+            eventChunk.timestampEnd.setHours(23, 59);
+            eventChunk.hasNext = true;
+            calendar[dateBegin.getFullYear()][dateBegin.getMonth()][
+              dateBegin.getDate()
+            ].events.push(eventChunk);
+            dateBegin.setDate(dateBegin.getDate() + 1);
+          }
+          //Se ultima parte dell'evento
+          else if (this.checkSameDay(dateBegin, dateEnd)) {
+            eventChunk.timestampBegin = new Date(dateEnd);
+            eventChunk.timestampBegin.setHours(0, 0);
+            eventChunk.timestampEnd = dateEnd;
+            eventChunk.hasPrevious = true;
+            calendar[dateBegin.getFullYear()][dateBegin.getMonth()][
+              dateBegin.getDate()
+            ].events.push(eventChunk);
+            dateBegin.setDate(dateBegin.getDate() + 1);
+          }
+          //Se parte centrale
+          else {
+            eventChunk.timestampEnd = new Date(dateBegin);
+            eventChunk.timestampEnd.setHours(23, 59);
+            eventChunk.timestampBegin = new Date(dateBegin);
+            eventChunk.timestampBegin.setHours(0, 0);
+            eventChunk.hasNext = true;
+            eventChunk.hasPrevious = true;
+            calendar[dateBegin.getFullYear()][dateBegin.getMonth()][
+              dateBegin.getDate()
+            ].events.push(eventChunk);
+            dateBegin.setDate(dateBegin.getDate() + 1);
+          }
+        }
       }
+      // Order list for fixing the moovement
+      calendar[tempDate.getFullYear()][tempDate.getMonth()][
+        tempDate.getDate()
+      ].events.sort((a, b) => (a.id > b.id ? 1 : -1));
     }
-    // Events to separate
-    // else {
-    //   console.log("evento da splittare");
-    //   calendar[tempDate.getFullYear()][tempDate.getMonth()][
-    //     tempDate.getDate()
-    //   ].events.push(event);
-    // }
-    // Order list for fixing the moovement
-    calendar[tempDate.getFullYear()][tempDate.getMonth()][
-      tempDate.getDate()
-    ].events.sort((a, b) => (a.id > b.id ? 1 : -1));
   }
   return calendar;
+};
+
+exports.verifyAloneEvent = event => {
+  return !(event.hasNext || event.hasPrevious);
 };

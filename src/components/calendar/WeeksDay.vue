@@ -14,7 +14,7 @@ export default {
 
 <style>
 .day_container {
-  width: 200px;
+  width: 25%;
   border-right: 1px solid rgb(194, 194, 194);
   height: 100%;
   padding: 0;
@@ -27,7 +27,8 @@ export default {
 }
 
 .name_day {
-  width: 120px;
+  /* width: 120px; */
+  width: 75%;
   text-align: center;
   font-size: 20px;
 }
