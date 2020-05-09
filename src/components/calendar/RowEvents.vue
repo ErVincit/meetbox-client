@@ -24,9 +24,10 @@ export default {
     };
   },
   mounted() {
-    const rowElement = document.querySelector(".row__events_container");
-    this.rowSizeX = rowElement.scrollWidth; //Attention if padding or margin
-    this.rowSizeY = rowElement.scrollHeight;
+    this.setActualRowSize();
+    window.addEventListener("resize", () => {
+      this.setActualRowSize();
+    });
   },
   watch: {
     row: function(newVal) {
@@ -36,6 +37,11 @@ export default {
   methods: {
     handleShowEvent(event) {
       this.$emit("showEvent", event);
+    },
+    setActualRowSize() {
+      const rowElement = document.querySelector(".row__events_container");
+      this.rowSizeX = rowElement.scrollWidth; // !!! Non prende margin o padding
+      this.rowSizeY = rowElement.scrollHeight;
     }
   }
 };
