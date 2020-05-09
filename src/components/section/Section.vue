@@ -1,10 +1,32 @@
 <template>
   <NeuContainer class="activity__section" disableHover>
-    <div>
-      <NeuInput class="m-0">📑 {{ title }}</NeuInput>
+    <div class="d-flex align-items-center">
+      <p class="m-0">📑</p>
+      <NeuInput
+        class="m-0 col rounded-pill p-0"
+        v-model="section.title"
+        @blur="setTitle"
+        backgroundHidden
+      />
+      <div class="dropdown col-auto px-2">
+        <button
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <img src="@/assets/kebab-icon.svg" />
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <p class="dropdown-item m-0 warning">
+            Elimina
+          </p>
+        </div>
+      </div>
     </div>
     <draggable
-      :list="tasks"
+      :list="section.tasks"
       :animation="200"
       group="tasks"
       @start="handleDragStart"
@@ -14,7 +36,7 @@
     >
       <Task
         class="mt-3 p-2"
-        v-for="task in tasks"
+        v-for="task in section.tasks"
         :key="task.id"
         :task="task"
         :disableHover="dragging"
@@ -25,16 +47,15 @@
       <NeuContainer v-if="addingTask" class="add-task mt-3 p-2" disableHover>
         <div class="d-flex mb-2">
           <SmallAddButton>Etichetta</SmallAddButton>
-          <SmallAddButton
-            @click="
-              newTaskMembers.push({
-                id: 12345,
-                firstname: 'Mario',
-                lastname: 'Gialli'
-              })
-            "
+          <SmallAddButton @click="showUserDropdown = true"
             >Membro</SmallAddButton
           >
+          <UserDropdown
+            v-if="showUserDropdown"
+            :users="workgroupMembers"
+            @select-user="addNewTaskMember"
+            @hide="showUserDropdown = false"
+          />
         </div>
         <form @submit.prevent="handleAddingTask">
           <NeuTextarea
@@ -65,6 +86,11 @@
       <BigAddButton class="mt-3" v-else @click.stop="addingTask = true"
         >Aggiungi una nuova attività</BigAddButton
       >
+      <Alert
+        :show="showAlert"
+        :message="alertMessage"
+        @close="showAlert = false"
+      />
     </div>
   </NeuContainer>
 </template>
@@ -72,30 +98,37 @@
 <script>
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import NeuTextarea from "@/components/neu-button/NeuTextarea";
+import NeuInput from "@/components/neu-button/NeuInput";
 import Task from "@/components/task/Task";
 import BigAddButton from "./BigAddButton";
 import SmallAddButton from "./SmallAddButton";
-import draggable from "vuedraggable";
 import Avatar from "@/components/avatar/Avatar";
+import Alert from "@/components/alert/Alert";
+import UserDropdown from "@/components/task/UserDropdown";
 
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import draggable from "vuedraggable";
 
 const handleOutsideClick = function(event) {
   if (!this.addingTask) return;
   const addTaskContainer = this.$refs["add-task__container"];
-  if (!addTaskContainer.contains(event.target)) this.addingTask = false;
+  if (addTaskContainer && !addTaskContainer.contains(event.target))
+    this.addingTask = false;
 };
 
 export default {
   name: "Section",
-  props: { id: Number, title: String, tasks: Array },
+  props: { section: { id: Number, title: String, tasks: Array } },
   components: {
     NeuContainer,
     Task,
     BigAddButton,
     SmallAddButton,
     NeuTextarea,
+    NeuInput,
     Avatar,
+    Alert,
+    UserDropdown,
     draggable
   },
   data() {
@@ -103,6 +136,9 @@ export default {
       newTaskTitle: "",
       newTaskMembers: [],
       addingTask: false,
+      showAlert: false,
+      alertMessage: "",
+      showUserDropdown: false,
       dragging: false
     };
   },
@@ -112,8 +148,24 @@ export default {
   destroyed() {
     document.removeEventListener("click", handleOutsideClick.bind(this));
   },
+  computed: {
+    ...mapGetters(["workgroups"]),
+    workgroupMembers() {
+      const { workgroupId } = this.$route.params;
+      return this.workgroups.find(wg => wg.id === parseInt(workgroupId))
+        .members;
+    },
+    workgroupLabels() {
+      const { workgroupId } = this.$route.params;
+      return this.workgroups.find(wg => wg.id === parseInt(workgroupId)).labels;
+    }
+  },
   methods: {
-    ...mapActions(["addTask", "editTask"]),
+    ...mapActions(["addTask", "editTask", "editSection"]),
+    addNewTaskMember(member) {
+      this.newTaskMembers.push(member);
+      this.showUserDropdown = false;
+    },
     handleAddingTask() {
       this.addingTask = false;
       this.newTaskTitle = this.newTaskTitle.trim();
@@ -121,12 +173,15 @@ export default {
         const { workgroupId } = this.$route.params;
         this.addTask({
           workgroupId,
-          sectionId: this.id,
+          sectionId: this.section.id,
           task: {
             title: this.newTaskTitle,
             label: null,
             members: this.newTaskMembers
           }
+        }).catch(err => {
+          this.alertMessage = "Creazione task fallita. " + err.message;
+          this.showAlert = true;
         });
         this.newTaskTitle = "";
         this.newTaskMembers = [];
@@ -142,7 +197,7 @@ export default {
     },
     handleDragStart({ oldDraggableIndex }) {
       this.dragging = true;
-      this.$emit("drag-start", this.tasks[oldDraggableIndex]);
+      this.$emit("drag-start", this.section.tasks[oldDraggableIndex]);
     },
     async handleTaskMove({ added, moved }) {
       const { workgroupId } = this.$route.params;
@@ -152,7 +207,7 @@ export default {
           workgroupId,
           sectionId: added.element.section,
           taskId: added.element.id,
-          editObject: { section: this.id, index: added.newIndex }
+          editObject: { section: this.section.id, index: added.newIndex }
         });
       }
 
@@ -160,7 +215,7 @@ export default {
         // Change task's index
         this.editTask({
           workgroupId,
-          sectionId: this.id,
+          sectionId: this.section.id,
           taskId: moved.element.id,
           editObject: { index: moved.newIndex }
         });
@@ -169,6 +224,14 @@ export default {
     handleDragEnd() {
       this.dragging = false;
       this.$emit("drag-end");
+    },
+    setTitle() {
+      const { workgroupId } = this.$route.params;
+      this.editSection({
+        workgroupId,
+        sectionId: this.section.id,
+        editObject: { title: this.section.title }
+      });
     }
   }
 };
@@ -178,8 +241,9 @@ export default {
 .activity__section {
   width: 300px;
 }
-.activity__section > p:first-child {
+.activity__section .neu-input > input {
   color: #1c4885;
+  font-size: 16px;
 }
 
 .neu-input {
@@ -222,5 +286,24 @@ export default {
 }
 .add-task__close:hover {
   color: rgb(211, 76, 76) !important;
+}
+.dropdown > button {
+  border: none;
+  outline: none;
+}
+.dropdown img {
+  width: 20px;
+  height: 20px;
+}
+.dropdown-item {
+  cursor: pointer;
+}
+.dropdown-item.warning {
+  color: orangered;
+}
+.dropdown-item:active,
+.dropdown-item:hover {
+  color: white;
+  background-color: orangered;
 }
 </style>

@@ -4,6 +4,7 @@
     :shadowRadius="3"
     :shadowBlur="5"
     alwaysHover
+    :disabled="backgroundHidden"
   >
     <input
       :type="type"
@@ -21,7 +22,12 @@ import NeuContainer from "@/components/neu-button/NeuContainer";
 
 export default {
   name: "NeuInput",
-  props: { type: String, placeholder: String, value: String },
+  props: {
+    type: String,
+    placeholder: String,
+    value: String,
+    backgroundHidden: { type: Boolean, default: false }
+  },
   components: { NeuContainer },
   computed: {
     listeners() {

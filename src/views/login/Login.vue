@@ -34,21 +34,11 @@
         >
       </form>
     </NeuContainer>
-    <div
-      v-if="showAlert"
-      class="alert alert-danger m-2 mb-4 fixed-bottom"
-      role="alert"
-    >
-      {{ alertMessage }}
-      <button
-        type="button"
-        class="close"
-        aria-label="Close"
-        @click="showAlert = false"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
+    <Alert
+      :show="showAlert"
+      :message="alertMessage"
+      @close="showAlert = false"
+    />
     <img
       id="draw-left"
       class="d-none d-md-block"
@@ -68,10 +58,11 @@ import Logo from "@/components/logo/Logo";
 import NeuButton from "@/components/neu-button/NeuButton";
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import NeuInput from "@/components/neu-button/NeuInput";
+import Alert from "@/components/alert/Alert";
 
 export default {
   name: "Login",
-  components: { Logo, NeuButton, NeuContainer, NeuInput },
+  components: { Logo, NeuButton, NeuContainer, NeuInput, Alert },
   data() {
     return {
       email: "",

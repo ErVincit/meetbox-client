@@ -1,9 +1,9 @@
 <template>
   <div
-    class="neu-container"
     :class="{
-      'neu-container--hover': !disableHover,
-      'neu-container--always-hover': alwaysHover
+      'neu-container': !disabled,
+      'neu-container--hover': !disabled && !disableHover,
+      'neu-container--always-hover': !disabled && alwaysHover
     }"
     :style="style"
     v-bind="$attrs"
@@ -23,7 +23,8 @@ export default {
     shadowRadius: { type: Number, default: 5 },
     shadowBlur: { type: Number, default: 10 },
     disableHover: { type: Boolean, default: false },
-    alwaysHover: { type: Boolean, default: false }
+    alwaysHover: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false }
   },
   computed: {
     style() {

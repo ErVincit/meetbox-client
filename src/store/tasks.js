@@ -24,6 +24,7 @@ const actions = {
       method: "POST"
     });
     const json = await data.json();
+    if (json.error) throw new Error(json.message);
     commit("newTask", { sectionId, task: json.data });
   },
   async deleteTask({ commit }, { workgroupId, sectionId, taskId }) {
@@ -43,11 +44,26 @@ const actions = {
     // If the section is changed take the new
     if (editObject.section) sectionId = editObject.section;
     commit("setTask", { sectionId, task });
+  },
+  async editSection({ commit }, { workgroupId, sectionId, editObject }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/section/${sectionId}/edit`;
+    const response = await fetch(url, {
+      credentials: "include",
+      body: JSON.stringify(editObject),
+      headers: { "Content-Type": "application/json" },
+      method: "PUT"
+    });
+    const section = (await response.json()).data;
+    commit("setSection", section);
   }
 };
 
 const mutations = {
   setSections: (state, sections) => (state.sections = sections),
+  setSection: (state, section) => {
+    const sectionIndex = state.sections.findIndex(s => s.id === section.id);
+    state.sections[sectionIndex] = section;
+  },
   setTasks: (state, { sectionId, tasks }) =>
     (state.sections.find(section => section.id === sectionId).tasks = tasks),
   newTask: (state, { sectionId, task }) =>

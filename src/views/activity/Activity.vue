@@ -10,17 +10,17 @@
           class="row pl-3 py-3 flex-grow-1 align-items-start flex-nowrap overflow-auto"
         >
           <Loading :show="!allTasks" />
-          <div class="pr-3" v-for="section in allTasks" :key="section.id">
-            <Section
-              class="px-3 py-3"
-              :id="section.id"
-              :title="section.title"
-              :tasks="section.tasks"
-              @showTask="showTask(section.id, ...arguments)"
-              @drag-start="handleDragStart(section.id, ...arguments)"
-              @drag-end="dragging = false"
-            />
-          </div>
+          <draggable :list="allTasks" ghost-class="ghost" class="d-flex">
+            <div class="pr-3" v-for="section in allTasks" :key="section.id">
+              <Section
+                class="px-3 py-3"
+                :section="section"
+                @showTask="showTask(section.id, ...arguments)"
+                @drag-start="handleDragStart(section.id, ...arguments)"
+                @drag-end="dragging = false"
+              />
+            </div>
+          </draggable>
         </div>
         <TaskInspector
           v-if="showTaskInspector"
@@ -59,6 +59,7 @@ import TaskInspector from "@/components/task/TaskInspector";
 import Loading from "@/components/loading/Loading";
 
 import { mapGetters, mapActions } from "vuex";
+import draggable from "vuedraggable";
 
 const handleOutsideClick = function(event) {
   if (!this.showTaskInspector) return;
@@ -84,7 +85,8 @@ export default {
     Section,
     TaskInspector,
     NeuContainer,
-    Loading
+    Loading,
+    draggable
   },
   computed: mapGetters(["allTasks"]),
   created() {
