@@ -14,23 +14,25 @@
       </div>
       <button
         type="button"
-        class="close d-block d-lg-none"
+        class="close d-block d-lg-none p-2"
         aria-label="Close"
         @click="$emit('hide')"
       >
         <span aria-hidden="true">&times;</span>
       </button>
       <div class="row align-items-center justify-content-center">
-        <h3 class="highlight font-weight-bold my-2 pb-2 col-12 col-xl">
-          {{ task.title }}
-        </h3>
+        <NeuInput
+          class="highlight font-weight-bold my-2 mx-3 col-12 col-xl p-0 pb-2 pb-md-0"
+          v-model="task.title"
+          @blur="setTitle"
+        />
         <div class="px-2 col-auto col-xl-auto">
           <NeuButton
             class="px-2"
             :backgroundColor="task.completed ? '#1c4885' : '#efeeee'"
-            :color="task.completed ? 'white' : ''"
-            :shadowRadius="1"
-            :shadowBlur="5"
+            :color="task.completed ? 'white' : '#787878'"
+            :shadowRadius="task.completed ? 1 : 5"
+            :shadowBlur="task.completed ? 5 : 10"
             @click.stop="onComplete"
             >✔️ {{ task.completed ? "Completato" : "Completa" }}</NeuButton
           >
@@ -41,7 +43,8 @@
       </div>
       <NeuTextarea
         class="my-4 mb-4"
-        :value="task.description"
+        v-model="task.description"
+        @blur="setDescription"
         placeholder="Inserisci qui una descrizione dell'attività..."
       ></NeuTextarea>
       <div class="row mb-4">
@@ -138,6 +141,7 @@ import NeuContainer from "@/components/neu-button/NeuContainer";
 import NeuButton from "@/components/neu-button/NeuButton";
 import NeuTextarea from "@/components/neu-button/NeuTextarea";
 import BigAddButton from "@/components/section/BigAddButton";
+import NeuInput from "@/components/neu-button/NeuInput";
 import FileDropArea from "./FileDropArea";
 import UserDropdown from "./UserDropdown";
 import Label from "./Label";
@@ -158,6 +162,7 @@ export default {
     UserDropdown,
     Label,
     // NeuLabel,
+    NeuInput,
     Member,
     NeuTextarea,
     TaskAttachment
@@ -281,6 +286,24 @@ export default {
         });
       }
       // this.showLabelDropdown = false;
+    },
+    setDescription() {
+      const { workgroupId } = this.$route.params;
+      this.editTask({
+        workgroupId,
+        sectionId: this.sectionId,
+        taskId: this.task.id,
+        editObject: { description: this.task.description }
+      });
+    },
+    setTitle() {
+      const { workgroupId } = this.$route.params;
+      this.editTask({
+        workgroupId,
+        sectionId: this.sectionId,
+        taskId: this.task.id,
+        editObject: { title: this.task.title }
+      });
     }
   }
 };
@@ -320,7 +343,6 @@ export default {
   transform: translate(-50%, -50%);
   z-index: 100;
   border: 4px dotted transparent;
-  overflow: auto;
 }
 @media (max-width: 768px) {
   .task-inspector {
@@ -328,13 +350,17 @@ export default {
     width: 100vw;
     height: 100vh;
     top: 50%;
+    overflow: auto;
   }
 }
 
+.task-inspector .neu-input > input,
+.task-inspector .neu-textarea > textarea,
 .highlight {
-  color: #1c4885;
+  color: #1c4885 !important;
 }
-.task-inspector .neu-button {
+.task-inspector .neu-button,
+.task-inspector .neu-input > input {
   height: 40px;
 }
 .task-inspector .neu-button > button {
