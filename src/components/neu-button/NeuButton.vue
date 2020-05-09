@@ -25,8 +25,8 @@ export default {
   props: {
     backgroundColor: { type: String, default: "#efeeee" },
     color: { type: String, default: "#787878" },
-    shadowRadius: { type: Number, default: 9 },
-    shadowBlur: { type: Number, default: 16 }
+    shadowRadius: { type: Number, default: 5 },
+    shadowBlur: { type: Number, default: 10 }
   },
   components: { NeuContainer }
 };

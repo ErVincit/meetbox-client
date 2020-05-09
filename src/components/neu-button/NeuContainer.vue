@@ -20,8 +20,8 @@ export default {
     backgroundColor: { type: String, default: "#efeeee" },
     color: { type: String, default: "#787878" },
     borderRadius: { type: Number, default: 10 },
-    shadowRadius: { type: Number, default: 9 },
-    shadowBlur: { type: Number, default: 16 },
+    shadowRadius: { type: Number, default: 5 },
+    shadowBlur: { type: Number, default: 10 },
     disableHover: { type: Boolean, default: false },
     alwaysHover: { type: Boolean, default: false }
   },

@@ -33,7 +33,7 @@
             Dimensioni
           </div>
         </div>
-        <div class="h-100 documents">
+        <div class="h-100 documents px-4">
           <Document
             v-for="document in rootItems"
             :key="document.id"
