@@ -1,6 +1,8 @@
 <template>
   <NeuContainer class="activity__section" disableHover>
-    <p class="m-0">{{ title }}</p>
+    <div>
+      <NeuInput class="m-0">📑 {{ title }}</NeuInput>
+    </div>
     <draggable
       :list="tasks"
       :animation="200"

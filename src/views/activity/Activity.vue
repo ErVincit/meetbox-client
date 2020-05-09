@@ -9,7 +9,7 @@
         <div
           class="row pl-3 py-3 flex-grow-1 align-items-start flex-nowrap overflow-auto"
         >
-          <p v-if="!allTasks">Caricamento...</p>
+          <Loading :show="!allTasks" />
           <div class="pr-3" v-for="section in allTasks" :key="section.id">
             <Section
               class="px-3 py-3"
@@ -56,6 +56,7 @@ import Recents from "@/components/recents/Recents";
 import Section from "@/components/section/Section";
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import TaskInspector from "@/components/task/TaskInspector";
+import Loading from "@/components/loading/Loading";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -82,7 +83,8 @@ export default {
     Recents,
     Section,
     TaskInspector,
-    NeuContainer
+    NeuContainer,
+    Loading
   },
   computed: mapGetters(["allTasks"]),
   created() {
@@ -117,7 +119,7 @@ export default {
 
 <style>
 .trash {
-  width: 100%;
+  width: calc(100% - 20px);
   min-height: 100px;
   height: auto !important;
   position: absolute;
@@ -125,6 +127,7 @@ export default {
   justify-content: center;
   align-items: center;
   bottom: 10px;
+  left: 10px;
   right: 10px;
   border: 2px dashed rgb(252, 109, 109);
   color: black !important;

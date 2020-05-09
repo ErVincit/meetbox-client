@@ -167,11 +167,13 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
+  max-height: 100%;
 }
 
 #draw-right {
   position: fixed;
   top: 0;
   right: 0;
+  max-height: 100%;
 }
 </style>
