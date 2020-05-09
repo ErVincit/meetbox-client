@@ -72,13 +72,8 @@ const handleOutsideClick = function(event) {
 export default {
   name: "Calendar",
   created() {
-    // var tmpDate = new Date();
-    // const range = 10;
-    // const actualYear = tmpDate.getFullYear();
-    // const tempCalendar = calendarUtils.createCalendar();
     this.initCalendar();
     this.fetchEvents();
-
     this.calendarIdentifier = calendarUtils.calendarWeeklyPosition(
       this.currentDate
     );

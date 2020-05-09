@@ -1,6 +1,14 @@
 <template>
   <NeuContainer class="event-inspector w-50 px-5 py-4" disableHover>
-    <h3 class="hightlight font-weight-bold my-2">{{ event.title }}</h3>
+    <h3 class="hightlight font-weight-bold my-2" @click="showArea">
+      {{ event.title }}
+    </h3>
+    <!-- <NeuTextarea
+      :invisible="false"
+      :value="event.title"
+      :placeholder="'Titolo'"
+      ref="titleArea"
+    /> -->
     <div class="d-flex">
       <div class="w-75">
         <div class="p-2">
@@ -11,8 +19,8 @@
               </p>
             </div>
             <div class="datetime_calendar">
-              <input type="date" ref="begin_date" />
-              <input type="time" ref="begin_time" />
+              <input type="date" ref="begin_date" @change="dateTimeChange" />
+              <input type="time" ref="begin_time" @change="dateTimeChange" />
             </div>
           </div>
           <div class="d-flex">
@@ -20,13 +28,16 @@
               <p class="hightlight p-0 m-0 col-sm-4">Fine</p>
             </div>
             <div class="datetime_calendar">
-              <input type="date" ref="end_date" />
-              <input type="time" ref="end_time" />
+              <input type="date" ref="end_date" @change="dateTimeChange" />
+              <input type="time" ref="end_time" @change="dateTimeChange" />
             </div>
           </div>
         </div>
         <p class="hightlight mt-4">Descrizione:</p>
-        <p class="pl-2">{{ event.description }}</p>
+        <NeuTextarea
+          :value="event.description"
+          :placeholder="'Aggiungi qui la tua descrizione!'"
+        />
       </div>
       <div class="p-5">
         <p class="hightlight">🧑‍🤝‍🧑 Assegnato:</p>
@@ -52,8 +63,9 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import NeuContainer from "@/components/neu-button/NeuContainer";
-// import NeuButton from "@/components/neu-button/NeuButton";
+import NeuTextarea from "@/components/neu-button/NeuTextarea";
 import BigAddButton from "@/components/section/BigAddButton";
 import Avatar from "@/components/avatar/Avatar";
 
@@ -61,7 +73,7 @@ import calendarUtils from "@/views/calendar/calendar_utils";
 
 export default {
   name: "EventInspector",
-  components: { NeuContainer, BigAddButton, Avatar },
+  components: { NeuContainer, BigAddButton, Avatar, NeuTextarea },
   props: {
     event: {
       id: Number,
@@ -72,6 +84,11 @@ export default {
       members: Array,
       owner: String
     }
+  },
+  data() {
+    return {
+      titleArea: true
+    };
   },
   mounted() {
     var tb = this.event.timestampBegin;
@@ -92,7 +109,42 @@ export default {
   methods: {
     removeMember(index) {
       this.event.members.splice(index, 1);
+    },
+    showArea() {
+      // console.log(this.$refs.titleArea);
+      // this.$refs.titleArea.style.visibility = "visible";
+      this.titleArea = false;
+    },
+    async dateTimeChange() {
+      console.log("EVENT---", this.event);
+      const newBeginDate = new Date(this.$refs.begin_date.value);
+      const split = this.$refs.begin_time.value.split(":");
+      const h = Number.parseInt(split[0]);
+      const m = Number.parseInt(split[1]);
+      newBeginDate.setHours(h, m);
+
+      const newEndDate = new Date(this.$refs.end_date.value);
+      const splitEnd = this.$refs.end_time.value.split(":");
+      const hEnd = Number.parseInt(splitEnd[0]);
+      const mEnd = Number.parseInt(splitEnd[1]);
+      newEndDate.setHours(hEnd, mEnd);
+
+      if (newEndDate < newBeginDate) return;
+      const newEvent = {
+        id: this.event.id,
+        timestampBegin: newBeginDate,
+        timestampEnd: newEndDate
+      };
+      const { workgroupId } = this.$route.params;
+      await this.$store.dispatch("editEvent", {
+        workgroupId,
+        event: newEvent,
+        oldEvent: this.event
+      });
     }
+  },
+  computed: {
+    ...mapActions(["editEvent"])
   }
 };
 </script>

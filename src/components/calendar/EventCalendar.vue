@@ -26,7 +26,6 @@ export default {
         this.event.timestampBegin.getMinutes()) *
         this.rowWidth) /
       (24 * 60);
-    // console.log("MAX", max);
     this.newHour = this.event.timestampBegin.getHours();
     this.newMinutes = this.event.timestampBegin.getMinutes();
 
@@ -70,8 +69,29 @@ export default {
           (24 * 60);
         this.$refs.event.style.width = `${length - max}px`;
       }
+    },
+    eventProps: function(val) {
+      this.event = val;
+      this.event.timestampBegin = new Date(this.event.timestampBegin);
+      this.event.timestampEnd = new Date(this.event.timestampEnd);
+      const max =
+        ((this.event.timestampBegin.getHours() * 60 +
+          this.event.timestampBegin.getMinutes()) *
+          this.rowSizeX) /
+        (24 * 60);
+
+      this.$refs.event.style.left = `${max}px`;
+      if (this.event.timestampEnd) {
+        const length =
+          ((this.event.timestampEnd.getHours() * 60 +
+            this.event.timestampEnd.getMinutes()) *
+            this.rowSizeX) /
+          (24 * 60);
+        this.$refs.event.style.width = `${length - max}px`;
+      }
     }
   },
+  updated() {},
   methods: {
     handleMousedown(e, event) {
       // console.log("MouseDown!");
@@ -130,6 +150,10 @@ export default {
             timestampEnd.setHours(23, 59);
           }
           // console.log("End:", timestampEnd);
+
+          this.event.timestampBegin = timestampBegin;
+          this.event.timestampEnd = timestampEnd;
+
           const newEvent = {
             id: event.id,
             timestampBegin,

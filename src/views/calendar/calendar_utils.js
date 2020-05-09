@@ -114,22 +114,6 @@ exports.handleEventCollision = events => {
 
     //TODO: Riordinare righe in base a larghezza
   }
-  // var z = 0;
-  // list.forEach(j => {
-  //   z++;
-  //   j.forEach(element => {
-  //     console.log(
-  //       z,
-  //       element.id,
-  //       "\n",
-  //       element.timestampBegin,
-  //       "\n",
-  //       element.timestampEnd
-  //     );
-  //   });
-  // });
-  // console.log("Events rowEventsContainer:", events, superCollision);
-  // console.log("List:", list);
   return list;
 };
 
@@ -167,12 +151,6 @@ exports.positionToHours = (x, rowSizeX) => {
   const solution = (24 * 60 * x) / rowSizeX;
   const hours = solution / 60;
   const minutes = solution % 60;
-  // console.log(
-  //   "Hours:",
-  //   Number.parseInt(hours),
-  //   "Minutes:",
-  //   Number.parseInt(minutes)
-  // );
   return { hours, minutes };
 };
 
@@ -185,9 +163,9 @@ exports.dateToDateType = date => {
   return (
     date.getFullYear() +
     "-" +
-    (date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth()) +
+    (date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : date.getMonth()) +
     "-" +
-    date.getDate()
+    (date.getDate() < 10 ? "0" + date.getDate() : date.getDate())
   );
 };
 
@@ -251,8 +229,8 @@ exports.interpolateCalendarEvents = (calendar, events) => {
             id: event.id,
             workgroup: event.workgroup,
             members: event.members,
-            timestampBegin: dateBegin,
-            timestampEnd: dateEnd,
+            timestampBegin: new Date(dateBegin),
+            timestampEnd: new Date(dateEnd),
             title: event.title,
             description: event.description,
             hasNext: false,
@@ -309,7 +287,7 @@ exports.verifyAloneEvent = event => {
 };
 
 exports.searchEvent = (events, event) => {
-  for (let i = 0; i <= events.length; i++) {
+  for (let i = 0; i < events.length; i++) {
     let localEvent = events[i];
     if (localEvent.id == event.id) return i;
   }
@@ -320,7 +298,7 @@ exports.handleDeletePrevious = (calendar, event) => {
   var tempEvent = event;
   var tempDate = new Date(event.timestampBegin);
   while (tempEvent.hasPrevious) {
-    tempDate = new Date(tempDate).setDate(tempDate.getDate() - 1);
+    tempDate.setDate(tempDate.getDate() - 1);
     const events =
       calendar[tempDate.getFullYear()][tempDate.getMonth()][tempDate.getDate()]
         .events;
@@ -339,6 +317,7 @@ exports.handleDeletePrevious = (calendar, event) => {
       console.log(
         "ERRORE: L'elemento che si vuole cancellare non è presente nella lista di eventi di appartenenza. Settaggio errato di qualche booleano hasPrevious"
       );
+      break;
     }
   }
   return calendar;
@@ -348,7 +327,7 @@ exports.handleDeleteNext = (calendar, event) => {
   var tempEvent = event;
   var tempDate = new Date(event.timestampBegin);
   while (tempEvent.hasNext) {
-    tempDate = new Date(tempDate).setDate(tempDate.getDate() + 1);
+    tempDate.setDate(tempDate.getDate() + 1);
     const events =
       calendar[tempDate.getFullYear()][tempDate.getMonth()][tempDate.getDate()]
         .events;
@@ -367,6 +346,7 @@ exports.handleDeleteNext = (calendar, event) => {
       console.log(
         "ERRORE: L'elemento che si vuole cancellare non è presente nella lista di eventi di appartenenza. Settaggio errato di qualche booleano hasNext"
       );
+      break;
     }
   }
   return calendar;

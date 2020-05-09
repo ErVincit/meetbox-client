@@ -1,6 +1,7 @@
 <template>
   <NeuContainer
     class="neu-textarea"
+    :class="{ invisible: invisible }"
     :shadowRadius="3"
     :shadowBlur="5"
     alwaysHover
@@ -20,7 +21,7 @@ import NeuContainer from "@/components/neu-button/NeuContainer";
 
 export default {
   name: "NeuTextarea",
-  props: { placeholder: String, value: String },
+  props: { placeholder: String, value: String, invisible: Boolean },
   components: { NeuContainer },
   computed: {
     listeners() {

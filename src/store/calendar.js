@@ -65,10 +65,13 @@ const actions = {
       if (!json.error) {
         json.data.timestampBegin = new Date(json.data.timestampBegin);
         json.data.timestampEnd = new Date(json.data.timestampEnd);
+        console.log("Ricevuto:", json.data);
         commit("changeEvent", {
           event: json.data,
           oldEvent
         });
+      } else {
+        console.log("ERRORE:", json);
       }
     }
   }
@@ -93,7 +96,7 @@ const mutations = {
     // const id = event.id;
 
     //Rimuovere evento precedente nel calendario
-    // console.log("OLD", oldEvent);
+    console.log("OLD", oldEvent);
     state.calendar = calendarUtils.deleteEvent(state.calendar, oldEvent);
     // const events =
     //   state.calendar[oldDateBegin.getFullYear()][oldDateBegin.getMonth()][
