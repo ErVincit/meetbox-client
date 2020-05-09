@@ -1,5 +1,5 @@
 <template>
-  <p class="m-0">MeetBox</p>
+  <p class="logo m-0">MeetBox</p>
 </template>
 
 <script>

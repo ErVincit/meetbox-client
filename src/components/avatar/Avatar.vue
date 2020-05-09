@@ -26,7 +26,7 @@ export default {
   props: { firstname: String, lastname: String },
   data() {
     return {
-      color: colors[Math.floor(Math.random() * colors.length)],
+      color: colors[this.firstname.charCodeAt(0) % colors.length],
       showTooltip: false
     };
   },

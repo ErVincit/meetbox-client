@@ -1,19 +1,26 @@
 <template>
   <NeuContainer
-    class="task"
+    class="task d-flex"
     :disableHover="disableHover"
     v-bind="$attrs"
     v-on="$listeners"
   >
-    <Label name="prova" />
-    <p class="m-0 my-1">{{ task.title }}</p>
-    <div class="d-flex justify-content-end">
-      <Avatar
-        v-for="member in task.members"
-        :key="member.id"
-        :firstname="member.firstname"
-        :lastname="member.lastname"
-      />
+    <Label v-if="task.label" :label="task.label" />
+    <div class="flex-grow-1">
+      <div class="d-flex align-items-center">
+        <p class="m-0 my-1 ml-2 flex-grow-1">
+          {{ task.title }}
+        </p>
+        <p class="m-0">{{ task.completed ? " ✔️" : "" }}</p>
+      </div>
+      <div class="d-flex justify-content-end">
+        <Avatar
+          v-for="member in task.members"
+          :key="member.id"
+          :firstname="member.firstname"
+          :lastname="member.lastname"
+        />
+      </div>
     </div>
   </NeuContainer>
 </template>
@@ -29,10 +36,11 @@ export default {
     task: {
       title: String,
       description: String,
-      label: Number,
+      label: Object,
       deadline: Date,
       members: Array,
-      attachments: Array
+      attachments: Array,
+      completed: Boolean
     },
     disableHover: Boolean
   },

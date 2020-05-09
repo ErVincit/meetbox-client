@@ -45,6 +45,7 @@ export default {
       for (let i = 0; i < e.dataTransfer.files.length; i++)
         files.push(e.dataTransfer.files[i]);
       this.$emit("file-drop", files);
+      this.dragCounter = 0;
     });
   }
 };

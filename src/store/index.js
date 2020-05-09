@@ -3,6 +3,7 @@ import Vuex from "vuex";
 
 import tasks from "./tasks";
 import calendar from "./calendar";
+import workgroup from "./workgroup";
 
 Vue.use(Vuex);
 
@@ -16,7 +17,8 @@ export default new Vuex.Store({
   actions: {},
   modules: {
     tasks,
-    calendar
+    calendar,
+    workgroup
   },
   getters: {
     usersInformation: state => {

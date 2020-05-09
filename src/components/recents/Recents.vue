@@ -67,6 +67,8 @@
 <script>
 import NeuButton from "@/components/neu-button/NeuButton";
 
+import { mapActions } from "vuex";
+
 export default {
   name: "Recents",
   props: {
@@ -77,6 +79,10 @@ export default {
     }
   },
   components: { NeuButton },
+  methods: mapActions(["fetchWorkgroups"]),
+  mounted() {
+    this.fetchWorkgroups();
+  },
   computed: {
     hideDrive() {
       return this.currentPage === "drive";

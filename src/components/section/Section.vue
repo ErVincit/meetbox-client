@@ -60,7 +60,7 @@
           </div>
         </div>
       </NeuContainer>
-      <BigAddButton v-else @click.stop="addingTask = true"
+      <BigAddButton class="mt-3" v-else @click.stop="addingTask = true"
         >Aggiungi una nuova attività</BigAddButton
       >
     </div>

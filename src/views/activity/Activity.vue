@@ -4,21 +4,23 @@
     <div id="page-content" class="row flex-grow-1">
       <Recents currentPage="activity" />
       <main class="col col-lg-9 d-flex flex-column">
-        <p class="m-0">Attività</p>
-        <hr class="mt-0 mb-2" />
-        <div class="row p-2 pb-4 flex-grow-1 align-items-start">
+        <p class="page__title m-0">Attività</p>
+        <hr class="m-0" />
+        <div
+          class="row pl-3 py-3 flex-grow-1 align-items-start flex-nowrap overflow-auto"
+        >
           <p v-if="!allTasks">Caricamento...</p>
-          <Section
-            class="mx-2 p-3"
-            v-for="section in allTasks"
-            :key="section.id"
-            :id="section.id"
-            :title="section.title"
-            :tasks="section.tasks"
-            @showTask="showTask(section.id, ...arguments)"
-            @drag-start="handleDragStart(section.id, ...arguments)"
-            @drag-end="dragging = false"
-          />
+          <div class="pr-3" v-for="section in allTasks" :key="section.id">
+            <Section
+              class="px-3 py-3"
+              :id="section.id"
+              :title="section.title"
+              :tasks="section.tasks"
+              @showTask="showTask(section.id, ...arguments)"
+              @drag-start="handleDragStart(section.id, ...arguments)"
+              @drag-end="dragging = false"
+            />
+          </div>
         </div>
         <TaskInspector
           v-if="showTaskInspector"
@@ -132,5 +134,12 @@ export default {
 .trash p {
   font-size: 30px;
   color: rgb(252, 109, 109);
+}
+
+@media (max-width: 991.98px) {
+  .page__title {
+    font-size: 2rem;
+    color: #2f80ed;
+  }
 }
 </style>

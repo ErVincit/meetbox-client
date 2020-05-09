@@ -1,6 +1,6 @@
 <template>
   <button
-    class="big-add-btn d-flex justify-content-center align-items-center mt-3"
+    class="big-add-btn d-flex justify-content-center align-items-center"
     @click="$emit('click', $event)"
   >
     <svg

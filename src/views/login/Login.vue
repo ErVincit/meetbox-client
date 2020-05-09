@@ -1,38 +1,64 @@
 <template>
-  <div>
-    <div class="login_container">
-      <NeuContainer class="p-4" disableHover>
-        <form
-          class="container-fluid d-flex flex-column align-items-center"
-          @submit.prevent="onSubmit"
+  <div class="login-container">
+    <NeuContainer class="p-4" disableHover>
+      <form
+        class="container-fluid h-100 d-flex flex-column align-items-center"
+        @submit.prevent="onSubmit"
+      >
+        <Logo class="flex-grow-1 my-5 my-md-0 d-flex align-items-center" />
+        <NeuInput
+          class="my-4 w-75"
+          type="email"
+          v-model="email"
+          placeholder="Email"
+          autofocus
+          autocomplete="username"
+        />
+        <NeuInput
+          class="my-4 w-75"
+          type="password"
+          v-model="password"
+          placeholder="Password"
+          autocomplete="current-password"
+        />
+        <p class="my-5 my-md-2">
+          Non hai un account? <router-link to="/signin">Registrati</router-link>
+        </p>
+        <NeuButton
+          class="my-3 mt-5 w-50"
+          backgroundColor="#2F80ED"
+          color="white"
+          :shadowRadius="2"
+          :shadowBlur="6"
+          >Accedi</NeuButton
         >
-          <Logo class="my-5" />
-          <NeuInput
-            class="my-4 w-75"
-            type="text"
-            v-model="email"
-            placeholder="Email"
-          />
-          <NeuInput
-            class="my-4 w-75"
-            type="password"
-            v-model="password"
-            placeholder="Password"
-          />
-          <p>Non hai un account? <span>Vaffanculo!</span></p>
-          <NeuButton
-            class="my-3 mt-5 w-50"
-            backgroundColor="#2F80ED"
-            color="white"
-            :shadowRadius="2"
-            :shadowBlur="6"
-            >Accedi</NeuButton
-          >
-        </form>
-      </NeuContainer>
+      </form>
+    </NeuContainer>
+    <div
+      v-if="showAlert"
+      class="alert alert-danger m-2 mb-4 fixed-bottom"
+      role="alert"
+    >
+      {{ alertMessage }}
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        @click="showAlert = false"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-    <img id="draw-left" src="@/assets/homepage-draw-left.svg" />
-    <img id="draw-right" src="@/assets/homepage-draw-right.svg" />
+    <img
+      id="draw-left"
+      class="d-none d-md-block"
+      src="@/assets/homepage-draw-left.svg"
+    />
+    <img
+      id="draw-right"
+      class="d-none d-md-block"
+      src="@/assets/homepage-draw-right.svg"
+    />
   </div>
 </template>
 
@@ -47,14 +73,19 @@ export default {
   name: "Login",
   components: { Logo, NeuButton, NeuContainer, NeuInput },
   data() {
-    return { email: "", password: "" };
+    return {
+      email: "",
+      password: "",
+      showAlert: false,
+      alertMessage: ""
+    };
   },
   created() {
     fetch(`${process.env.VUE_APP_SERVER_ADDRESS}/api/login/validate`, {
       method: "GET",
       credentials: "include"
     }).then(value => {
-      if (value.status === 200) this.$router.push("/17/drive");
+      if (value.ok) this.$router.push("/17/drive");
     });
   },
   methods: {
@@ -67,10 +98,16 @@ export default {
           headers: { "Content-Type": "application/json" },
           credentials: "include"
         }).then(async value => {
-          const message = await value.json();
-          if (message.data) {
-            Store.commit("usersInformation", message.data);
-            this.$router.push("/17/drive");
+          if (value.status === 401) {
+            this.alertMessage =
+              "Autenticazione fallita. Email e/o password non sono corretti";
+            this.showAlert = true;
+          } else {
+            const message = await value.json();
+            if (message.data) {
+              Store.commit("usersInformation", message.data);
+              this.$router.push("/17/drive");
+            }
           }
         });
       }
@@ -80,14 +117,34 @@ export default {
 </script>
 
 <style scoped>
-.login_container {
+.login-container > .neu-container {
   position: absolute;
-  height: 70%;
-  width: 30%;
+  min-width: 200px;
+  width: 40%;
+  max-width: 600px;
+  min-height: 500px;
+  height: 50%;
 
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+@media (max-width: 992px) {
+  .login-container > .neu-container {
+    width: 50%;
+    top: 50%;
+  }
+}
+@media (max-width: 768px) {
+  .login-container > .neu-container {
+    max-width: unset;
+    width: 100%;
+    height: 100%;
+  }
+  .login-container > .neu-container .logo {
+    flex-grow: unset !important;
+  }
 }
 
 #button_container {
@@ -107,13 +164,13 @@ export default {
 }
 
 #draw-left {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
 }
 
 #draw-right {
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
 }
