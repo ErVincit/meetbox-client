@@ -14,16 +14,18 @@
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
       <a class="navbar-brand text-left" href="#"><Logo /></a>
     </div>
+    <UserInfo />
   </nav>
 </template>
 
 <script>
 import Logo from "@/components/logo/Logo";
+import UserInfo from "./UserInfo";
 // import WorkgroupSelector from "./WorkgroupSelector";
 
 export default {
   name: "PageHeader",
-  components: { Logo }
+  components: { Logo, UserInfo }
 };
 </script>
 

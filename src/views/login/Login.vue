@@ -53,12 +53,13 @@
 </template>
 
 <script>
-import Store from "@/store/index";
 import Logo from "@/components/logo/Logo";
 import NeuButton from "@/components/neu-button/NeuButton";
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import NeuInput from "@/components/neu-button/NeuInput";
 import Alert from "@/components/alert/Alert";
+
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Login",
@@ -71,15 +72,17 @@ export default {
       alertMessage: ""
     };
   },
-  created() {
-    fetch(`${process.env.VUE_APP_SERVER_ADDRESS}/api/login/validate`, {
-      method: "GET",
-      credentials: "include"
-    }).then(value => {
-      if (value.ok) this.$router.push("/17/drive");
-    });
+  computed: mapGetters(["currentUser"]),
+  async created() {
+    if (this.currentUser) {
+      this.redirect();
+    } else {
+      await this.validateUser();
+      this.redirect();
+    }
   },
   methods: {
+    ...mapActions(["validateUser"]),
     onSubmit() {
       const { email, password } = this;
       if (email && password) {
@@ -96,12 +99,16 @@ export default {
           } else {
             const message = await value.json();
             if (message.data) {
-              Store.commit("usersInformation", message.data);
-              this.$router.push("/17/drive");
+              this.$store.commit("setCurrentUser", message.data);
+              this.redirect();
             }
           }
         });
       }
+    },
+    redirect() {
+      const lastWorkgroupId = "17"; // localStorage.getItem("lastWorkgroupId");
+      this.$router.push("/" + lastWorkgroupId + "/drive");
     }
   }
 };
