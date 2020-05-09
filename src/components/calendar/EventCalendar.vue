@@ -54,24 +54,16 @@ export default {
   watch: {
     rowWidth: function(val) {
       this.rowSizeX = val;
-      const max =
-        ((this.event.timestampBegin.getHours() * 60 +
-          this.event.timestampBegin.getMinutes()) *
-          val) /
-        (24 * 60);
-
-      this.$refs.event.style.left = `${max}px`;
-      if (this.event.timestampEnd) {
-        const length =
-          ((this.event.timestampEnd.getHours() * 60 +
-            this.event.timestampEnd.getMinutes()) *
-            val) /
-          (24 * 60);
-        this.$refs.event.style.width = `${length - max}px`;
-      }
+      this.setEventLeght(event);
     },
-    eventProps: function(val) {
-      this.event = val;
+    eventProps: function(event) {
+      this.event = event;
+      this.setEventLeght(event);
+    }
+  },
+  updated() {},
+  methods: {
+    setEventLeght() {
       this.event.timestampBegin = new Date(this.event.timestampBegin);
       this.event.timestampEnd = new Date(this.event.timestampEnd);
       const max =
@@ -89,10 +81,7 @@ export default {
           (24 * 60);
         this.$refs.event.style.width = `${length - max}px`;
       }
-    }
-  },
-  updated() {},
-  methods: {
+    },
     handleMousedown(e, event) {
       // console.log("MouseDown!");
       // Elimina la possibilità all'utente di selezionare testo
@@ -122,16 +111,6 @@ export default {
             this.newMinutes
           );
           // Controllo se è cambiato qualcosa
-          // console.log(
-          //   timestampBegin.getHours(),
-          //   this.newHour,
-          //   timestampBegin.getMinutes(),
-          //   this.newMinutes
-          // );
-          // console.log(
-          //   timestampBegin.getHours() == this.newHour &&
-          //     timestampBegin.getMinutes() == this.newMinutes
-          // );
           if (
             timestampBegin.getHours() == this.newHour &&
             timestampBegin.getMinutes() == this.newMinutes
@@ -149,7 +128,6 @@ export default {
             timestampEnd.setDate(timestampEnd.getDate() - 1);
             timestampEnd.setHours(23, 59);
           }
-          // console.log("End:", timestampEnd);
 
           this.event.timestampBegin = timestampBegin;
           this.event.timestampEnd = timestampEnd;
@@ -192,7 +170,6 @@ export default {
       const toLeft =
         document.getElementsByClassName("row__events_container")[0].offsetLeft +
         document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
-      // console.log(this.offSet, this.target, toLeft);s
       const newPos = e.clientX - toLeft - this.offSet - 15;
       const superMax =
         this.rowSizeX -
@@ -248,6 +225,7 @@ export default {
   width: 100px;
   height: 100%;
   background-color: #2f80ed;
+  color: black;
   border: 1px solid white;
   overflow: hidden;
   padding: 0;
@@ -264,7 +242,7 @@ export default {
 .event_resizer {
   position: absolute;
   height: 100%;
-  width: 25px;
+  width: 2px;
   cursor: col-resize;
   z-index: 25;
 }

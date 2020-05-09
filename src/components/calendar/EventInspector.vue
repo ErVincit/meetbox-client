@@ -1,14 +1,9 @@
 <template>
   <NeuContainer class="event-inspector w-50 px-5 py-4" disableHover>
-    <h3 class="hightlight font-weight-bold my-2" @click="showArea">
+    <!-- <h3 class="hightlight font-weight-bold my-2" @click="showArea">
       {{ event.title }}
-    </h3>
-    <!-- <NeuTextarea
-      :invisible="false"
-      :value="event.title"
-      :placeholder="'Titolo'"
-      ref="titleArea"
-    /> -->
+    </h3> -->
+    <NeuInput :placeholder="'Titolo'" v-model="event.title" @blur="setTitle" />
     <div class="d-flex">
       <div class="w-75">
         <div class="p-2">
@@ -35,8 +30,10 @@
         </div>
         <p class="hightlight mt-4">Descrizione:</p>
         <NeuTextarea
-          :value="event.description"
+          v-model="event.description"
           :placeholder="'Aggiungi qui la tua descrizione!'"
+          ref="description"
+          @blur="setDescription"
         />
       </div>
       <div class="p-5">
@@ -56,38 +53,58 @@
             >&times;</span
           >
         </li>
-        <BigAddButton>Aggiungi un nuovo membro</BigAddButton>
+        <BigAddButton class="col mt-2" @click="showUserDropdown = true"
+          >Aggiungi un nuovo membro</BigAddButton
+        >
+        <UserDropdown
+          v-if="showUserDropdown"
+          :users="workgroupMembers"
+          :members="event.members"
+          @select-user="addMember"
+          @hide="showUserDropdown = false"
+        />
       </div>
     </div>
   </NeuContainer>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import NeuTextarea from "@/components/neu-button/NeuTextarea";
+import NeuInput from "@/components/neu-button/NeuInput";
 import BigAddButton from "@/components/section/BigAddButton";
 import Avatar from "@/components/avatar/Avatar";
+import UserDropdown from "@/components/task/UserDropdown";
 
 import calendarUtils from "@/views/calendar/calendar_utils";
 
 export default {
   name: "EventInspector",
-  components: { NeuContainer, BigAddButton, Avatar, NeuTextarea },
-  props: {
-    event: {
-      id: Number,
-      title: String,
-      description: String,
-      timestampBegin: Date,
-      timestampEnd: Date,
-      members: Array,
-      owner: String
-    }
+  components: {
+    NeuContainer,
+    BigAddButton,
+    Avatar,
+    NeuTextarea,
+    NeuInput,
+    UserDropdown
   },
+  props: ["event"],
+  //  {
+  // id: Number,
+  // title: String,
+  // description: String,
+  // timestampBegin: Date,
+  // timestampEnd: Date,
+  // members: Array,
+  // owner: String
+  // }
+  // },
   data() {
     return {
-      titleArea: true
+      titleArea: true,
+      showUserDropdown: false,
+      ourOldEvent: this.event
     };
   },
   mounted() {
@@ -107,16 +124,81 @@ export default {
     }
   },
   methods: {
-    removeMember(index) {
+    ...mapActions(["editEvent"]),
+    async addMember(member) {
+      const { workgroupId } = this.$route.params;
+      const newEvent = {
+        id: this.event.id,
+        members: [...this.event.members, member].map(m => m.id)
+      };
+      await this.editEvent({
+        workgroupId,
+        event: newEvent,
+        oldEvent: this.event
+      });
+      this.event.members.push(member);
+      this.showDropdown = false;
+    },
+    async setTitle() {
+      const { workgroupId } = this.$route.params;
+      this.event.members = null;
+
+      await this.editEvent({
+        workgroupId,
+        event: this.event,
+        oldEvent: {
+          description: this.ourOldEvent.description,
+          hasNext: this.ourOldEvent.hasNext,
+          hasPrevious: this.ourOldEvent.hasPrevious,
+          id: this.ourOldEvent.id,
+          members: this.ourOldEvent.members,
+          originalBegin: new Date(this.ourOldEvent.originalBegin),
+          originalEnd: new Date(this.ourOldEvent.originalEnd),
+          timestampBegin: new Date(this.ourOldEvent.timestampBegin),
+          timestampEnd: new Date(this.ourOldEvent.timestampEnd),
+          title: this.ourOldEvent.title,
+          workgroup: this.ourOldEvent.workgroup
+        }
+      });
+    },
+    async setDescription() {
+      const { workgroupId } = this.$route.params;
+      this.event.members = null;
+      await this.editEvent({
+        workgroupId,
+        event: this.event,
+        oldEvent: {
+          description: this.ourOldEvent.description,
+          hasNext: this.ourOldEvent.hasNext,
+          hasPrevious: this.ourOldEvent.hasPrevious,
+          id: this.ourOldEvent.id,
+          members: this.ourOldEvent.members,
+          originalBegin: new Date(this.ourOldEvent.originalBegin),
+          originalEnd: new Date(this.ourOldEvent.originalEnd),
+          timestampBegin: new Date(this.ourOldEvent.timestampBegin),
+          timestampEnd: new Date(this.ourOldEvent.timestampEnd),
+          title: this.ourOldEvent.title,
+          workgroup: this.ourOldEvent.workgroup
+        }
+      });
+    },
+    async removeMember(index) {
       this.event.members.splice(index, 1);
+      const { workgroupId } = this.$route.params;
+      const newEvent = {
+        id: this.event.id,
+        members: this.event.members.map(m => m.id)
+      };
+      await this.editEvent({
+        workgroupId,
+        event: newEvent,
+        oldEvent: this.ourOldEvent
+      });
     },
     showArea() {
-      // console.log(this.$refs.titleArea);
-      // this.$refs.titleArea.style.visibility = "visible";
       this.titleArea = false;
     },
     async dateTimeChange() {
-      console.log("EVENT---", this.event);
       const newBeginDate = new Date(this.$refs.begin_date.value);
       const split = this.$refs.begin_time.value.split(":");
       const h = Number.parseInt(split[0]);
@@ -129,7 +211,18 @@ export default {
       const mEnd = Number.parseInt(splitEnd[1]);
       newEndDate.setHours(hEnd, mEnd);
 
-      if (newEndDate < newBeginDate) return;
+      if (newEndDate < newBeginDate) {
+        var tb = this.event.timestampBegin;
+        var te = this.event.timestampEnd;
+        if (this.event.originalBegin && this.event.originalEnd) {
+          tb = this.event.originalBegin;
+          te = this.event.originalEnd;
+        }
+        this.$refs.begin_date.value = calendarUtils.dateToDateType(tb);
+        this.$refs.begin_time.value = calendarUtils.dateToTimeType(tb);
+        this.$refs.end_date.value = calendarUtils.dateToDateType(te);
+        this.$refs.end_time.value = calendarUtils.dateToTimeType(te);
+      }
       const newEvent = {
         id: this.event.id,
         timestampBegin: newBeginDate,
@@ -144,7 +237,17 @@ export default {
     }
   },
   computed: {
-    ...mapActions(["editEvent"])
+    ...mapGetters(["workgroups"]),
+    workgroupMembers() {
+      const { workgroupId } = this.$route.params;
+      return this.workgroups.find(wg => wg.id === parseInt(workgroupId))
+        .members;
+    }
+  },
+  watch: {
+    event: function(event) {
+      console.log("Event changed", event);
+    }
   }
 };
 </script>

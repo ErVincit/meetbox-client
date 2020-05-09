@@ -2,8 +2,6 @@
   <div
     class="avatar d-flex justify-content-center align-items-center rounded-circle"
     :style="{ backgroundColor: color }"
-    @mouseenter="showTooltip = true"
-    @mouseleave="showTooltip = false"
     v-tooltip="fullname"
   >
     <p class="m-0">{{ firstLetters }}</p>
@@ -26,8 +24,7 @@ export default {
   props: { firstname: String, lastname: String },
   data() {
     return {
-      color: colors[this.firstname.charCodeAt(0) % colors.length],
-      showTooltip: false
+      color: colors[this.firstname.charCodeAt(0) % colors.length]
     };
   },
   computed: {

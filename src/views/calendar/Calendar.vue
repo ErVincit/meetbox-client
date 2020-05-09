@@ -20,7 +20,6 @@
         <hr class="mt-0 mb-2" />
         <div class="flex-grow-1">
           <CalendarRow
-            class="ciotto"
             v-for="day in days"
             :key="day.day"
             :dataprops="day.events"
@@ -41,7 +40,7 @@
 
     <EventInspector
       v-if="showEventInspector"
-      ref="event-inspector"
+      ref="event_inspector"
       :event="eventToShow"
       @hide="showEventInspector = false"
     />
@@ -61,12 +60,8 @@ import calendarUtils from "./calendar_utils";
 
 const handleOutsideClick = function(event) {
   if (!this.showEventInspector) return;
-  const eventInspector = this.$refs["event-inspector"].$vnode.elm;
-  if (!eventInspector.contains(event.target)) {
-    // console.log("Esco dall'intefaccia modale");
-    // TODO: Connettere tutto quanto amico
-    this.showEventInspector = false;
-  }
+  const eventInspector = this.$refs["event_inspector"].$vnode.elm;
+  if (!eventInspector.contains(event.target)) this.showEventInspector = false;
 };
 
 export default {

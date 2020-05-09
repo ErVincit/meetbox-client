@@ -31,6 +31,13 @@
         {{ user.firstname }} {{ user.lastname }}
       </li>
     </transition-group>
+
+    <div
+      class="d-flex justify-content-center m-3 pt-2"
+      v-if="shownUsers.length === 0"
+    >
+      ⚠️ Non ci sono altri membri ⚠️
+    </div>
   </NeuContainer>
 </template>
 
@@ -41,18 +48,32 @@ import Avatar from "@/components/avatar/Avatar";
 
 export default {
   name: "UserDropdown",
-  props: { users: Array },
+  props: { users: Array, members: Array },
   data() {
-    return { keyword: "" };
+    return { keyword: "", membersD: this.members };
   },
   components: { NeuContainer, NeuInput, Avatar },
   computed: {
     shownUsers() {
       return this.users.filter(
-        ({ firstname, lastname }) =>
-          firstname.toLowerCase().includes(this.keyword.toLowerCase()) ||
-          lastname.toLowerCase().includes(this.keyword.toLowerCase())
+        ({ firstname, lastname, id }) =>
+          (firstname.toLowerCase().includes(this.keyword.toLowerCase()) ||
+            lastname.toLowerCase().includes(this.keyword.toLowerCase())) &&
+          this.includeUser(id)
       );
+    }
+  },
+  methods: {
+    includeUser: function(id) {
+      if (!this.members) this.membersD = [];
+      for (let i = 0; i < this.membersD.length; i++)
+        if (this.members[i].id == id) return false;
+      return true;
+    }
+  },
+  watch: {
+    members: function(val) {
+      this.membersD = val;
     }
   }
 };

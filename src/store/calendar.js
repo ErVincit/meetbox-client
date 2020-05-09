@@ -26,7 +26,11 @@ const actions = {
       }
     );
     const json = await response.json();
-    commit("setEvents", json.data);
+    if (!json.error) {
+      commit("setEvents", json.data);
+    } else {
+      console.log(json);
+    }
   },
   async addEvent({ commit }, { workgroupId, event }) {
     const response = await fetch(
@@ -39,17 +43,23 @@ const actions = {
       }
     );
     const json = await response.json();
-    commit("newEvent", json.data);
+    if (!json.error) {
+      commit("newEvent", json.data);
+    } else {
+      console.log(json);
+    }
   },
   // eslint-disable-next-line no-unused-vars
   async editEvent({ commit }, { workgroupId, event, oldEvent }) {
     //Faccio richiesta
+    oldEvent.timestampBegin = new Date(oldEvent.timestampBegin);
+    oldEvent.timestampEnd = new Date(oldEvent.timestampEnd);
 
     //TODO: Passare intero giorno dell'evento
     if (event.hasNext || event.hasPrevious) {
-      console.log("Sto passando al server un giorno segmentato");
-      event.timestampBegin = event.originalBegin;
-      event.timestampEnd = event.originalEnd;
+      // console.log("Sto passando al server un giorno segmentato");
+      event.timestampBegin = new Date(event.originalBegin);
+      event.timestampEnd = new Date(event.originalEnd);
     }
     const response = await fetch(
       `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/calendar/event/${event.id}`,
@@ -65,13 +75,16 @@ const actions = {
       if (!json.error) {
         json.data.timestampBegin = new Date(json.data.timestampBegin);
         json.data.timestampEnd = new Date(json.data.timestampEnd);
-        console.log("Ricevuto:", json.data);
         commit("changeEvent", {
           event: json.data,
           oldEvent
         });
       } else {
         console.log("ERRORE:", json);
+        commit("changeEvent", {
+          event: oldEvent,
+          oldEvent
+        });
       }
     }
   }
@@ -89,34 +102,9 @@ const mutations = {
     console.log(state, event);
   },
   changeEvent: (state, { event, oldEvent }) => {
-    // const oldDateBegin = oldEvent.timestampBegin;
-    // const oldDateEnd = oldEvent.timestampEnd;
-    // console.log(oldDateBegin, oldDateEnd);
-    // const newDate = new Date(event.timestampBegin);
-    // const id = event.id;
-
     //Rimuovere evento precedente nel calendario
-    console.log("OLD", oldEvent);
     state.calendar = calendarUtils.deleteEvent(state.calendar, oldEvent);
-    // const events =
-    //   state.calendar[oldDateBegin.getFullYear()][oldDateBegin.getMonth()][
-    //     oldDateBegin.getDate()
-    //   ].events;
-    // for (let i = 0; i < events.length; i++)
-    //   if (events[i].id == id) {
-    //     state.calendar[oldDateBegin.getFullYear()][oldDateBegin.getMonth()][
-    //       oldDateBegin.getDate()
-    //     ].events.splice(i, 1);
-    //   }
-
-    //Aggiungere nuovo evento nel calendario
-    // state.calendar[newDate.getFullYear()][newDate.getMonth()][
-    //   newDate.getDate()
-    // ].events.push(event);
-    // state.calendar[newDate.getFullYear()][newDate.getMonth()][
-    //   newDate.getDate()
-    // ].events.sort((a, b) => (a.id > b.id ? 1 : -1));
-
+    //Aggiunge l'evento salvato nel server nello stato
     state.calendar = calendarUtils.interpolateCalendarEvents(state.calendar, [
       event
     ]);
