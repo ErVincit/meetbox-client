@@ -7,14 +7,33 @@ const getters = {
 };
 
 const actions = {
+  async loginUser({ commit }, credentials) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/login`;
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(credentials),
+      headers: { "Content-Type": "application/json" },
+      credentials: "include"
+    });
+    if (response.ok) {
+      const message = await response.json();
+      commit("setCurrentUser", message.data);
+      return true;
+    }
+    return false;
+  },
   async validateUser({ commit }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/login/validate`;
     const response = await fetch(url, {
       method: "GET",
       credentials: "include"
     });
-    const json = await response.json();
-    if (response.ok) commit("setCurrentUser", json.data);
+    if (response.ok) {
+      const json = await response.json();
+      commit("setCurrentUser", json.data);
+      return true;
+    }
+    return false;
   }
 };
 

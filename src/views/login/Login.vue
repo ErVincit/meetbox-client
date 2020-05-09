@@ -77,33 +77,21 @@ export default {
     if (this.currentUser) {
       this.redirect();
     } else {
-      await this.validateUser();
-      this.redirect();
+      const validated = await this.validateUser();
+      if (validated) this.redirect();
     }
   },
   methods: {
-    ...mapActions(["validateUser"]),
-    onSubmit() {
+    ...mapActions(["validateUser", "loginUser"]),
+    async onSubmit() {
       const { email, password } = this;
       if (email && password) {
-        fetch(`${process.env.VUE_APP_SERVER_ADDRESS}/api/login`, {
-          method: "POST",
-          body: JSON.stringify({ email, password }),
-          headers: { "Content-Type": "application/json" },
-          credentials: "include"
-        }).then(async value => {
-          if (value.status === 401) {
-            this.alertMessage =
-              "Autenticazione fallita. Email e/o password non sono corretti";
-            this.showAlert = true;
-          } else {
-            const message = await value.json();
-            if (message.data) {
-              this.$store.commit("setCurrentUser", message.data);
-              this.redirect();
-            }
-          }
-        });
+        const logged = await this.loginUser({ email, password });
+        if (logged) this.redirect();
+        else {
+          this.alertMessage = "Autenticazione fallita. Riprovare...";
+          this.showAlert = true;
+        }
       }
     },
     redirect() {
