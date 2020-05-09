@@ -1,5 +1,5 @@
 <template>
-  <NeuButton class="mt-3 rounded-pill">
+  <NeuButton class="mt-3 rounded-pill" v-bind="$attrs" v-on="$listeners">
     <div class="d-flex">
       <div class="document justify-content-start w-25">
         <img class="mx-2" src="@/assets/folderIcon.png" ref="ciccio" />
@@ -47,7 +47,6 @@ export default {
       var u = -1;
       do {
         bytes /= thresh;
-        console.log(bytes);
         ++u;
       } while (Math.abs(bytes) >= thresh && u < units.length - 1);
       return bytes.toFixed(1) + " " + units[u];

@@ -41,10 +41,7 @@ export default {
     });
 
     this.$refs.fileform.addEventListener("drop", e => {
-      const files = [];
-      for (let i = 0; i < e.dataTransfer.files.length; i++)
-        files.push(e.dataTransfer.files[i]);
-      this.$emit("file-drop", files);
+      this.$emit("file-drop", e.dataTransfer.files);
       this.dragCounter = 0;
     });
   }

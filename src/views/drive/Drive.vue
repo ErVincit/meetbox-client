@@ -3,43 +3,65 @@
     <PageHeader />
     <div id="page-content" class="row flex-grow-1">
       <Recents currentPage="drive" />
-      <main class="col col-lg-9">
+      <main class="col col-lg-9 d-flex flex-column">
         <p class="m-0">Drive</p>
         <hr class="mt-0 mb-2" />
-        <div class="d-flex mt-3">
+        <div class="d-flex mt-3 px-4">
           <div class="d-flex w-50 align-items-center">
             <NeuInput placeholder="Cerca..." />
           </div>
           <div class="d-flex w-50 justify-content-end">
-            <NeuButton class="w-50 rounded-pill">
+            <NeuButton class="w-50 rounded-pill" @click="$refs.file.click()">
               <div class="d-flex justify-content-center align-items-center">
-                <img class="mx-3" src="@/assets/cloud-upload.svg" />
+                <img class="mr-3" src="@/assets/cloud-upload.svg" />
                 <p class="carica m-0">Carica</p>
               </div>
             </NeuButton>
+            <input
+              class="d-none"
+              ref="file"
+              type="file"
+              @change="addFiles($refs.file.files)"
+            />
           </div>
         </div>
-        <div class="d-flex mt-3">
-          <div class="header w-25">
-            Nome
+        <FileDropArea
+          @file-enter="draggingFile = true"
+          @file-leave="draggingFile = false"
+          @file-drop="handleFileDrop"
+          class="flex-grow-1 m-1"
+        >
+          <div class="position-relative w-100 h-100 p-2 d-flex flex-column">
+            <div
+              v-if="draggingFile"
+              class="drag-title d-flex justify-content-center align-items-center"
+            >
+              Rilascia il file per caricarlo sul Drive
+            </div>
+            <div class="d-flex mt-3 px-4">
+              <div class="header w-25">
+                Nome
+              </div>
+              <div class="header w-25">
+                Proprietario
+              </div>
+              <div class="header w-25">
+                Data
+              </div>
+              <div class="header w-25">
+                Dimensioni
+              </div>
+            </div>
+            <div class="documents px-4">
+              <Document
+                v-for="document in documents[currentPosition]"
+                :key="document.id"
+                :document="document"
+                @click="e => handleClick(e, document)"
+              />
+            </div>
           </div>
-          <div class="header w-25">
-            Proprietario
-          </div>
-          <div class="header w-25">
-            Data
-          </div>
-          <div class="header w-25">
-            Dimensioni
-          </div>
-        </div>
-        <div class="h-100 documents px-4">
-          <Document
-            v-for="document in rootItems"
-            :key="document.id"
-            :document="document"
-          />
-        </div>
+        </FileDropArea>
       </main>
       <div
         class="col col-lg-1 d-none d-lg-block"
@@ -55,17 +77,47 @@ import Recents from "@/components/recents/Recents";
 import Document from "@/components/document/Document";
 import NeuInput from "@/components/neu-button/NeuInput";
 import NeuButton from "@/components/neu-button/NeuButton";
+import FileDropArea from "@/components/task/FileDropArea";
 
 export default {
   name: "Drive",
-  components: { PageHeader, Recents, Document, NeuInput, NeuButton },
+  components: {
+    PageHeader,
+    Recents,
+    Document,
+    NeuInput,
+    NeuButton,
+    FileDropArea
+  },
   computed: {
     rootItems() {
       return this.documents["root"];
+    },
+    folderWithChild() {
+      return Object.keys(this.documents);
+    }
+  },
+  methods: {
+    addFiles(files) {
+      // TODO: upload file to server
+      for (const file of files) {
+        console.log("File uploaded!", file);
+      }
+    },
+    handleClick(e, document) {
+      console.log("Clicked", document.id);
+      if (document.isfolder && this.folderWithChild.includes(document.id + ""))
+        this.currentPosition = document.id;
+    },
+    handleFileDrop(files) {
+      // TODO: Upload to server
+      console.log("Uploading...", files);
     }
   },
   data() {
     return {
+      draggingFile: false,
+      currentPosition: "root",
       documents: {
         "14": [
           {
@@ -575,5 +627,16 @@ export default {
 }
 .documents {
   overflow: auto;
+}
+.drag-title {
+  border: 4px dashed purple;
+  border-radius: 10px;
+  position: absolute;
+  background-color: #efeeee;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 30px;
 }
 </style>
