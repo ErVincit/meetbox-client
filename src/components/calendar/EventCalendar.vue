@@ -27,6 +27,8 @@ export default {
         this.rowWidth) /
       (24 * 60);
     // console.log("MAX", max);
+    this.newHour = this.event.timestampBegin.getHours();
+    this.newMinutes = this.event.timestampBegin.getMinutes();
 
     this.$refs.event.style.left = `${max}px`;
     if (this.event.timestampEnd) {
@@ -99,6 +101,23 @@ export default {
             "minute",
             this.newMinutes
           );
+          // Controllo se è cambiato qualcosa
+          // console.log(
+          //   timestampBegin.getHours(),
+          //   this.newHour,
+          //   timestampBegin.getMinutes(),
+          //   this.newMinutes
+          // );
+          // console.log(
+          //   timestampBegin.getHours() == this.newHour &&
+          //     timestampBegin.getMinutes() == this.newMinutes
+          // );
+          if (
+            timestampBegin.getHours() == this.newHour &&
+            timestampBegin.getMinutes() == this.newMinutes
+          )
+            return;
+
           timestampBegin.setHours(this.newHour, this.newMinutes);
           const timestampEnd = calendarUtils.endTimestampCalculator(
             event.timestampBegin,
@@ -110,16 +129,20 @@ export default {
             timestampEnd.setDate(timestampEnd.getDate() - 1);
             timestampEnd.setHours(23, 59);
           }
-          console.log("End:", timestampEnd);
+          // console.log("End:", timestampEnd);
           const newEvent = {
             id: event.id,
             timestampBegin,
             timestampEnd
           };
+          if (this.event.originalBegin && this.event.originalEnd) {
+            event.timestampBegin = event.originalBegin;
+            event.timestampEnd = event.originalEnd;
+          }
           await this.$store.dispatch("editEvent", {
             workgroupId,
             event: newEvent,
-            oldDate: event.timestampBegin
+            oldEvent: event
           });
           this.disableClick = false;
         };
@@ -141,6 +164,7 @@ export default {
       }
     },
     handleMousemove(e) {
+      this.disableClick = true;
       const toLeft =
         document.getElementsByClassName("row__events_container")[0].offsetLeft +
         document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
@@ -165,7 +189,6 @@ export default {
         this.target.style.left = superMax + "px";
         // TODO: Assegnare valore massimi
       }
-      this.disableClick = true;
     },
     handleResizingLeft(e) {
       // e.preventDeafult();

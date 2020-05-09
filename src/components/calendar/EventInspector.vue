@@ -74,8 +74,12 @@ export default {
     }
   },
   mounted() {
-    const tb = this.event.timestampBegin;
-    const te = this.event.timestampEnd;
+    var tb = this.event.timestampBegin;
+    var te = this.event.timestampEnd;
+    if (this.event.originalBegin && this.event.originalEnd) {
+      tb = this.event.originalBegin;
+      te = this.event.originalEnd;
+    }
     if (tb) {
       this.$refs.begin_date.value = calendarUtils.dateToDateType(tb);
       this.$refs.begin_time.value = calendarUtils.dateToTimeType(tb);

@@ -256,7 +256,9 @@ exports.interpolateCalendarEvents = (calendar, events) => {
             title: event.title,
             description: event.description,
             hasNext: false,
-            hasPrevious: false
+            hasPrevious: false,
+            originalBegin: event.timestampBegin,
+            originalEnd: event.timestampEnd
           };
           if (this.checkSameDay(dateBegin, tempDate)) {
             eventChunk.timestampEnd = new Date(dateBegin);
@@ -304,4 +306,89 @@ exports.interpolateCalendarEvents = (calendar, events) => {
 
 exports.verifyAloneEvent = event => {
   return !(event.hasNext || event.hasPrevious);
+};
+
+exports.searchEvent = (events, event) => {
+  for (let i = 0; i <= events.length; i++) {
+    let localEvent = events[i];
+    if (localEvent.id == event.id) return i;
+  }
+  return -1;
+};
+
+exports.handleDeletePrevious = (calendar, event) => {
+  var tempEvent = event;
+  var tempDate = new Date(event.timestampBegin);
+  while (tempEvent.hasPrevious) {
+    tempDate = new Date(tempDate).setDate(tempDate.getDate() - 1);
+    const events =
+      calendar[tempDate.getFullYear()][tempDate.getMonth()][tempDate.getDate()]
+        .events;
+    const index = this.searchEvent(events, tempEvent);
+    if (index != -1) {
+      tempEvent =
+        calendar[tempDate.getFullYear()][tempDate.getMonth()][
+          tempDate.getDate()
+        ].events[index];
+      // Eliminare evento dalla lista di eventi
+      calendar[tempDate.getFullYear()][tempDate.getMonth()][
+        tempDate.getDate()
+      ].events.splice(index, 1);
+      // Il ciclo dovrebbe poi finire se hasPrevious è false
+    } else {
+      console.log(
+        "ERRORE: L'elemento che si vuole cancellare non è presente nella lista di eventi di appartenenza. Settaggio errato di qualche booleano hasPrevious"
+      );
+    }
+  }
+  return calendar;
+};
+
+exports.handleDeleteNext = (calendar, event) => {
+  var tempEvent = event;
+  var tempDate = new Date(event.timestampBegin);
+  while (tempEvent.hasNext) {
+    tempDate = new Date(tempDate).setDate(tempDate.getDate() + 1);
+    const events =
+      calendar[tempDate.getFullYear()][tempDate.getMonth()][tempDate.getDate()]
+        .events;
+    const index = this.searchEvent(events, tempEvent);
+    if (index != -1) {
+      tempEvent =
+        calendar[tempDate.getFullYear()][tempDate.getMonth()][
+          tempDate.getDate()
+        ].events[index];
+      // Eliminare evento dalla lista di eventi
+      calendar[tempDate.getFullYear()][tempDate.getMonth()][
+        tempDate.getDate()
+      ].events.splice(index, 1);
+      // Il ciclo dovrebbe poi finire se hasPrevious è false
+    } else {
+      console.log(
+        "ERRORE: L'elemento che si vuole cancellare non è presente nella lista di eventi di appartenenza. Settaggio errato di qualche booleano hasNext"
+      );
+    }
+  }
+  return calendar;
+};
+
+exports.deleteEvent = (calendar, event) => {
+  if (event.hasPrevious) calendar = this.handleDeletePrevious(calendar, event);
+  if (event.hasNext) calendar = this.handleDeleteNext(calendar, event);
+
+  var date = new Date(event.timestampBegin);
+  const events =
+    calendar[date.getFullYear()][date.getMonth()][date.getDate()].events;
+  const index = this.searchEvent(events, event);
+  if (index != -1) {
+    calendar[date.getFullYear()][date.getMonth()][date.getDate()].events.splice(
+      index,
+      1
+    );
+  } else {
+    console.log(
+      "ERRORE: L'elemento che si vuole cancellare non è presente nella lista di eventi di appartenenza"
+    );
+  }
+  return calendar;
 };

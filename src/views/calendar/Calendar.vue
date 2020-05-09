@@ -62,7 +62,11 @@ import calendarUtils from "./calendar_utils";
 const handleOutsideClick = function(event) {
   if (!this.showEventInspector) return;
   const eventInspector = this.$refs["event-inspector"].$vnode.elm;
-  if (!eventInspector.contains(event.target)) this.showEventInspector = false;
+  if (!eventInspector.contains(event.target)) {
+    // console.log("Esco dall'intefaccia modale");
+    // TODO: Connettere tutto quanto amico
+    this.showEventInspector = false;
+  }
 };
 
 export default {
