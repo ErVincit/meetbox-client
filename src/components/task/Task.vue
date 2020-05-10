@@ -5,7 +5,7 @@
     v-bind="$attrs"
     v-on="$listeners"
   >
-    <Label v-if="task.label" :label="task.label" />
+    <Label v-if="task.label" :label="label" />
     <div class="flex-grow-1">
       <div class="d-flex align-items-center">
         <p class="m-0 my-1 ml-2 flex-grow-1">
@@ -15,7 +15,7 @@
       </div>
       <div class="d-flex justify-content-end">
         <Avatar
-          v-for="member in task.members"
+          v-for="member in members"
           :key="member.id"
           :firstname="member.firstname"
           :lastname="member.lastname"
@@ -30,13 +30,15 @@ import NeuContainer from "@/components/neu-button/NeuContainer";
 import Label from "./Label";
 import Avatar from "@/components/avatar/Avatar";
 
+import { mapGetters } from "vuex";
+
 export default {
   name: "Task",
   props: {
     task: {
       title: String,
       description: String,
-      label: Object,
+      label: Number,
       deadline: Date,
       members: Array,
       attachments: Array,
@@ -44,7 +46,24 @@ export default {
     },
     disableHover: Boolean
   },
-  components: { NeuContainer, Label, Avatar }
+  components: { NeuContainer, Label, Avatar },
+  computed: {
+    ...mapGetters(["workgroups"]),
+    currentWorkgroup() {
+      const { workgroupId } = this.$route.params;
+      return this.workgroups.find(wg => wg.id === parseInt(workgroupId));
+    },
+    members() {
+      return this.currentWorkgroup.members.filter(m =>
+        this.task.members.includes(m.id)
+      );
+    },
+    label() {
+      return this.currentWorkgroup.labels.find(
+        label => label.id === this.task.label
+      );
+    }
+  }
 };
 </script>
 

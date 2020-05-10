@@ -145,7 +145,7 @@ export default {
     return {
       newTaskTitle: "",
       newTaskMembers: [],
-      newTaskLabel: { id: 1, name: "Prova", color: "123456" },
+      newTaskLabel: null,
       addingTask: false,
       showAlert: false,
       alertMessage: "",

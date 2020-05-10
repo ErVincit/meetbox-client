@@ -55,8 +55,9 @@
           <Label
             class="col"
             v-if="task.label"
-            :label="task.label"
+            :label="workgroupLabels.find(l => task.label === l.id)"
             @click="showLabelDropdown = true"
+            showName
           />
           <BigAddButton v-else class="col" @click="showLabelDropdown = true"
             >Aggiungi label</BigAddButton
@@ -82,7 +83,7 @@
             v-for="label in workgroupLabels"
             :key="label.id"
             :label="label"
-            @click.stop="setLabel(label)"
+            @click.stop="setLabel(label.id)"
           />
           <BigAddButton>Crea label</BigAddButton>
         </NeuContainer>
@@ -129,7 +130,9 @@
         <div class="col-12 col-md-6 pb-3 pb-md-0">
           <p class="col-auto highlight m-0 pb-2 pr-3 text-nowrap">🧑‍🤝‍🧑 Membri:</p>
           <Member
-            v-for="member in task.members"
+            v-for="member in workgroupMembers.filter(m =>
+              task.members.includes(m.id)
+            )"
             :key="member.id"
             :member="member"
             @remove="removeMember"
@@ -140,7 +143,7 @@
           <UserDropdown
             v-if="showUserDropdown"
             :users="workgroupMembers"
-            :members="task.members"
+            :members="workgroupMembers.filter(m => task.members.includes(m.id))"
             @select-user="addMember"
             @hide="showUserDropdown = false"
           />
@@ -288,31 +291,27 @@ export default {
     },
     addMember(member) {
       const { workgroupId } = this.$route.params;
-      console.log(this.task);
+      this.task.members.push(member.id);
       this.editTask({
         workgroupId,
         sectionId: this.sectionId,
         taskId: this.task.id,
-        editObject: { members: [...this.task.members, member].map(m => m.id) }
+        editObject: { members: this.task.members }
       });
-      this.task.members.push(member);
       this.showDropdown = false;
     },
     removeMember(member) {
       const { workgroupId } = this.$route.params;
-      const members = this.task.members.filter(m => m.id !== member.id);
+      const members = this.task.members.filter(id => id !== member.id);
       this.task.members = members;
       this.editTask({
         workgroupId,
         sectionId: this.sectionId,
         taskId: this.task.id,
-        editObject: {
-          members: members.map(m => m.id)
-        }
+        editObject: { members }
       });
     },
     setLabel(label) {
-      console.log(label);
       const { workgroupId } = this.$route.params;
       if (this.task.label && this.task.label.id === label.id) {
         // Remove label
@@ -330,7 +329,7 @@ export default {
           workgroupId,
           sectionId: this.sectionId,
           taskId: this.task.id,
-          editObject: { label: label.id }
+          editObject: { label: label }
         });
       }
       // this.showLabelDropdown = false;
