@@ -74,10 +74,10 @@ export default {
   overflow: hidden;
 }
 
-.avatar {
+.task .avatar {
   margin-right: -10px;
 }
-.avatar:last-child {
+.task .avatar:last-child {
   margin-right: 0px;
 }
 </style>

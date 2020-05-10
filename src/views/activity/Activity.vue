@@ -50,9 +50,29 @@
           </p>
         </NeuContainer>
       </main>
-      <div class="col col-lg-1 d-none d-lg-block" style="background-color: red">
-        <button @click="createSection">+</button>
-      </div>
+      <Actions>
+        <NeuButton
+          @click="createSection"
+          class="d-flex justify-content-center align-items-center mt-3"
+          style="width: 50px; height: 50px"
+        >
+          <img src="@/assets/addIcon.svg" v-tooltip:left="'Crea sezione'" />
+        </NeuButton>
+        <NeuButton
+          @click="createSection"
+          class="d-flex justify-content-center align-items-center mt-3"
+          style="width: 50px; height: 50px"
+        >
+          <img src="@/assets/folderIcon.png" v-tooltip:left="'Crea sezione'" />
+        </NeuButton>
+        <NeuButton
+          @click="createSection"
+          class="d-flex justify-content-center align-items-center mt-3"
+          style="width: 50px; height: 50px"
+        >
+          <img src="@/assets/pdfIcon.png" v-tooltip:left="'Crea sezione'" />
+        </NeuButton>
+      </Actions>
     </div>
   </div>
 </template>
@@ -64,6 +84,8 @@ import Section from "@/components/section/Section";
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import TaskInspector from "@/components/task/TaskInspector";
 import Loading from "@/components/loading/Loading";
+import NeuButton from "@/components/neu-button/NeuButton";
+import Actions from "@/components/actions/Actions";
 
 import { mapGetters, mapActions } from "vuex";
 import draggable from "vuedraggable";
@@ -94,6 +116,8 @@ export default {
     TaskInspector,
     NeuContainer,
     Loading,
+    NeuButton,
+    Actions,
     draggable
   },
   computed: mapGetters(["allTasks"]),
