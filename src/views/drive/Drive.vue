@@ -8,7 +8,11 @@
         <hr class="mt-0 mb-2" />
         <div class="d-flex mt-3 px-4">
           <div class="d-flex w-50 align-items-center">
-            <NeuInput placeholder="Cerca..." />
+            <NeuInput
+              type="text"
+              placeholder="Cerca..."
+              v-model="researchString"
+            />
           </div>
           <div class="d-flex w-50 justify-content-end">
             <NeuButton class="w-50 rounded-pill" @click="$refs.file.click()">
@@ -54,7 +58,7 @@
             </div>
             <div class="documents px-4">
               <Document
-                v-for="document in documents[currentPosition]"
+                v-for="document in filteredDocuments"
                 :key="document.id"
                 :document="document"
                 @click="e => handleClick(e, document)"
@@ -95,6 +99,11 @@ export default {
     },
     folderWithChild() {
       return Object.keys(this.documents);
+    },
+    filteredDocuments() {
+      return this.documents[this.currentPosition].filter(({ name }) =>
+        name.toLowerCase().includes(this.researchString.toLowerCase())
+      );
     }
   },
   methods: {
@@ -105,7 +114,6 @@ export default {
       }
     },
     handleClick(e, document) {
-      console.log("Clicked", document.id);
       if (document.isfolder && this.folderWithChild.includes(document.id + ""))
         this.currentPosition = document.id;
     },
@@ -118,6 +126,7 @@ export default {
     return {
       draggingFile: false,
       currentPosition: "root",
+      researchString: "",
       documents: {
         "14": [
           {
