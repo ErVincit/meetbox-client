@@ -6,14 +6,18 @@
     @click.stop="handleShowEvent"
     v-on="$listeners"
   >
-    <div class="event_resizer" @mousedown="handleResizingLeft"></div>
+    <div
+      v-if="isEditable"
+      class="event_resizer"
+      @mousedown="handleResizingLeft"
+    ></div>
     {{ event.title }}
-    <div class="event_resizer"></div>
+    <div v-if="isEditable" class="event_resizer"></div>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 import calendarUtils from "@/views/calendar/calendar_utils";
 
@@ -86,9 +90,11 @@ export default {
       // console.log("MouseDown!");
       // Elimina la possibilità all'utente di selezionare testo
       document.body.style.userSelect = "none";
+      console.log(this.isEditable);
       if (
-        e.path[0].className.split(" ").includes("event") &&
-        calendarUtils.verifyAloneEvent(event)
+        e.target.className.split(" ").includes("event") &&
+        calendarUtils.verifyAloneEvent(event) &&
+        this.isEditable
       ) {
         this.offSet = e.offsetX;
         this.target = e.target;
@@ -214,9 +220,18 @@ export default {
     // }
     handleShowEvent() {
       if (!this.disableClick) this.$emit("showEvent", this.event);
-    }
+    },
+    ...mapActions(["editEvent"])
   },
-  computed: mapActions(["editEvent"])
+  computed: {
+    ...mapGetters(["currentUser"]),
+    isEditable() {
+      for (let i = 0; i < this.event.members.length; i++)
+        if (this.event.members[i].id == this.currentUser.id) return true;
+      if (this.event.owner == this.currentUser.id) return true;
+      return false;
+    }
+  }
 };
 </script>
 
@@ -231,8 +246,9 @@ export default {
   padding: 0;
   margin: 0;
   border-radius: 8px;
-  text-align: center;
+  white-space: nowrap;
 
+  text-overflow: ellipsis;
   display: flex;
   flex-direction: column;
   justify-content: center;
