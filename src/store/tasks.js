@@ -62,6 +62,7 @@ const mutations = {
   setSections: (state, sections) => (state.sections = sections),
   setSection: (state, section) => {
     const sectionIndex = state.sections.findIndex(s => s.id === section.id);
+    section.tasks = state.sections[sectionIndex].tasks;
     state.sections[sectionIndex] = section;
   },
   setTasks: (state, { sectionId, tasks }) =>

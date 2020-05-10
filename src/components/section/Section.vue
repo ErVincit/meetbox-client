@@ -6,6 +6,7 @@
         class="m-0 col rounded-pill p-0"
         v-model="section.title"
         @blur="setTitle"
+        @focus="$emit('start-editing')"
         backgroundHidden
       />
       <div class="dropdown col-auto px-2">
@@ -246,6 +247,7 @@ export default {
         sectionId: this.section.id,
         editObject: { title: this.section.title }
       });
+      this.$emit("end-editing");
     }
   }
 };

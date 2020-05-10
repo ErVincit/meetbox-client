@@ -10,7 +10,12 @@
           class="row pl-3 py-3 flex-grow-1 align-items-start flex-nowrap overflow-auto"
         >
           <Loading :show="!allTasks" />
-          <draggable :list="allTasks" ghost-class="ghost" class="d-flex">
+          <draggable
+            :list="allTasks"
+            :disabled="editingSection"
+            ghost-class="ghost"
+            class="d-flex"
+          >
             <div class="pr-3" v-for="section in allTasks" :key="section.id">
               <Section
                 class="px-3 py-3"
@@ -18,6 +23,8 @@
                 @showTask="showTask(section.id, ...arguments)"
                 @drag-start="handleDragStart(section.id, ...arguments)"
                 @drag-end="dragging = false"
+                @start-editing="editingSection = true"
+                @end-editing="editingSection = false"
               />
             </div>
           </draggable>
@@ -76,7 +83,8 @@ export default {
       taskToShow: null,
       sectionToShow: null,
       dragging: false,
-      draggingItemInfo: null
+      draggingItemInfo: null,
+      editingSection: false
     };
   },
   components: {
