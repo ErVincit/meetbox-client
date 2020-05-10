@@ -45,8 +45,16 @@
     </draggable>
     <div class="add-task__container" ref="add-task__container">
       <NeuContainer v-if="addingTask" class="add-task mt-3 p-2" disableHover>
-        <div class="d-flex mb-2">
-          <SmallAddButton>Etichetta</SmallAddButton>
+        <div class="d-flex mb-2 align-items-center">
+          <Label
+            v-if="newTaskLabel"
+            :label="newTaskLabel"
+            @click.stop="newTaskLabel = null"
+            showName
+          />
+          <SmallAddButton v-else @click="showLabelDropdown = true"
+            >Etichetta</SmallAddButton
+          >
           <SmallAddButton @click="showUserDropdown = true"
             >Membro</SmallAddButton
           >
@@ -104,6 +112,7 @@ import BigAddButton from "./BigAddButton";
 import SmallAddButton from "./SmallAddButton";
 import Avatar from "@/components/avatar/Avatar";
 import Alert from "@/components/alert/Alert";
+import Label from "@/components/task/Label";
 import UserDropdown from "@/components/task/UserDropdown";
 
 import { mapActions, mapGetters } from "vuex";
@@ -129,16 +138,19 @@ export default {
     Avatar,
     Alert,
     UserDropdown,
+    Label,
     draggable
   },
   data() {
     return {
       newTaskTitle: "",
       newTaskMembers: [],
+      newTaskLabel: { id: 1, name: "Prova", color: "123456" },
       addingTask: false,
       showAlert: false,
       alertMessage: "",
       showUserDropdown: false,
+      showLabelDropdown: false,
       dragging: false
     };
   },
@@ -176,8 +188,8 @@ export default {
           sectionId: this.section.id,
           task: {
             title: this.newTaskTitle,
-            label: null,
-            members: this.newTaskMembers
+            label: this.newTaskLabel,
+            members: this.newTaskMembers.map(m => m.id)
           }
         }).catch(err => {
           this.alertMessage = "Creazione task fallita. " + err.message;
@@ -185,12 +197,14 @@ export default {
         });
         this.newTaskTitle = "";
         this.newTaskMembers = [];
+        this.newTaskLabel = null;
       }
     },
     exitAddingTask() {
       this.addingTask = false;
       this.newTaskTitle = "";
       this.newTaskMembers = [];
+      this.newTaskLabel = null;
     },
     handleTextareaKeyup(event) {
       if (event.keyCode === 13) this.handleAddingTask();
@@ -287,6 +301,12 @@ export default {
 .add-task__close:hover {
   color: rgb(211, 76, 76) !important;
 }
+.add-task .label {
+  width: 25%;
+  height: 26px;
+  cursor: pointer;
+}
+
 .dropdown > button {
   border: none;
   outline: none;

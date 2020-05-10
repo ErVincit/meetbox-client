@@ -8,7 +8,7 @@
   >
     <input
       :type="type"
-      class="form-control rounded-pill px-4"
+      class="form-control rounded-pill"
       :placeholder="placeholder"
       :value="value"
       v-on="listeners"

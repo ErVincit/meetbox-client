@@ -22,7 +22,7 @@
           autocomplete="current-password"
         />
         <p class="my-5 my-md-2">
-          Non hai un account? <router-link to="/signin">Registrati</router-link>
+          Non hai un account? <router-link to="/signup">Registrati</router-link>
         </p>
         <NeuButton
           class="my-3 mt-5 w-50"
