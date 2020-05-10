@@ -90,7 +90,6 @@ export default {
       // console.log("MouseDown!");
       // Elimina la possibilità all'utente di selezionare testo
       document.body.style.userSelect = "none";
-      console.log(this.isEditable);
       if (
         e.target.className.split(" ").includes("event") &&
         calendarUtils.verifyAloneEvent(event) &&
