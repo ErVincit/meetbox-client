@@ -34,7 +34,7 @@ const actions = {
   },
   async addEvent({ commit }, { workgroupId, event }) {
     const response = await fetch(
-      `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/calendar/events`,
+      `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/calendar/event`,
       {
         method: "POST",
         body: JSON.stringify(event),
@@ -44,6 +44,10 @@ const actions = {
     );
     const json = await response.json();
     if (!json.error) {
+      console.log("Prima", json.data);
+      json.data.timestampBegin = new Date(json.data.timestampBegin);
+      json.data.timestampEnd = new Date(json.data.timestampEnd);
+      console.log("Dopo", json.data);
       commit("newEvent", json.data);
     } else {
       console.log(json);
@@ -99,7 +103,10 @@ const mutations = {
   setCalendar: (state, calendar) => (state.calendar = calendar),
   newEvent: (state, event) => {
     // Aggiungi evento a calendario
-    console.log(state, event);
+    //Aggiunge l'evento salvato nel server nello stato
+    state.calendar = calendarUtils.interpolateCalendarEvents(state.calendar, [
+      event
+    ]);
   },
   changeEvent: (state, { event, oldEvent }) => {
     //Rimuovere evento precedente nel calendario

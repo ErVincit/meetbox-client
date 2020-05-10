@@ -16,12 +16,18 @@
           <NeuButton @click="handleNext" class="calendar_button cb_rigth">
             <img src="../../assets/calendar-right.svg" />
           </NeuButton>
+          <NeuButton
+            @click.stop="addEvent"
+            class="position-absolute add_event l-0 cb_rigth"
+          >
+            <img src="../../assets/addIcon.svg" />
+          </NeuButton>
         </div>
         <hr class="mt-0 mb-2" />
         <div class="time-header d-flex m-0 p-0">
           <div class="dayContainer h-100 m-0 p-2"></div>
           <div class="event-container d-flex h-100 m-0 p-0">
-            <div class="pos-time h-100 w-25 d-flex justify-content-center">
+            <div class="pos-time h-100 w-25 d-flex justify-content-center pl-2">
               00:00
             </div>
             <div class="pos-time h-100 w-25 d-flex justify-content-center">
@@ -30,7 +36,7 @@
             <div class="pos-time h-100 w-25 d-flex justify-content-center">
               12:00
             </div>
-            <div class="pos-time h-100 w-25 d-flex justify-content-center">
+            <div class="pos-time h-100 w-25 d-flex justify-content-center pr-2">
               18:00
             </div>
           </div>
@@ -92,6 +98,7 @@
       ref="event_inspector"
       :event="eventToShow"
       @hide="showEventInspector = false"
+      @hideEventInspector="showEventInspector = false"
     />
   </div>
 </template>
@@ -124,6 +131,11 @@ export default {
   },
   components: { PageHeader, Recents, CalendarRow, NeuButton, EventInspector },
   methods: {
+    addEvent() {
+      console.log("presssed");
+      this.eventToShow = undefined;
+      this.showEventInspector = true;
+    },
     handlePrevious() {
       if (this.weeklyView) {
         this.currentDate = new Date(
@@ -231,6 +243,12 @@ export default {
 
 .calendar_button {
   width: 50px;
+}
+
+.add_event {
+  width: 50px;
+  right: 0;
+  margin-right: 10px;
 }
 
 .title_page {
