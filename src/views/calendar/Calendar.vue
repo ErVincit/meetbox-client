@@ -18,18 +18,67 @@
           </NeuButton>
         </div>
         <hr class="mt-0 mb-2" />
-        <div class="flex-grow-1">
-          <CalendarRow
-            v-for="day in days"
-            :key="day.day"
-            :dataprops="day.events"
-            :fullDayEvents="day.fullDayEvents"
-            :rowSizeX="rowSizeX"
-            :nameDay="day.nameDay"
-            :day="day.day"
-            @showEvent="showEvent(...arguments)"
+        <div class="time-header d-flex m-0 p-0">
+          <div class="dayContainer h-100 m-0 p-2"></div>
+          <div class="event-container d-flex h-100 m-0 p-0">
+            <div class="pos-time h-100 w-25 d-flex justify-content-center">
+              00:00
+            </div>
+            <div class="pos-time h-100 w-25 d-flex justify-content-center">
+              06:00
+            </div>
+            <div class="pos-time h-100 w-25 d-flex justify-content-center">
+              12:00
+            </div>
+            <div class="pos-time h-100 w-25 d-flex justify-content-center">
+              18:00
+            </div>
+          </div>
+          <div
+            class="pos-time fullDayEvent h-100 m-0 p-0 d-flex justify-content-center"
           >
-          </CalendarRow>
+            23:59
+          </div>
+        </div>
+        <div class="space-header d-flex m-0 p-0">
+          <div class="dayContainer h-100 m-0 p-2 ml"></div>
+          <div class="event-container d-flex h-100 m-0 p-0">
+            <div class="mr h-100 w-25"></div>
+            <div class="mr h-100 w-25"></div>
+            <div class="mr h-100 w-25"></div>
+            <div class="h-100 w-25"></div>
+          </div>
+          <div class="fullDayEvent h-100 m-0 p-0 ml"></div>
+        </div>
+        <div class="position-relative h-100 w-100 m-0 p-0">
+          <div class="position-absolute h-100 w-100 p-0 m-0">
+            <div
+              class="background d-flex m-0 p-0"
+              v-for="day in days"
+              :key="day.day + 'back'"
+            >
+              <div class="dayContainer h-100 m-0 p-2"></div>
+              <div class="event-container d-flex h-100 m-0 p-0">
+                <div class="mr h-100 w-25"></div>
+                <div class="mr h-100 w-25"></div>
+                <div class="mr h-100 w-25"></div>
+                <div class="h-100 w-25"></div>
+              </div>
+              <div class="fullDayEvent h-100 m-0 p-0"></div>
+            </div>
+          </div>
+          <div class="h-100 w-100">
+            <CalendarRow
+              v-for="day in days"
+              :key="day.day"
+              :dataprops="day.events"
+              :fullDayEvents="day.fullDayEvents"
+              :nameDay="day.nameDay"
+              :day="day.day"
+              @showEvent="showEvent(...arguments)"
+            >
+            </CalendarRow>
+          </div>
         </div>
       </main>
       <div
@@ -50,7 +99,7 @@
 <script>
 import PageHeader from "@/components/page-header/PageHeader";
 import Recents from "@/components/recents/Recents";
-import CalendarRow from "./CalendarRow";
+import CalendarRow from "@/components/calendar/CalendarRow";
 import NeuButton from "@/components/neu-button/NeuButton";
 import EventInspector from "@/components/calendar/EventInspector";
 
@@ -213,6 +262,10 @@ export default {
   margin: auto;
 }
 
+.dayContainer {
+  width: 25%;
+}
+
 .calendar_button {
   width: 50px;
 }
@@ -220,5 +273,44 @@ export default {
 .title_page {
   color: #1c4885;
   font-size: 24px;
+}
+
+.background {
+  height: calc(100% / 7);
+  width: 100%;
+  border-bottom: 1px solid rgb(194, 194, 194);
+  overflow: hidden;
+
+  padding: 0;
+  margin: 0;
+}
+
+.fullDayEvent {
+  width: 15%;
+}
+
+.event-container {
+  width: 100%;
+}
+
+.mr {
+  border-right: 1px solid rgb(194, 194, 194);
+}
+
+.bl {
+  border-left: 1px solid rgb(194, 194, 194);
+}
+
+.time-header {
+  height: 25px;
+}
+.space-header {
+  height: 5px;
+}
+
+.pos-time {
+  transform: translateX(-50%);
+  font-size: 16px;
+  color: #787878;
 }
 </style>

@@ -87,6 +87,7 @@ export default {
 <style>
 .row__events_container {
   height: auto;
+  width: 100%;
   padding: 0;
   margin: 0;
 }
