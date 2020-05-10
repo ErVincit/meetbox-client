@@ -88,7 +88,20 @@
         </NeuContainer>
         <div class="col-12 col-xl-6 d-flex align-items-center pb-3">
           <p class="col-auto highlight m-0 pr-3 text-nowrap">📅 Scadenza:</p>
-          <NeuButton class="col">{{ deadlineString }}</NeuButton>
+          <div class="col p-0" style="min-width: 0px">
+            <NeuInput
+              type="date"
+              class="mb-1"
+              v-model="deadlineDate"
+              @blur="setDeadline"
+            />
+            <NeuInput
+              type="time"
+              class="mt-1"
+              v-model="deadlineTime"
+              @blur="setDeadline"
+            />
+          </div>
         </div>
       </div>
       <div class="row mb-4">
@@ -127,6 +140,7 @@
           <UserDropdown
             v-if="showUserDropdown"
             :users="workgroupMembers"
+            :members="task.members"
             @select-user="addMember"
             @hide="showUserDropdown = false"
           />
@@ -184,6 +198,40 @@ export default {
       return this.task.deadline
         ? calendarUtils.dateToString(new Date(this.task.deadline))
         : "Aggiungi";
+    },
+    deadlineDate: {
+      get() {
+        // The deadline isn't set
+        if (!this.task.deadline) return null;
+        return calendarUtils.dateToDateType(new Date(this.task.deadline));
+      },
+      set(value) {
+        const date = this.task.deadline
+          ? new Date(this.task.deadline)
+          : new Date();
+        const array = value.split("-");
+        date.setDate(array[2]);
+        date.setMonth(array[1]);
+        date.setFullYear(array[0]);
+        this.task.deadline = date.getTime();
+      }
+    },
+    deadlineTime: {
+      get() {
+        // The deadline isn't set
+        if (!this.task.deadline) return null;
+        return calendarUtils.dateToTimeType(new Date(this.task.deadline));
+      },
+      set(value) {
+        if (!value) return;
+        const date = this.task.deadline
+          ? new Date(this.task.deadline)
+          : new Date();
+        const time = value.split(":");
+        date.setHours(time[0]);
+        date.setMinutes(time[1]);
+        this.task.deadline = date;
+      }
     },
     ...mapGetters(["workgroups"]),
     workgroupMembers() {
@@ -303,6 +351,15 @@ export default {
         sectionId: this.sectionId,
         taskId: this.task.id,
         editObject: { title: this.task.title }
+      });
+    },
+    setDeadline() {
+      const { workgroupId } = this.$route.params;
+      this.editTask({
+        workgroupId,
+        sectionId: this.sectionId,
+        taskId: this.task.id,
+        editObject: { deadline: this.task.deadline }
       });
     }
   }

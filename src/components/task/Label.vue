@@ -1,10 +1,12 @@
 <template>
   <div
-    class="label rounded-pill"
+    class="label rounded-pill d-flex justify-content-center align-items-center"
     :style="style"
     v-bind="$attrs"
     v-on="$listeners"
-  />
+  >
+    <span v-if="showName">{{ label.name }}</span>
+  </div>
 </template>
 
 <script>
@@ -12,7 +14,7 @@ export default {
   name: "Label",
   props: {
     label: { name: String, color: String },
-    expanded: { type: Boolean, default: false }
+    showName: { type: Boolean, default: false }
   },
   computed: {
     style() {
@@ -32,5 +34,6 @@ export default {
 }
 span {
   color: white;
+  font-size: 12px;
 }
 </style>

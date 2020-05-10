@@ -1,9 +1,18 @@
 <template>
   <NeuContainer class="event-inspector w-50 px-5 py-4" disableHover>
-    <!-- <h3 class="hightlight font-weight-bold my-2" @click="showArea">
+    <h3
+      v-if="!isEditable"
+      class="hightlight font-weight-bold my-2"
+      @click="showArea"
+    >
       {{ event.title }}
-    </h3> -->
-    <NeuInput :placeholder="'Titolo'" v-model="event.title" @blur="setTitle" />
+    </h3>
+    <NeuInput
+      v-if="isEditable"
+      :placeholder="'Titolo'"
+      v-model="event.title"
+      @blur="setTitle"
+    />
     <div class="d-flex">
       <div class="w-75">
         <div class="p-2">
@@ -14,8 +23,18 @@
               </p>
             </div>
             <div class="datetime_calendar">
-              <input type="date" ref="begin_date" @change="dateTimeChange" />
-              <input type="time" ref="begin_time" @change="dateTimeChange" />
+              <input
+                type="date"
+                ref="begin_date"
+                @change="dateTimeChange"
+                :disabled="!isEditable"
+              />
+              <input
+                type="time"
+                ref="begin_time"
+                @change="dateTimeChange"
+                :disabled="!isEditable"
+              />
             </div>
           </div>
           <div class="d-flex">
@@ -23,18 +42,30 @@
               <p class="hightlight p-0 m-0 col-sm-4">Fine</p>
             </div>
             <div class="datetime_calendar">
-              <input type="date" ref="end_date" @change="dateTimeChange" />
-              <input type="time" ref="end_time" @change="dateTimeChange" />
+              <input
+                type="date"
+                ref="end_date"
+                @change="dateTimeChange"
+                :disabled="!isEditable"
+              />
+              <input
+                type="time"
+                ref="end_time"
+                @change="dateTimeChange"
+                :disabled="!isEditable"
+              />
             </div>
           </div>
         </div>
         <p class="hightlight mt-4">Descrizione:</p>
         <NeuTextarea
+          v-if="isEditable"
           v-model="event.description"
           :placeholder="'Aggiungi qui la tua descrizione!'"
           ref="description"
           @blur="setDescription"
         />
+        <p class="pl-3" v-if="!isEditable">{{ event.description }}</p>
       </div>
       <div class="p-5">
         <p class="hightlight">🧑‍🤝‍🧑 Assegnato:</p>
@@ -53,7 +84,10 @@
             >&times;</span
           >
         </li>
-        <BigAddButton class="col mt-2" @click="showUserDropdown = true"
+        <BigAddButton
+          class="col mt-2"
+          v-if="isEditable"
+          @click="showUserDropdown = true"
           >Aggiungi un nuovo membro</BigAddButton
         >
         <UserDropdown
@@ -237,11 +271,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["workgroups"]),
+    ...mapGetters(["workgroups", "currentUser"]),
     workgroupMembers() {
       const { workgroupId } = this.$route.params;
       return this.workgroups.find(wg => wg.id === parseInt(workgroupId))
         .members;
+    },
+    isEditable() {
+      for (let i = 0; i < this.event.members.length; i++)
+        if (this.event.members[i].id == this.currentUser.id) return true;
+      if (this.event.owner == this.currentUser.id) return true;
+      return false;
     }
   },
   watch: {

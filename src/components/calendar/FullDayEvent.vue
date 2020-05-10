@@ -34,7 +34,9 @@ export default {
   margin: 0;
   border-radius: 8px;
   text-align: center;
+  white-space: nowrap;
 
+  text-overflow: ellipsis;
   display: flex;
   flex-direction: column;
   justify-content: center;
