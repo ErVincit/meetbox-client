@@ -2,7 +2,7 @@
   <NeuButton class="mt-3 rounded-pill" v-bind="$attrs" v-on="$listeners">
     <div class="d-flex">
       <div class="document justify-content-start w-25">
-        <img class="mx-2" src="@/assets/folderIcon.png" ref="ciccio" />
+        <img class="mx-2" src="@/assets/folderIcon.png" ref="icon" />
         {{ document.name }}
       </div>
       <div class="document w-25">
@@ -30,6 +30,32 @@ export default {
       new Date(this.document.creationdate)
     );
     this.size = this.humanFileSize(this.document.size);
+    if (this.document.name.includes(".")) {
+      var ext = this.document.name.split(".").pop();
+      console.log(ext);
+      switch (ext) {
+        case "mp3":
+          this.$refs.icon.src = require("@/assets/audioIcon.png");
+          break;
+        case "mp4":
+        case "mov":
+        case "avi":
+          this.$refs.icon.src = require("@/assets/videoIcon.png");
+          break;
+        case "png":
+        case "jpeg":
+        case "svg":
+          this.$refs.icon.src = require("@/assets/imageIcon.png");
+          break;
+        case "pdf":
+          this.$refs.icon.src = require("@/assets/pdfIcon.png");
+          break;
+        case "zip":
+        case "rar":
+          this.$refs.icon.src = require("@/assets/zipIcon.png");
+          break;
+      }
+    }
   },
   data() {
     return {

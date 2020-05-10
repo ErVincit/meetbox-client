@@ -362,6 +362,58 @@ export default {
             folder: 14,
             workgroup: 17,
             task: null
+          },
+          {
+            id: 59,
+            name: "file.pdf",
+            creationdate: "2020-04-27T00:18:39.000Z",
+            isfolder: false,
+            isnote: false,
+            path: "nomedellapath",
+            size: 10000,
+            owner: 10,
+            folder: 14,
+            workgroup: 17,
+            task: null
+          },
+          {
+            id: 60,
+            name: "file.jpeg",
+            creationdate: "2020-04-27T00:18:39.000Z",
+            isfolder: false,
+            isnote: false,
+            path: "nomedellapath",
+            size: 10000,
+            owner: 10,
+            folder: 14,
+            workgroup: 17,
+            task: null
+          },
+          {
+            id: 61,
+            name: "file.png",
+            creationdate: "2020-04-27T00:18:39.000Z",
+            isfolder: false,
+            isnote: false,
+            path: "nomedellapath",
+            size: 10000,
+            owner: 10,
+            folder: 14,
+            workgroup: 17,
+            task: null
+          },
+          {
+            id: 62,
+            name: "file.rar",
+            creationdate: "2020-04-27T00:18:39.000Z",
+            isfolder: false,
+            isnote: false,
+            path: "nomedellapath",
+            size: 10000,
+            owner: 10,
+            folder: 14,
+            workgroup: 17,
+            task: null
           }
         ],
         "15": [
