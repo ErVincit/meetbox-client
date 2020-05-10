@@ -53,8 +53,30 @@ const actions = {
       headers: { "Content-Type": "application/json" },
       method: "PUT"
     });
-    const section = (await response.json()).data;
+    const json = await response.json();
+    const section = json.data;
     commit("setSection", section);
+  },
+  async deleteSection({ commit }, { workgroupId, sectionId }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/section/${sectionId}`;
+    const response = await fetch(url, {
+      credentials: "include",
+      method: "DELETE"
+    });
+    const json = await response.json();
+    const section = json.data;
+    commit("removeSection", section.id);
+  },
+  async addSection({ commit }, { workgroupId, section }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/section`;
+    const response = await fetch(url, {
+      credentials: "include",
+      body: JSON.stringify(section),
+      headers: { "Content-Type": "application/json" },
+      method: "POST"
+    });
+    const newSection = (await response.json()).data;
+    commit("newSection", newSection);
   }
 };
 
@@ -64,6 +86,12 @@ const mutations = {
     const sectionIndex = state.sections.findIndex(s => s.id === section.id);
     section.tasks = state.sections[sectionIndex].tasks;
     state.sections[sectionIndex] = section;
+  },
+  newSection: (state, section) => {
+    state.sections.push(section);
+  },
+  removeSection: (state, sectionId) => {
+    state.sections = state.sections.filter(s => s.id != sectionId);
   },
   setTasks: (state, { sectionId, tasks }) =>
     (state.sections.find(section => section.id === sectionId).tasks = tasks),

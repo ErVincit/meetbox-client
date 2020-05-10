@@ -14,6 +14,7 @@
             :list="allTasks"
             :disabled="editingSection"
             ghost-class="ghost"
+            @change="handleSectionMove"
             class="d-flex"
           >
             <div class="pr-3" v-for="section in allTasks" :key="section.id">
@@ -49,10 +50,9 @@
           </p>
         </NeuContainer>
       </main>
-      <div
-        class="col col-lg-1 d-none d-lg-block"
-        style="background-color: red"
-      ></div>
+      <div class="col col-lg-1 d-none d-lg-block" style="background-color: red">
+        <button @click="createSection">+</button>
+      </div>
     </div>
   </div>
 </template>
@@ -102,7 +102,7 @@ export default {
     this.fetchTasks(workgroupId);
   },
   methods: {
-    ...mapActions(["fetchTasks", "deleteTask"]),
+    ...mapActions(["fetchTasks", "deleteTask", "addSection", "editSection"]),
     showTask(section, task) {
       this.taskToShow = task;
       this.sectionToShow = section;
@@ -116,6 +116,21 @@ export default {
       const { section, task } = this.draggingItemInfo;
       const { workgroupId } = this.$route.params;
       this.deleteTask({ workgroupId, sectionId: section, taskId: task.id });
+    },
+    createSection() {
+      const { workgroupId } = this.$route.params;
+      this.addSection({
+        workgroupId,
+        section: { title: "Sezione di prova " + Math.random() * 10 }
+      });
+    },
+    async handleSectionMove({ moved }) {
+      const { workgroupId } = this.$route.params;
+      this.editSection({
+        workgroupId,
+        sectionId: moved.element.id,
+        editObject: { index: moved.newIndex }
+      });
     }
   },
   mounted() {

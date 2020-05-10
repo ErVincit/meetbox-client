@@ -6,14 +6,14 @@
     <div class="spinner-border my-4" role="status">
       <span class="sr-only">Caricamento...</span>
     </div>
-    <p>{{ loadingMessage }}</p>
+    <p v-if="!hideMessage">{{ loadingMessage }}</p>
   </div>
 </template>
 
 <script>
 export default {
   name: "Loading",
-  props: { show: Boolean },
+  props: { show: Boolean, hideMessage: { type: Boolean, default: false } },
   computed: {
     loadingMessage() {
       const messages = [

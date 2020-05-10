@@ -20,7 +20,7 @@
           <img src="@/assets/kebab-icon.svg" />
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <p class="dropdown-item m-0 warning">
+          <p class="dropdown-item m-0 warning" @click="removeSection">
             Elimina
           </p>
         </div>
@@ -44,6 +44,9 @@
         @click.stop="$emit('showTask', task)"
       />
     </draggable>
+    <NeuContainer v-if="waitingAddTask" class="mt-3"
+      ><Loading :show="waitingAddTask" hideMessage
+    /></NeuContainer>
     <div class="add-task__container" ref="add-task__container">
       <NeuContainer v-if="addingTask" class="add-task mt-3 p-2" disableHover>
         <div class="d-flex mb-2 align-items-center">
@@ -115,6 +118,7 @@ import Avatar from "@/components/avatar/Avatar";
 import Alert from "@/components/alert/Alert";
 import Label from "@/components/task/Label";
 import UserDropdown from "@/components/task/UserDropdown";
+import Loading from "@/components/loading/Loading";
 
 import { mapActions, mapGetters } from "vuex";
 import draggable from "vuedraggable";
@@ -140,6 +144,7 @@ export default {
     Alert,
     UserDropdown,
     Label,
+    Loading,
     draggable
   },
   data() {
@@ -152,7 +157,8 @@ export default {
       alertMessage: "",
       showUserDropdown: false,
       showLabelDropdown: false,
-      dragging: false
+      dragging: false,
+      waitingAddTask: false
     };
   },
   mounted() {
@@ -174,7 +180,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["addTask", "editTask", "editSection"]),
+    ...mapActions(["addTask", "editTask", "editSection", "deleteSection"]),
     addNewTaskMember(member) {
       this.newTaskMembers.push(member);
       this.showUserDropdown = false;
@@ -183,6 +189,7 @@ export default {
       this.addingTask = false;
       this.newTaskTitle = this.newTaskTitle.trim();
       if (this.newTaskTitle.length !== 0) {
+        this.waitingAddTask = true;
         const { workgroupId } = this.$route.params;
         this.addTask({
           workgroupId,
@@ -192,10 +199,12 @@ export default {
             label: this.newTaskLabel,
             members: this.newTaskMembers.map(m => m.id)
           }
-        }).catch(err => {
-          this.alertMessage = "Creazione task fallita. " + err.message;
-          this.showAlert = true;
-        });
+        })
+          .then(() => (this.waitingAddTask = false))
+          .catch(err => {
+            this.alertMessage = "Creazione task fallita. " + err.message;
+            this.showAlert = true;
+          });
         this.newTaskTitle = "";
         this.newTaskMembers = [];
         this.newTaskLabel = null;
@@ -248,6 +257,13 @@ export default {
         editObject: { title: this.section.title }
       });
       this.$emit("end-editing");
+    },
+    removeSection() {
+      const { workgroupId } = this.$route.params;
+      this.deleteSection({
+        workgroupId,
+        sectionId: this.section.id
+      });
     }
   }
 };
