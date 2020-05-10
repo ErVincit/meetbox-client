@@ -31,14 +31,17 @@ exports.calendarWeeklyPosition = date => {
   const min = date.getDate() - todayDay + 1;
   const max = date.getDate() + 7 - todayDay;
 
+  const minDate = new Date(date.getFullYear(), date.getMonth(), min);
+  const maxDate = new Date(date.getFullYear(), date.getMonth(), max);
+
   return (
-    new Date(date.getFullYear(), date.getMonth(), min).getDate() +
+    minDate.getDate() +
     " " +
-    this.getMonthName(date.getMonth()) +
+    this.getMonthName(minDate.getMonth()) +
     " - " +
-    new Date(date.getFullYear(), date.getMonth(), max).getDate() +
+    maxDate.getDate() +
     " " +
-    this.getMonthName(date.getMonth())
+    this.getMonthName(maxDate.getMonth())
   );
 };
 

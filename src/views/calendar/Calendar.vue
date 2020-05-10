@@ -166,53 +166,17 @@ export default {
       if (this.calendar) {
         const min = today.getDate() - todayDay + 1;
         const max = today.getDate() + 7 - todayDay;
-        const maxMonthDays = new Date(
-          today.getFullYear(),
-          today.getMonth() + 1, // TODO: Il +1 sarà da levare quando ci sarà la data impostata come new Date(2020,5,4) -> 5 = Giugno, partono da zero
-          0
-        ).getDate();
-
-        if (min > 0 && max <= maxMonthDays) {
-          // console.log("LA SETTIMANA FA PARTE DELLO STESSO MESE");
-          for (let i = min; i <= max; i++) {
-            settimana.push(
-              this.calendar[today.getFullYear()][today.getMonth()][i]
-            );
-          }
-        } else if (min >= 0 && max > maxMonthDays) {
-          // console.log("SFORA IN GRANDEZZA (29-30-31)");
-          for (let i = min; i <= maxMonthDays; i++) {
-            settimana.push(
-              this.calendar[today.getFullYear()][today.getMonth()][i]
-            );
-          }
-          let maxNextMonthDays = max - maxMonthDays;
-          for (let i = 1; i <= maxNextMonthDays; i++) {
-            settimana.push(
-              this.calendar[today.getFullYear()][today.getMonth() + 1][i]
-            );
-          }
-        } else {
-          // console.log("SFORA IN PICCOLEZZA (Minore di 1)", min, max);
-          const dd = new Date(
-            today.getFullYear(),
-            today.getMonth() + 1,
-            min /*== 0 ? 1 : min*/
-          ); //Poichè sottrazione equivale a 0
-          for (let i = dd.getDate(); i <= maxMonthDays; i++) {
-            settimana.push(
-              this.calendar[today.getFullYear()][today.getMonth()][i]
-            );
-          }
-          for (let i = 1; i <= max; i++) {
-            settimana.push(
-              this.calendar[today.getFullYear()][today.getMonth() + 1][i]
-            );
-          }
+        const tempDate = new Date(today.getFullYear(), today.getMonth(), min);
+        const maxDate = new Date(today.getFullYear(), today.getMonth(), max);
+        while (tempDate <= maxDate) {
+          settimana.push(
+            this.calendar[tempDate.getFullYear()][tempDate.getMonth()][
+              tempDate.getDate()
+            ]
+          );
+          tempDate.setDate(tempDate.getDate() + 1);
         }
       }
-      // console.log("SETTIMANA:", settimana);
-      //TODO: Scorrere calendario. A volte da errore
       return settimana;
     },
     currentMonth: function() {
