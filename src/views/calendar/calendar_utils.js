@@ -369,9 +369,19 @@ exports.deleteEvent = (calendar, event) => {
       1
     );
   } else {
-    console.log(
-      "ERRORE: L'elemento che si vuole cancellare non è presente nella lista di eventi di appartenenza"
-    );
+    const fullDayEvents =
+      calendar[date.getFullYear()][date.getMonth()][date.getDate()]
+        .fullDayEvents;
+    const index = this.searchEvent(fullDayEvents, event);
+    if (index != -1) {
+      calendar[date.getFullYear()][date.getMonth()][
+        date.getDate()
+      ].fullDayEvents.splice(index, 1);
+    } else {
+      console.log(
+        "ERRORE: L'elemento che si vuole cancellare non è presente nella lista di eventi di appartenenza"
+      );
+    }
   }
   return calendar;
 };

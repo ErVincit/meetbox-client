@@ -150,7 +150,6 @@ export default {
       }
     },
     showEvent(event) {
-      // console.log(event);
       this.showEventInspector = true;
       this.eventToShow = event;
     },
