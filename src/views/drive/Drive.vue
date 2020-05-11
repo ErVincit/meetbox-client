@@ -56,21 +56,64 @@
                 Dimensioni
               </div>
             </div>
-            <div class="documents px-4">
+            <transition-group
+              class="documents px-4"
+              name="documents-fade"
+              tag="div"
+            >
               <Document
                 v-for="document in filteredDocuments"
                 :key="document.id"
+                :class="{
+                  selected: filesSelected.find(doc => doc.id === document.id)
+                }"
+                :edit="
+                  editmode &&
+                    filesSelected.find(doc => doc.id === document.id) &&
+                    rename
+                "
                 :document="document"
-                @click="e => handleClick(e, document)"
+                @click.stop="handleClick(document)"
+                @dblclick.stop="handleDblClick($event, document)"
               />
-            </div>
+            </transition-group>
           </div>
         </FileDropArea>
       </main>
-      <div
-        class="col col-lg-1 d-none d-lg-block"
-        style="background-color: red"
-      ></div>
+      <Actions>
+        <NeuButton
+          class="d-flex justify-content-center align-items-center mt-3"
+          style="width: 50px; height: 50px"
+        >
+          <img
+            src="@/assets/addIcon.svg"
+            v-tooltip:left="'Crea nuova cartella'"
+          />
+        </NeuButton>
+        <NeuButton
+          v-if="editmode"
+          class="d-flex justify-content-center align-items-center mt-3"
+          style="width: 50px; height: 50px"
+          @click="deleteDocument"
+        >
+          <img src="@/assets/deleteIcon.svg" v-tooltip:left="'Elimina file'" />
+        </NeuButton>
+        <NeuButton
+          v-if="editmode && filesSelected.length === 1"
+          class="d-flex justify-content-center align-items-center mt-3"
+          style="width: 50px; height: 50px"
+          @click="editName"
+        >
+          <img src="@/assets/editIcon.svg" v-tooltip:left="'Rinomina'" />
+        </NeuButton>
+        <NeuButton
+          v-if="editmode"
+          class="d-flex justify-content-center align-items-center mt-3"
+          style="width: 50px; height: 50px"
+        >
+          <img src="@/assets/moveIcon.svg" v-tooltip:left="'Sposta file'" />
+        </NeuButton>
+      </Actions>
     </div>
   </div>
 </template>
@@ -82,6 +125,7 @@ import Document from "@/components/document/Document";
 import NeuInput from "@/components/neu-button/NeuInput";
 import NeuButton from "@/components/neu-button/NeuButton";
 import FileDropArea from "@/components/task/FileDropArea";
+import Actions from "@/components/actions/Actions";
 
 export default {
   name: "Drive",
@@ -91,7 +135,8 @@ export default {
     Document,
     NeuInput,
     NeuButton,
-    FileDropArea
+    FileDropArea,
+    Actions
   },
   computed: {
     rootItems() {
@@ -113,13 +158,27 @@ export default {
         console.log("File uploaded!", file);
       }
     },
-    handleClick(e, document) {
+    handleClick(document) {
+      this.editmode = true;
+      const index = this.filesSelected.findIndex(doc => doc.id === document.id);
+      if (index === -1) this.filesSelected.push(document);
+      else this.filesSelected.splice(index, 1);
+      if (this.filesSelected.length === 0) this.editmode = false;
+    },
+    handleDblClick(e, document) {
       if (document.isfolder && this.folderWithChild.includes(document.id + ""))
         this.currentPosition = document.id;
     },
     handleFileDrop(files) {
       // TODO: Upload to server
       console.log("Uploading...", files);
+    },
+    deleteDocument() {
+      for (const document of this.filesSelected)
+        console.log("Elimino", document.id);
+    },
+    editName() {
+      this.rename = !this.rename;
     }
   },
   data() {
@@ -127,6 +186,9 @@ export default {
       draggingFile: false,
       currentPosition: "root",
       researchString: "",
+      editmode: false,
+      filesSelected: [],
+      rename: false,
       documents: {
         "14": [
           {
@@ -699,5 +761,19 @@ export default {
   width: 100%;
   height: 100%;
   font-size: 30px;
+}
+.selected {
+  border: 1px solid purple !important;
+}
+.documents-fade-enter-active,
+.documents-fade-leave-active {
+  transition: all 1s;
+}
+.documents-fade-enter,
+.documents-fade-leave-to {
+  opacity: 0;
+}
+.documents-fade-move {
+  transition: transform 1s;
 }
 </style>

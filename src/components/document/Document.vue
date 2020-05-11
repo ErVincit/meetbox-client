@@ -1,30 +1,39 @@
 <template>
-  <NeuButton class="mt-3 rounded-pill" v-bind="$attrs" v-on="$listeners">
+  <NeuContainer
+    class="mt-3 rounded-pill document"
+    v-bind="$attrs"
+    v-on="$listeners"
+  >
     <div class="d-flex">
-      <div class="document justify-content-start w-25">
+      <div class="document-col justify-content-start w-25">
         <img class="mx-2" src="@/assets/folderIcon.svg" ref="icon" />
-        {{ document.name }}
+        <NeuInput
+          v-model="document.name"
+          :disabled="!edit"
+          :backgroundHidden="!edit"
+        />
       </div>
-      <div class="document w-25">
+      <div class="document-col w-25">
         {{ document.owner }}
       </div>
-      <div class="document w-25">
+      <div class="document-col w-25">
         {{ data }}
       </div>
-      <div class="document w-25">
+      <div class="document-col w-25">
         {{ size }}
       </div>
     </div>
-  </NeuButton>
+  </NeuContainer>
 </template>
 
 <script>
-import NeuButton from "@/components/neu-button/NeuButton";
+import NeuContainer from "@/components/neu-button/NeuContainer";
+import NeuInput from "@/components/neu-button/NeuInput";
 import Calendarutils from "@/views/calendar/calendar_utils";
 export default {
   name: "Document",
-  props: ["document"],
-  components: { NeuButton },
+  props: { document: Object, edit: { type: Boolean, default: false } },
+  components: { NeuContainer, NeuInput },
   mounted() {
     this.data = Calendarutils.dateToString(
       new Date(this.document.creationdate)
@@ -84,11 +93,16 @@ export default {
 
 <style>
 .document {
+  border: 1px solid transparent;
+}
+
+.document-col {
   width: 100%;
   height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 16px;
+  user-select: none;
 }
 </style>
