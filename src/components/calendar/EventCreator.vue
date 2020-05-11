@@ -49,7 +49,17 @@
         />
       </div>
       <div class="membri p-5">
-        <p class="hightlight">🧑‍🤝‍🧑 Assegnato:</p>
+        <p class="hightlight mb-1">👑 Proprietario:</p>
+        <li class="d-flex align-items-center">
+          <Avatar
+            class="mr-2"
+            :firstname="getMember(currentUser.id).firstname"
+            :lastname="getMember(currentUser.id).lastname"
+          />
+          {{ getMember(currentUser.id).firstname }}
+          {{ getMember(currentUser.id).lastname }}
+        </li>
+        <p class="hightlight mt-3">🧑‍🤝‍🧑 Assegnato:</p>
         <li
           v-for="(member, index) in event.members"
           :key="member.id"
@@ -61,10 +71,7 @@
             :lastname="member.lastname"
           />
           {{ member.firstname }} {{ member.lastname }}
-          <span
-            v-if="member.id != currentUser.id"
-            class="ml-auto mr-2"
-            @click.stop="removeMember(index)"
+          <span class="ml-auto mr-2" @click.stop="removeMember(index)"
             >&times;</span
           >
         </li>
@@ -148,7 +155,6 @@ export default {
     };
   },
   created() {
-    this.event.members.push(this.currentUser);
     this.event.timestampBegin.setHours(
       this.event.timestampBegin.getHours() + 1
     );
@@ -205,6 +211,12 @@ export default {
         this.event.timestampEnd.setDate(this.event.timestampEnd.getDate() + 1);
         this.event.timestampEnd.setHours(hx, mx);
       }
+    },
+    getMember(idUser) {
+      for (let i = 0; i < this.workgroupMembers.length; i++)
+        if (this.workgroupMembers[i].id == idUser)
+          return this.workgroupMembers[i];
+      return { firstname: "Nessun", lastname: "risultato" };
     }
   },
   computed: {
