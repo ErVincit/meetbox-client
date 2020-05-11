@@ -239,7 +239,8 @@ exports.interpolateCalendarEvents = (calendar, events) => {
             hasNext: false,
             hasPrevious: false,
             originalBegin: event.timestampBegin,
-            originalEnd: event.timestampEnd
+            originalEnd: event.timestampEnd,
+            owner: event.owner
           };
           if (this.checkSameDay(dateBegin, tempDate)) {
             eventChunk.timestampEnd = new Date(dateBegin);

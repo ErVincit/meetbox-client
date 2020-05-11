@@ -83,11 +83,11 @@
       </main>
       <Actions>
         <NeuButton
-          @click.stop="addEvent"
+          @click.stop="createEvent"
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
         >
-          <img src="@/assets/addIcon.svg" v-tooltip:left="'Crea sezione'" />
+          <img src="@/assets/addIcon.svg" v-tooltip:left="'Crea evento'" />
         </NeuButton>
       </Actions>
     </div>
@@ -96,8 +96,13 @@
       v-if="showEventInspector"
       ref="event_inspector"
       :event="eventToShow"
-      @hide="showEventInspector = false"
       @hideEventInspector="showEventInspector = false"
+    />
+
+    <EventCreator
+      v-if="showEventCreator"
+      ref="event_creator"
+      @hideEventCreator="showEventCreator = false"
     />
   </div>
 </template>
@@ -108,6 +113,7 @@ import Recents from "@/components/recents/Recents";
 import CalendarRow from "@/components/calendar/CalendarRow";
 import NeuButton from "@/components/neu-button/NeuButton";
 import EventInspector from "@/components/calendar/EventInspector";
+import EventCreator from "@/components/calendar/EventCreator";
 import Actions from "@/components/actions/Actions";
 
 import { mapGetters, mapActions } from "vuex";
@@ -115,9 +121,14 @@ import { mapGetters, mapActions } from "vuex";
 import calendarUtils from "./calendar_utils";
 
 const handleOutsideClick = function(event) {
-  if (!this.showEventInspector) return;
-  const eventInspector = this.$refs["event_inspector"].$vnode.elm;
-  if (!eventInspector.contains(event.target)) this.showEventInspector = false;
+  if (!this.showEventInspector && !this.showEventCreator) return;
+  else if (this.showEventInspector) {
+    const eventInspector = this.$refs["event_inspector"].$vnode.elm;
+    if (!eventInspector.contains(event.target)) this.showEventInspector = false;
+  } else {
+    const eventCreator = this.$refs["event_creator"].$vnode.elm;
+    if (!eventCreator.contains(event.target)) this.showEventCreator = false;
+  }
 };
 
 export default {
@@ -135,12 +146,13 @@ export default {
     CalendarRow,
     NeuButton,
     EventInspector,
-    Actions
+    Actions,
+    EventCreator
   },
   methods: {
-    addEvent() {
-      this.eventToShow = undefined;
-      this.showEventInspector = true;
+    createEvent() {
+      if (this.showEventInspector) this.showEventInspector = false;
+      this.showEventCreator = true;
     },
     handlePrevious() {
       if (this.weeklyView) {
@@ -168,6 +180,7 @@ export default {
       }
     },
     showEvent(event) {
+      this.showEventCreator = false;
       this.showEventInspector = true;
       this.eventToShow = event;
     },
@@ -207,10 +220,11 @@ export default {
       defaultNoEnd: 60,
       isMonthView: false,
       weeklyView: true,
-      currentDate: new Date("2020-6-25"),
+      currentDate: new Date(),
       calendarIdentifier: null,
       showEventInspector: false,
-      eventToShow: null
+      eventToShow: null,
+      showEventCreator: false
     };
   },
   mounted() {
@@ -223,12 +237,6 @@ export default {
 </script>
 
 <style scoped>
-/* .ciotto {
-  display: flex;
-  width: 100%;
-  height: 12vh;
-} */
-
 .days_controller {
   justify-content: center;
 }

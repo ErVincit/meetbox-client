@@ -44,10 +44,8 @@ const actions = {
     );
     const json = await response.json();
     if (!json.error) {
-      console.log("Prima", json.data);
       json.data.timestampBegin = new Date(json.data.timestampBegin);
       json.data.timestampEnd = new Date(json.data.timestampEnd);
-      console.log("Dopo", json.data);
       commit("newEvent", json.data);
     } else {
       console.log(json);
