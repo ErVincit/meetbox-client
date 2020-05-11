@@ -23,7 +23,7 @@
       </NeuButton>
     </div>
     <div class="d-flex">
-      <div class="w-75">
+      <div class="settings">
         <div class="p-2">
           <div class="d-flex">
             <div class="d-flex flex-column justify-content-center w-25">
@@ -31,15 +31,16 @@
                 Inizio
               </p>
             </div>
-            <div class="datetime_calendar">
-              <input
+            <div class="d-flex">
+              <NeuInput
                 type="date"
                 ref="begin_date"
                 @change="dateTimeChange"
                 :disabled="!isEditable"
               />
-              <input
+              <NeuInput
                 type="time"
+                class="w-50"
                 ref="begin_time"
                 @change="dateTimeChange"
                 :disabled="!isEditable"
@@ -50,15 +51,16 @@
             <div class="d-flex flex-column justify-content-center w-25">
               <p class="hightlight p-0 m-0 col-sm-4">Fine</p>
             </div>
-            <div class="datetime_calendar">
-              <input
+            <div class="d-flex">
+              <NeuInput
                 type="date"
                 ref="end_date"
                 @change="dateTimeChange"
                 :disabled="!isEditable"
               />
-              <input
+              <NeuInput
                 type="time"
+                class="w-50"
                 ref="end_time"
                 @change="dateTimeChange"
                 :disabled="!isEditable"
@@ -76,7 +78,7 @@
         />
         <p class="pl-3" v-if="!isEditable">{{ ourEvent.description }}</p>
       </div>
-      <div class="p-5">
+      <div class="membri p-5">
         <p class="hightlight">🧑‍🤝‍🧑 Assegnato:</p>
         <li
           v-for="(member, index) in ourEvent.members"
@@ -110,7 +112,7 @@
     </div>
     <div
       v-if="error"
-      class="alert  alert-warning alert-dismissible fade show"
+      class="alert mt-3 alert-warning alert-dismissible fade show"
       role="alert"
     >
       <strong>Attenzione!</strong> {{ errorText }}
@@ -488,7 +490,6 @@ export default {
       }
     },
     clean: function() {
-      console.log("Cleanno");
       this.cleanEvent();
     }
   }
@@ -524,9 +525,6 @@ export default {
   color: rgb(211, 76, 76);
   cursor: pointer;
 }
-.datetime_calendar {
-  left: 100px;
-}
 
 input:invalid + span::after {
   content: "✖";
@@ -534,5 +532,13 @@ input:invalid + span::after {
 
 input:valid + span::after {
   content: "✓";
+}
+
+.settings {
+  width: 60%;
+}
+
+.membri {
+  width: 40%;
 }
 </style>

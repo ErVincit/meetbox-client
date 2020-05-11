@@ -16,12 +16,6 @@
           <NeuButton @click="handleNext" class="calendar_button cb_rigth">
             <img src="../../assets/calendar-right.svg" />
           </NeuButton>
-          <NeuButton
-            @click.stop="addEvent"
-            class="position-absolute add_event l-0 cb_rigth"
-          >
-            <img src="../../assets/addIcon.svg" />
-          </NeuButton>
         </div>
         <hr class="mt-0 mb-2" />
         <div class="time-header d-flex m-0 p-0">
@@ -87,10 +81,15 @@
           </div>
         </div>
       </main>
-      <div
-        class="col col-lg-1 d-none d-lg-block"
-        style="background-color: grey"
-      ></div>
+      <Actions>
+        <NeuButton
+          @click.stop="addEvent"
+          class="d-flex justify-content-center align-items-center mt-3"
+          style="width: 50px; height: 50px"
+        >
+          <img src="@/assets/addIcon.svg" v-tooltip:left="'Crea sezione'" />
+        </NeuButton>
+      </Actions>
     </div>
 
     <EventInspector
@@ -109,6 +108,7 @@ import Recents from "@/components/recents/Recents";
 import CalendarRow from "@/components/calendar/CalendarRow";
 import NeuButton from "@/components/neu-button/NeuButton";
 import EventInspector from "@/components/calendar/EventInspector";
+import Actions from "@/components/actions/Actions";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -129,10 +129,16 @@ export default {
       this.currentDate
     );
   },
-  components: { PageHeader, Recents, CalendarRow, NeuButton, EventInspector },
+  components: {
+    PageHeader,
+    Recents,
+    CalendarRow,
+    NeuButton,
+    EventInspector,
+    Actions
+  },
   methods: {
     addEvent() {
-      console.log("presssed");
       this.eventToShow = undefined;
       this.showEventInspector = true;
     },
