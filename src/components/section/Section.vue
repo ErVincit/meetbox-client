@@ -52,24 +52,34 @@
     <div class="add-task__container px-3" ref="add-task__container">
       <NeuContainer v-if="addingTask" class="add-task p-2" disableHover>
         <div class="d-flex mb-2 align-items-center">
-          <Label
-            v-if="newTaskLabel"
-            :label="newTaskLabel"
-            @click.stop="newTaskLabel = null"
-            showName
-          />
-          <SmallAddButton v-else @click="showLabelDropdown = true">
-            Etichetta
-          </SmallAddButton>
-          <SmallAddButton @click="showUserDropdown = true">
-            Membro
-          </SmallAddButton>
-          <UserDropdown
-            v-if="showUserDropdown"
-            :users="workgroupMembers"
-            @select-user="addNewTaskMember"
-            @hide="showUserDropdown = false"
-          />
+          <div class="dropdown">
+            <div id="labelsDropdown" data-toggle="dropdown">
+              <Label v-if="newTaskLabel" :label="newTaskLabel" showName />
+              <SmallAddButton v-else>
+                Etichetta
+              </SmallAddButton>
+            </div>
+            <LabelDropdown
+              :labelId="newTaskLabel"
+              @selected="newTaskLabel = $event === newTaskLabel ? null : $event"
+              aria-labelledby="labelsDropdown"
+            />
+          </div>
+          <div class="dropdown">
+            <SmallAddButton
+              id="membersDropdown"
+              data-toggle="dropdown"
+              ref="membersDropdownBtn"
+            >
+              Membro
+            </SmallAddButton>
+            <UserDropdown
+              aria-labelledby="membersDropdown"
+              :users="workgroupMembers"
+              :members="newTaskMembers"
+              @select-user="addNewTaskMember"
+            />
+          </div>
         </div>
         <form @submit.prevent="handleAddingTask">
           <NeuTextarea
@@ -119,6 +129,7 @@ import SmallAddButton from "./SmallAddButton";
 import Avatar from "@/components/avatar/Avatar";
 import Alert from "@/components/alert/Alert";
 import Label from "@/components/task/Label";
+import LabelDropdown from "@/components/task/LabelDropdown";
 import UserDropdown from "@/components/task/UserDropdown";
 import Loading from "@/components/loading/Loading";
 
@@ -148,6 +159,7 @@ export default {
     Alert,
     UserDropdown,
     Label,
+    LabelDropdown,
     Loading,
     draggable
   },
@@ -188,6 +200,7 @@ export default {
     addNewTaskMember(member) {
       this.newTaskMembers.push(member);
       this.showUserDropdown = false;
+      this.$refs.membersDropdownBtn.$el.click();
     },
     startAddingTask() {
       this.addingTask = true;
@@ -332,8 +345,14 @@ export default {
 .add-task__close:hover {
   color: rgb(211, 76, 76) !important;
 }
+.add-task .avatar {
+  margin-right: -10px;
+}
+.add-task .avatar:last-child {
+  margin-right: 0px;
+}
 .add-task .label {
-  width: 25%;
+  width: 80px;
   height: 26px;
   cursor: pointer;
 }

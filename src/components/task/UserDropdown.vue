@@ -1,34 +1,26 @@
 <template>
-  <NeuContainer class="user-dropdown p-2" disableHover>
-    <div class="d-flex">
-      <NeuInput
-        class="user-dropdown__search-bar flex-grow-1"
-        type="text"
-        placeholder="Cerca utente..."
-        v-model="keyword"
-      ></NeuInput>
-      <button
-        type="button"
-        class="close px-2"
-        aria-label="Close"
-        @click.stop="$emit('hide')"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
+  <NeuContainer class="dropdown-menu user-dropdown p-2" disableHover>
+    <NeuInput
+      class="user-dropdown__search-bar flex-grow-1"
+      type="text"
+      placeholder="Cerca utente..."
+      v-model="keyword"
+    ></NeuInput>
     <transition-group class="my-2" name="user-dropdown__element-fade" tag="ul">
       <li
         v-for="user in shownUsers"
         :key="user.id"
-        class="d-flex align-items-center user-dropdown__element"
+        class="d-flex align-items-center user-dropdown__element px-2"
         @click.stop="$emit('select-user', user)"
       >
         <Avatar
-          class="mx-2 my-1"
+          class="mr-1 my-1"
           :firstname="user.firstname"
           :lastname="user.lastname"
         />
-        {{ user.firstname }} {{ user.lastname }}
+        <span class="mx-1 text-nowrap"
+          >{{ user.firstname }} {{ user.lastname }}</span
+        >
       </li>
     </transition-group>
 
@@ -36,7 +28,7 @@
       class="d-flex justify-content-center m-3 pt-2"
       v-if="shownUsers.length === 0"
     >
-      ⚠️ Non ci sono altri membri ⚠️
+      <span class="text-nowrap">⚠️ Non ci sono altri membri ⚠️</span>
     </div>
   </NeuContainer>
 </template>
@@ -81,12 +73,9 @@ export default {
 
 <style>
 .user-dropdown {
-  width: 300px;
-  height: auto;
   z-index: 1000;
-  margin-top: 20px;
-  position: absolute;
-  transition: all 1s;
+  margin-top: 10px;
+  border: none;
 }
 
 .user-dropdown__search-bar input,

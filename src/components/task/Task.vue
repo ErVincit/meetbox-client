@@ -51,7 +51,9 @@ export default {
     ...mapGetters(["workgroups"]),
     currentWorkgroup() {
       const { workgroupId } = this.$route.params;
-      return this.workgroups.find(wg => wg.id === parseInt(workgroupId));
+      if (this.workgroups)
+        return this.workgroups.find(wg => wg.id === parseInt(workgroupId));
+      return null;
     },
     members() {
       return this.currentWorkgroup.members.filter(m =>

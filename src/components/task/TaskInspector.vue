@@ -52,41 +52,29 @@
           <p class="col-auto highlight m-0 pr-3 text-nowrap">
             🏷️ Etichetta:
           </p>
-          <Label
-            class="col"
-            v-if="task.label"
-            :label="workgroupLabels.find(l => task.label === l.id)"
-            @click="showLabelDropdown = true"
-            showName
-          />
-          <BigAddButton v-else class="col" @click="showLabelDropdown = true"
-            >Aggiungi label</BigAddButton
-          >
+          <div class="dropdown col">
+            <div
+              class="w-100"
+              id="labelsDropdown"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <Label
+                v-if="task.label"
+                class="w-100"
+                :label="workgroupLabels.find(l => task.label === l.id)"
+                showName
+              />
+              <BigAddButton v-else class="w-100">Aggiungi label</BigAddButton>
+            </div>
+            <LabelDropdown
+              aria-labelledby="labelsDropdown"
+              :idLabel="task.label"
+              @selected="setLabel"
+            />
+          </div>
         </div>
-        <NeuContainer
-          v-if="showLabelDropdown"
-          class="label-dropdown p-2"
-          :shadowRadius="5"
-          :shadowBlur="12"
-          disableHover
-        >
-          <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            @click.stop="showLabelDropdown = false"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <Label
-            class="my-2"
-            v-for="label in workgroupLabels"
-            :key="label.id"
-            :label="label"
-            @click.stop="setLabel(label.id)"
-          />
-          <BigAddButton>Crea label</BigAddButton>
-        </NeuContainer>
         <div class="col-12 col-xl-6 d-flex align-items-center pb-3">
           <p class="col-auto highlight m-0 pr-3 text-nowrap">📅 Scadenza:</p>
           <div class="col p-0" style="min-width: 0px">
@@ -117,9 +105,9 @@
             :attachment="attachment"
             @delete="removeAttachment"
           />
-          <BigAddButton class="col mt-2" @click="$refs.file.click()"
-            >Aggiungi un nuovo allegato</BigAddButton
-          >
+          <BigAddButton class="col mt-2" @click="$refs.file.click()">
+            Aggiungi un nuovo allegato
+          </BigAddButton>
           <input
             class="d-none"
             ref="file"
@@ -137,16 +125,25 @@
             :member="member"
             @remove="removeMember"
           />
-          <BigAddButton class="col mt-2" @click="showUserDropdown = true"
-            >Aggiungi un nuovo membro</BigAddButton
-          >
-          <UserDropdown
-            v-if="showUserDropdown"
-            :users="workgroupMembers"
-            :members="workgroupMembers.filter(m => task.members.includes(m.id))"
-            @select-user="addMember"
-            @hide="showUserDropdown = false"
-          />
+          <div class="dropdown justify-content-center">
+            <BigAddButton
+              class="col mt-2"
+              id="membersDropdown"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Aggiungi un nuovo membro
+            </BigAddButton>
+            <UserDropdown
+              aria-labelledby="membersDropdown"
+              :users="workgroupMembers"
+              :members="
+                workgroupMembers.filter(m => task.members.includes(m.id))
+              "
+              @select-user="addMember"
+            />
+          </div>
         </div>
       </div>
     </NeuContainer>
@@ -162,6 +159,7 @@ import NeuInput from "@/components/neu-button/NeuInput";
 import FileDropArea from "./FileDropArea";
 import UserDropdown from "./UserDropdown";
 import Label from "./Label";
+import LabelDropdown from "./LabelDropdown";
 // import NeuLabel from "./NeuLabel";
 import Member from "./Member";
 import TaskAttachment from "./TaskAttachment";
@@ -178,6 +176,7 @@ export default {
     FileDropArea,
     UserDropdown,
     Label,
+    LabelDropdown,
     // NeuLabel,
     NeuInput,
     Member,
@@ -249,9 +248,7 @@ export default {
   },
   data() {
     return {
-      draggingFile: false,
-      showUserDropdown: false,
-      showLabelDropdown: false
+      draggingFile: false
     };
   },
   methods: {
@@ -313,7 +310,7 @@ export default {
     },
     setLabel(label) {
       const { workgroupId } = this.$route.params;
-      if (this.task.label && this.task.label.id === label.id) {
+      if (this.task.label !== null && this.task.label === label.id) {
         // Remove label
         this.task.label = null;
         this.editTask({
@@ -324,15 +321,14 @@ export default {
         });
       } else {
         // Set new label
-        this.task.label = label;
+        this.task.label = label.id;
         this.editTask({
           workgroupId,
           sectionId: this.sectionId,
           taskId: this.task.id,
-          editObject: { label: label }
+          editObject: { label: this.task.label }
         });
       }
-      // this.showLabelDropdown = false;
     },
     setDescription() {
       const { workgroupId } = this.$route.params;
@@ -422,9 +418,6 @@ export default {
 .task-inspector .neu-button > button {
   font-size: medium;
 }
-.task-inspector li {
-  list-style: none;
-}
 
 .task-inspector .label {
   font-size: 16px;
@@ -435,23 +428,6 @@ export default {
   transition: transform 200ms;
 }
 .task-inspector .label:active {
-  transform: scale(0.9);
-}
-
-.task-inspector .label-dropdown {
-  position: absolute;
-  margin-top: 50px;
-  width: 300px;
-  z-index: 2000;
-}
-.task-inspector .label-dropdown .label {
-  height: 30px;
-  width: 100%;
-  font-size: 16px;
-  transition: all 200ms;
-}
-.task-inspector .label-dropdown .label:hover {
-  opacity: 0.8;
   transform: scale(0.9);
 }
 </style>
