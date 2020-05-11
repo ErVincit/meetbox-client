@@ -1,13 +1,18 @@
 <template>
   <div class="activity container-fluid h-100 d-flex flex-column">
     <PageHeader />
-    <div id="page-content" class="row flex-grow-1">
-      <Recents currentPage="activity" />
-      <main class="col col-lg-9 d-flex flex-column">
+    <div
+      id="page-content"
+      class="row flex-grow-1"
+      style="height: calc(100% - 100px)"
+    >
+      <Recents currentPage="activity" class="h-100" />
+      <main class="col col-lg-9 d-flex flex-column h-100">
         <p class="page__title m-0">Attività</p>
         <hr class="m-0" />
         <div
-          class="row pl-3 py-3 flex-grow-1 align-items-start flex-nowrap overflow-auto"
+          class="row pl-3 py-3 flex-grow-1 align-items-start flex-nowrap"
+          style="overflow-x: auto; overflow-y: hidden"
         >
           <Loading :show="!allTasks" />
           <draggable
@@ -15,11 +20,11 @@
             :disabled="editingSection"
             ghost-class="ghost"
             @change="handleSectionMove"
-            class="d-flex"
+            class="d-flex h-100"
           >
             <div class="pr-3" v-for="section in allTasks" :key="section.id">
               <Section
-                class="px-3 py-3"
+                class="py-3 mh-100 d-flex flex-column"
                 :section="section"
                 @showTask="showTask(section.id, ...arguments)"
                 @drag-start="handleDragStart(section.id, ...arguments)"
@@ -50,7 +55,7 @@
           </p>
         </NeuContainer>
       </main>
-      <Actions>
+      <Actions class="h-100">
         <NeuButton
           @click="createSection"
           class="d-flex justify-content-center align-items-center mt-3"
@@ -171,13 +176,10 @@ export default {
   width: calc(100% - 20px);
   min-height: 100px;
   height: auto !important;
-  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  bottom: 10px;
-  left: 10px;
-  right: 10px;
+  margin: 10px;
   border: 2px dashed rgb(252, 109, 109);
   color: black !important;
   border-radius: 30px;

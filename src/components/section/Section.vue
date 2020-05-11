@@ -1,6 +1,6 @@
 <template>
   <NeuContainer class="activity__section" disableHover>
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center px-3 pb-2">
       <p class="m-0">📑</p>
       <NeuInput
         class="m-0 col rounded-pill p-0"
@@ -34,9 +34,11 @@
       @change="handleTaskMove"
       @end="handleDragEnd"
       draggable=".task"
+      class="flex-grow-1"
+      style="overflow-y: auto"
     >
       <Task
-        class="mt-3 p-2"
+        class="mt-3 p-2 mx-3"
         v-for="task in section.tasks"
         :key="task.id"
         :task="task"
@@ -44,11 +46,11 @@
         @click.stop="$emit('showTask', task)"
       />
     </draggable>
-    <NeuContainer v-if="waitingAddTask" class="mt-3"
+    <NeuContainer v-if="waitingAddTask" class="mx-3"
       ><Loading :show="waitingAddTask" hideMessage
     /></NeuContainer>
-    <div class="add-task__container" ref="add-task__container">
-      <NeuContainer v-if="addingTask" class="add-task mt-3 p-2" disableHover>
+    <div class="add-task__container px-3" ref="add-task__container">
+      <NeuContainer v-if="addingTask" class="add-task p-2" disableHover>
         <div class="d-flex mb-2 align-items-center">
           <Label
             v-if="newTaskLabel"
@@ -95,7 +97,7 @@
           </div>
         </div>
       </NeuContainer>
-      <BigAddButton class="mt-3" v-else @click.stop="addingTask = true"
+      <BigAddButton v-else @click.stop="addingTask = true"
         >Aggiungi una nuova attività</BigAddButton
       >
       <Alert
@@ -276,6 +278,9 @@ export default {
 .activity__section .neu-input > input {
   color: #1c4885;
   font-size: 16px;
+}
+.activity__section .task:last-child {
+  margin-bottom: 16px;
 }
 
 .neu-input {
