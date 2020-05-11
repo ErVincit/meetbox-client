@@ -65,6 +65,16 @@
         <p class="pl-3" v-if="!isEditable">{{ ourEvent.description }}</p>
       </div>
       <div class="membri p-5">
+        <p class="hightlight mb-1">👑 Proprietario:</p>
+        <li class="d-flex align-items-center">
+          <Avatar
+            class="mr-2"
+            :firstname="getMember(event.owner).firstname"
+            :lastname="getMember(event.owner).lastname"
+          />
+          {{ getMember(event.owner).firstname }}
+          {{ getMember(event.owner).lastname }}
+        </li>
         <p class="hightlight">🧑‍🤝‍🧑 Assegnato:</p>
         <li
           v-for="(member, index) in event.members"
@@ -78,7 +88,7 @@
           />
           {{ member.firstname }} {{ member.lastname }}
           <span
-            v-if="member.id != event.owner && isEditable"
+            v-if="isEditable"
             class="ml-auto mr-2"
             @click.stop="removeMember(index)"
             >&times;</span
@@ -173,12 +183,14 @@ export default {
   methods: {
     ...mapActions(["editEvent"]),
     async addMember(member) {
+      for (let i = 0; i < this.ourEvent.members.length; i++)
+        if (member.id == this.ourEvent.members[i].id) return;
       const { workgroupId } = this.$route.params;
       const newEvent = {
         id: this.event.id,
         members: [...this.ourEvent.members, member].map(m => m.id)
       };
-      await this.editEvent({
+      this.editEvent({
         workgroupId,
         event: newEvent,
         oldEvent: this.event
@@ -247,6 +259,12 @@ export default {
         event: newEvent,
         oldEvent: this.event
       });
+    },
+    getMember(idUser) {
+      for (let i = 0; i < this.workgroupMembers.length; i++)
+        if (this.workgroupMembers[i].id == idUser)
+          return this.workgroupMembers[i];
+      return { firstname: "Nessun", lastname: "risultato" };
     }
   },
   computed: {
@@ -310,7 +328,7 @@ export default {
         .members;
     },
     isEditable() {
-      if (this.ourEvent.owner == this.currentUser.id) return true;
+      if (this.event.owner == this.currentUser.id) return true;
       for (let i = 0; i < this.event.members.length; i++)
         if (this.event.members[i].id == this.currentUser.id) return true;
       return false;
