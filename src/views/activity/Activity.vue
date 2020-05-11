@@ -63,14 +63,14 @@
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
         >
-          <img src="@/assets/folderIcon.png" v-tooltip:left="'Crea sezione'" />
+          <img src="@/assets/folderIcon.svg" v-tooltip:left="'Crea sezione'" />
         </NeuButton>
         <NeuButton
           @click="createSection"
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
         >
-          <img src="@/assets/pdfIcon.png" v-tooltip:left="'Crea sezione'" />
+          <img src="@/assets/pdfIcon.svg" v-tooltip:left="'Crea sezione'" />
         </NeuButton>
       </Actions>
     </div>
