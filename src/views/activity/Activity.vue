@@ -63,20 +63,6 @@
         >
           <img src="@/assets/addIcon.svg" v-tooltip:left="'Crea sezione'" />
         </NeuButton>
-        <NeuButton
-          @click="createSection"
-          class="d-flex justify-content-center align-items-center mt-3"
-          style="width: 50px; height: 50px"
-        >
-          <img src="@/assets/folderIcon.svg" v-tooltip:left="'Crea sezione'" />
-        </NeuButton>
-        <NeuButton
-          @click="createSection"
-          class="d-flex justify-content-center align-items-center mt-3"
-          style="width: 50px; height: 50px"
-        >
-          <img src="@/assets/pdfIcon.svg" v-tooltip:left="'Crea sezione'" />
-        </NeuButton>
       </Actions>
     </div>
   </div>
@@ -105,7 +91,6 @@ export default {
   name: "Activity",
   data() {
     return {
-      sections: null,
       showTaskInspector: false,
       taskToShow: null,
       sectionToShow: null,
@@ -150,7 +135,7 @@ export default {
       const { workgroupId } = this.$route.params;
       this.addSection({
         workgroupId,
-        section: { title: "Sezione di prova " + Math.random() * 10 }
+        section: { title: "Nuova sezione" }
       });
     },
     async handleSectionMove({ moved }) {

@@ -46,9 +46,9 @@
         @click.stop="$emit('showTask', task)"
       />
     </draggable>
-    <NeuContainer v-if="waitingAddTask" class="mx-3"
-      ><Loading :show="waitingAddTask" hideMessage
-    /></NeuContainer>
+    <NeuContainer v-if="waitingAddTask" class="mx-3">
+      <Loading :show="waitingAddTask" hideMessage />
+    </NeuContainer>
     <div class="add-task__container px-3" ref="add-task__container">
       <NeuContainer v-if="addingTask" class="add-task p-2" disableHover>
         <div class="d-flex mb-2 align-items-center">
@@ -58,12 +58,12 @@
             @click.stop="newTaskLabel = null"
             showName
           />
-          <SmallAddButton v-else @click="showLabelDropdown = true"
-            >Etichetta</SmallAddButton
-          >
-          <SmallAddButton @click="showUserDropdown = true"
-            >Membro</SmallAddButton
-          >
+          <SmallAddButton v-else @click="showLabelDropdown = true">
+            Etichetta
+          </SmallAddButton>
+          <SmallAddButton @click="showUserDropdown = true">
+            Membro
+          </SmallAddButton>
           <UserDropdown
             v-if="showUserDropdown"
             :users="workgroupMembers"
@@ -97,9 +97,9 @@
           </div>
         </div>
       </NeuContainer>
-      <BigAddButton v-else @click.stop="addingTask = true"
-        >Aggiungi una nuova attività</BigAddButton
-      >
+      <BigAddButton v-else @click.stop="startAddingTask">
+        Aggiungi una nuova attività
+      </BigAddButton>
       <Alert
         :show="showAlert"
         :message="alertMessage"
@@ -128,8 +128,10 @@ import draggable from "vuedraggable";
 const handleOutsideClick = function(event) {
   if (!this.addingTask) return;
   const addTaskContainer = this.$refs["add-task__container"];
-  if (addTaskContainer && !addTaskContainer.contains(event.target))
+  if (addTaskContainer && !addTaskContainer.contains(event.target)) {
     this.addingTask = false;
+    this.$emit("end-editing");
+  }
 };
 
 export default {
@@ -187,8 +189,13 @@ export default {
       this.newTaskMembers.push(member);
       this.showUserDropdown = false;
     },
+    startAddingTask() {
+      this.addingTask = true;
+      this.$emit("start-editing");
+    },
     handleAddingTask() {
       this.addingTask = false;
+      this.$emit("end-editing");
       this.newTaskTitle = this.newTaskTitle.trim();
       if (this.newTaskTitle.length !== 0) {
         this.waitingAddTask = true;
@@ -214,6 +221,7 @@ export default {
     },
     exitAddingTask() {
       this.addingTask = false;
+      this.$emit("end-editing");
       this.newTaskTitle = "";
       this.newTaskMembers = [];
       this.newTaskLabel = null;
