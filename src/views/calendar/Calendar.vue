@@ -97,6 +97,7 @@
       ref="event_inspector"
       :event="eventToShow"
       @hideEventInspector="showEventInspector = false"
+      @deletedEvent="handleDeletedEvent"
     />
 
     <EventCreator
@@ -104,6 +105,23 @@
       ref="event_creator"
       @hideEventCreator="showEventCreator = false"
     />
+
+    <div
+      v-if="deletedEventMessage"
+      class="fixed-bottom alert mt-3 alert-warning alert-dismissible fade show"
+      role="alert"
+    >
+      L'evento "{{ eventToShow.title }}" &egrave; stato cancellato
+      <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+        @click.stop="deletedEventMessage = false"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -184,6 +202,13 @@ export default {
       this.showEventInspector = true;
       this.eventToShow = event;
     },
+    handleDeletedEvent() {
+      this.showEventInspector = false;
+      this.deletedEventMessage = true;
+      setTimeout(() => {
+        this.deletedEventMessage = false;
+      }, 5000);
+    },
     ...mapActions(["initCalendar", "fetchEvents"])
   },
   computed: {
@@ -224,7 +249,8 @@ export default {
       calendarIdentifier: null,
       showEventInspector: false,
       eventToShow: null,
-      showEventCreator: false
+      showEventCreator: false,
+      deletedEventMessage: false
     };
   },
   mounted() {

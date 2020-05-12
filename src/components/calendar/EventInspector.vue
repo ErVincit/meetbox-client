@@ -136,11 +136,7 @@
         class="close"
         data-dismiss="alert"
         aria-label="Close"
-        @click.stop="
-          e => {
-            error = false;
-          }
-        "
+        @click.stop="error = false"
       >
         <span aria-hidden="true">&times;</span>
       </button>
@@ -190,7 +186,8 @@ export default {
         members: this.event.members
       },
       error: false,
-      errorText: ""
+      errorText: "",
+      deleted: false
     };
   },
   methods: {
@@ -249,12 +246,13 @@ export default {
       });
     },
     async deleteEvent() {
+      this.deleted = true;
       const { workgroupId } = this.$route.params;
       await this.removeEvent({
         workgroupId,
         event: this.event
       });
-      this.$emit("hideEventInspector");
+      this.$emit("deletedEvent");
     },
     checkDate() {
       if (this.ourEvent.timestampBegin > this.ourEvent.timestampEnd) {
@@ -349,6 +347,7 @@ export default {
         .members;
     },
     isEditable() {
+      if (this.deleted) return false;
       if (this.event.owner == this.currentUser.id) return true;
       for (let i = 0; i < this.event.members.length; i++)
         if (this.event.members[i].id == this.currentUser.id) return true;

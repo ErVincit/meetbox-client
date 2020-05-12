@@ -100,8 +100,6 @@ const actions = {
     const json = await response.json();
     if (response.status == 200) {
       if (!json.error) {
-        json.data.timestampBegin = new Date(json.data.timestampBegin);
-        json.data.timestampEnd = new Date(json.data.timestampEnd);
         commit("removeEvent", {
           event
         });
