@@ -13,8 +13,9 @@
     ></div>
     {{ event.title }}
     <div
-      v-if="isEditable"
+      v-if="isRightResizable"
       class="event_resizer event_resizer_right right"
+      @mousedown="handleRightResizing($event, event)"
     ></div>
   </div>
 </template>
@@ -170,7 +171,7 @@ export default {
           document.body.style.userSelect = "initial";
           const timestampBegin = new Date(this.event.timestampBegin);
           timestampBegin.setHours(this.newHour, this.newMinutes);
-          console.log("TIMESTAMP:", timestampBegin);
+          console.log("New begin time:", timestampBegin);
           var timestampEnd = new Date(this.event.timestampEnd);
           const { workgroupId } = this.$route.params;
 
@@ -253,22 +254,63 @@ export default {
       //   this.target.style.width = this.widthCalculator() + "px";
       // }
     },
-    // resizeMoovig(e) {
-    //   const toLeft =
-    //     document.getElementsByClassName("row__events")[0].offsetLeft +
-    //     document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
-    //   const newPos = e.clientX - toLeft - this.offSet - 15;
-    //   if (0 <= newPos) {
-    //     e.path[1].style.left = newPos + "px";
-    //     /*const { hours, minutes } = */ calendarUtils.positionToHours(
-    //       newPos,
-    //       this.rowSizeX
-    //     );
-    //     // console.log(hours, minutes, this.event);
-    //   } else if (newPos <= 0) {
-    //     this.target.style.left = 0 + "px";
-    //   }
-    // }
+    async handleRightResizing(e, event) {
+      const target = e.target.parentNode;
+      document.onmousemove = e => {
+        this.disableClick = true;
+        const toLeft =
+          document.getElementsByClassName("row__events_container")[0]
+            .offsetLeft +
+          document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
+        const newPos = e.clientX - toLeft - 17;
+        const startEvent = Number.parseInt(target.style.left.replace("px", ""));
+        const min = startEvent + (15 * this.rowSizeX) / (24 * 60);
+        if (min <= newPos && newPos <= this.rowSizeX) {
+          const { hours, minutes } = calendarUtils.positionToHours(
+            newPos,
+            this.rowSizeX
+          );
+          this.newEndHour = hours;
+          this.newEndMinutes = minutes;
+          target.style.width = newPos - startEvent + "px";
+        }
+        // else if (newPos <= 0) {
+        //   target.style.left = 0 + "px";
+        //   this.newHour = 0;
+        //   this.newMinutes = 0;
+        //   // e.target.parentNode.style.width = this.widthCalculator() + "px";
+        // }
+      };
+      document.onmouseup = async () => {
+        document.onmouseup = null;
+        document.onmousemove = null;
+        document.body.style.userSelect = "initial";
+        var timestampBegin = new Date(this.event.timestampBegin);
+        const timestampEnd = new Date(this.event.timestampEnd);
+        timestampEnd.setHours(this.newEndHour, this.newEndMinutes);
+        console.log("New end time:", timestampBegin, timestampEnd);
+        const { workgroupId } = this.$route.params;
+
+        //Se è un evento spezzettato
+        if (this.event.originalBegin && this.event.originalEnd) {
+          timestampBegin = new Date(this.event.originalBegin);
+        }
+        //Se è evento giornaliero
+
+        const newEvent = {
+          id: event.id,
+          timestampBegin,
+          timestampEnd
+        };
+        await this.editEvent({
+          workgroupId,
+          event: newEvent,
+          oldEvent: event
+        });
+
+        this.disableClick = false;
+      };
+    },
     handleShowEvent() {
       if (!this.disableClick) this.$emit("showEvent", this.event);
     },
@@ -297,6 +339,9 @@ export default {
     },
     isleftResizable() {
       return this.isEditable && !this.eventProps.hasPrevious;
+    },
+    isRightResizable() {
+      return this.isEditable && !this.eventProps.hasNext;
     }
   }
 };
