@@ -77,6 +77,9 @@ const actions = {
     });
     const newSection = (await response.json()).data;
     commit("newSection", newSection);
+  },
+  clearLabel({ commit }, labelId) {
+    commit("clearLabel", labelId);
   }
 };
 
@@ -105,6 +108,11 @@ const mutations = {
     const section = state.sections.find(section => section.id === sectionId);
     const taskIndex = section.tasks.findIndex(t => t.id === task.id);
     section.tasks[taskIndex] = task;
+  },
+  clearLabel: (state, labelId) => {
+    for (const section of state.sections)
+      for (const task of section.tasks)
+        if (task.label === labelId) task.label = null;
   }
 };
 

@@ -9,7 +9,7 @@
       type="button"
       class="close"
       aria-label="Close"
-      @click="$emit('close')"
+      @click.stop="$emit('close')"
     >
       <span aria-hidden="true">&times;</span>
     </button>

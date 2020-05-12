@@ -295,7 +295,6 @@ export default {
         taskId: this.task.id,
         editObject: { members: this.task.members }
       });
-      this.showDropdown = false;
     },
     removeMember(member) {
       const { workgroupId } = this.$route.params;

@@ -762,7 +762,7 @@ export default {
   height: 100%;
   font-size: 30px;
 }
-.selected {
+.document.selected {
   border: 1px solid purple !important;
 }
 .documents-fade-enter-active,

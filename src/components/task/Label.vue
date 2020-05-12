@@ -4,6 +4,7 @@
     :style="style"
     v-bind="$attrs"
     v-on="$listeners"
+    v-if="label"
   >
     <span v-if="showName">{{ label.name }}</span>
   </div>

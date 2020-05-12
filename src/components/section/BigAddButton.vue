@@ -11,7 +11,7 @@
     >
       <path d="M19 11H13V5H11V11H5V13H11V19H13V13H19V11Z" />
     </svg>
-    <p class="m-0 p-2"><slot /></p>
+    <p class="m-0 px-2"><slot /></p>
   </button>
 </template>
 
@@ -24,6 +24,7 @@ export default {
 <style scoped>
 button.big-add-btn {
   width: 100%;
+  height: 35px;
   color: var(--color);
   text-align: center;
   cursor: pointer;

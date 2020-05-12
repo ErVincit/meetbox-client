@@ -61,7 +61,8 @@
             </div>
             <LabelDropdown
               :labelId="newTaskLabel"
-              @selected="newTaskLabel = $event === newTaskLabel ? null : $event"
+              @selected="addNewTaskLabel"
+              ref="labelsDropdownBtn"
               aria-labelledby="labelsDropdown"
             />
           </div>
@@ -171,8 +172,6 @@ export default {
       addingTask: false,
       showAlert: false,
       alertMessage: "",
-      showUserDropdown: false,
-      showLabelDropdown: false,
       dragging: false,
       waitingAddTask: false
     };
@@ -199,8 +198,11 @@ export default {
     ...mapActions(["addTask", "editTask", "editSection", "deleteSection"]),
     addNewTaskMember(member) {
       this.newTaskMembers.push(member);
-      this.showUserDropdown = false;
       this.$refs.membersDropdownBtn.$el.click();
+    },
+    addNewTaskLabel(label) {
+      this.newTaskLabel = label === this.newTaskLabel ? null : label;
+      this.$refs.labelsDropdownBtn.$el.click();
     },
     startAddingTask() {
       this.addingTask = true;
@@ -218,7 +220,7 @@ export default {
           sectionId: this.section.id,
           task: {
             title: this.newTaskTitle,
-            label: this.newTaskLabel,
+            label: this.newTaskLabel.id,
             members: this.newTaskMembers.map(m => m.id)
           }
         })

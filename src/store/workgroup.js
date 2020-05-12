@@ -14,11 +14,59 @@ const actions = {
     });
     const json = await data.json();
     commit("setWorkgroups", json.data);
+  },
+  async editLabel({ commit }, { workgroupId, labelId, editObject }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/label/${labelId}/edit`;
+    console.log(url);
+    console.log(editObject);
+    const data = await fetch(url, {
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(editObject),
+      method: "PUT"
+    });
+    const json = await data.json();
+    console.log(json.data);
+    commit("setLabel", json.data);
+  },
+  async createLabel({ commit }, { workgroupId, label }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/label`;
+    const data = await fetch(url, {
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(label),
+      method: "POST"
+    });
+    const json = await data.json();
+    commit("newLabel", json.data);
+  },
+  async deleteLabel({ commit }, { workgroupId, labelId }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/label/${labelId}`;
+    const data = await fetch(url, {
+      credentials: "include",
+      method: "DELETE"
+    });
+    const json = await data.json();
+    commit("removeLabel", json.data);
   }
 };
 
 const mutations = {
-  setWorkgroups: (state, workgroups) => (state.workgroups = workgroups)
+  setWorkgroups: (state, workgroups) => (state.workgroups = workgroups),
+  setLabel: (state, label) => {
+    console.log(state.workgroups);
+    const workgroup = state.workgroups.find(wg => wg.id === label.workgroup);
+    console.log(workgroup, label.id);
+    const index = workgroup.labels.findIndex(l => l.id === label.id);
+    console.log(index);
+    workgroup[index] = label;
+  },
+  newLabel: (state, label) =>
+    state.workgroups.find(wg => wg.id === label.workgroup).labels.push(label),
+  removeLabel: (state, label) => {
+    const workgroup = state.workgroups.find(wg => wg.id === label.workgroup);
+    workgroup.labels = workgroup.labels.filter(l => l.id !== label.id);
+  }
 };
 
 export default { state, getters, actions, mutations };
