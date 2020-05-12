@@ -22,49 +22,51 @@
         >
       </div>
     </div>
-    <div class="d-flex">
-      <div class="settings">
-        <div class="p-2">
-          <div class="d-flex">
-            <div class="d-flex flex-column justify-content-center w-25">
-              <p class="hightlight p-0 m-0 col-sm-4">
-                Inizio
-              </p>
-            </div>
-            <div class="d-flex">
-              <NeuInput
-                type="date"
-                v-model="inputBeginDate"
-                :disabled="!isEditable"
-                :min="todayDate"
-              />
-              <NeuInput
-                type="time"
-                class="w-50"
-                v-model="inputBeginTime"
-                :disabled="!isEditable"
-              />
-            </div>
+    <div>
+      <div class="p-2">
+        <div class="d-flex">
+          <div class="d-flex flex-column justify-content-center w-25">
+            <p class="hightlight p-0 m-0 col-sm-4">
+              Inizio
+            </p>
           </div>
           <div class="d-flex">
-            <div class="d-flex flex-column justify-content-center w-25">
-              <p class="hightlight p-0 m-0 col-sm-4">Fine</p>
-            </div>
-            <div class="d-flex">
-              <NeuInput
-                type="date"
-                v-model="inputEndDate"
-                :disabled="!isEditable"
-              />
-              <NeuInput
-                type="time"
-                class="w-50"
-                v-model="inputEndTime"
-                :disabled="!isEditable"
-              />
-            </div>
+            <NeuInput
+              type="date"
+              v-model="inputBeginDate"
+              :disabled="!isEditable"
+              :min="todayDate"
+            />
+            <NeuInput
+              type="time"
+              class="w-50"
+              v-model="inputBeginTime"
+              :disabled="!isEditable"
+            />
           </div>
         </div>
+        <div class="d-flex">
+          <div class="d-flex flex-column justify-content-center w-25">
+            <p class="hightlight p-0 m-0 col-sm-4">Fine</p>
+          </div>
+          <div class="d-flex">
+            <NeuInput
+              type="date"
+              v-model="inputEndDate"
+              :disabled="!isEditable"
+            />
+            <NeuInput
+              type="time"
+              class="w-50"
+              v-model="inputEndTime"
+              :disabled="!isEditable"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="w-50">
         <p class="hightlight mt-4">Descrizione:</p>
         <NeuTextarea
           v-if="isEditable"
@@ -73,9 +75,11 @@
           ref="description"
           @blur="setDescription"
         />
-        <p class="pl-3" v-if="!isEditable">{{ ourEvent.description }}</p>
+        <p class="pl-3" v-if="!isEditable">
+          {{ ourEvent.description !== "" ? ourEvent.description : "Ciaoo" }}
+        </p>
       </div>
-      <div class="membri p-5">
+      <div class="w-50 p-5">
         <p class="hightlight mb-1">👑 Proprietario:</p>
         <li class="d-flex align-items-center">
           <Avatar
@@ -187,7 +191,8 @@ export default {
       },
       error: false,
       errorText: "",
-      deleted: false
+      deleted: false,
+      noDescription: "Nessuna descrizione presente"
     };
   },
   methods: {

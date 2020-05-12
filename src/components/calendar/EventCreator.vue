@@ -18,37 +18,39 @@
         >
       </div>
     </div>
-    <div class="d-flex">
-      <div class="settings">
-        <div class="p-2">
-          <div class="d-flex">
-            <div class="d-flex flex-column justify-content-center w-25">
-              <p class="hightlight p-0 m-0 col-sm-4">
-                Inizio
-              </p>
-            </div>
-            <div class="d-flex">
-              <NeuInput type="date" v-model="inputBeginDate" :min="todayDate" />
-              <NeuInput type="time" class="w-50" v-model="inputBeginTime" />
-            </div>
+    <div>
+      <div class="p-2">
+        <div class="d-flex">
+          <div class="d-flex flex-column justify-content-center w-25">
+            <p class="hightlight p-0 m-0 col-sm-4">
+              Inizio
+            </p>
           </div>
           <div class="d-flex">
-            <div class="d-flex flex-column justify-content-center w-25">
-              <p class="hightlight p-0 m-0 col-sm-4">Fine</p>
-            </div>
-            <div class="d-flex">
-              <NeuInput type="date" v-model="inputEndDate" :min="minEndDate" />
-              <NeuInput type="time" class="w-50" v-model="inputEndTime" />
-            </div>
+            <NeuInput type="date" v-model="inputBeginDate" :min="todayDate" />
+            <NeuInput type="time" class="w-50" v-model="inputBeginTime" />
           </div>
         </div>
+        <div class="d-flex">
+          <div class="d-flex flex-column justify-content-center w-25">
+            <p class="hightlight p-0 m-0 col-sm-4">Fine</p>
+          </div>
+          <div class="d-flex">
+            <NeuInput type="date" v-model="inputEndDate" :min="minEndDate" />
+            <NeuInput type="time" class="w-50" v-model="inputEndTime" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex">
+      <div class="w-50">
         <p class="hightlight mt-4">Descrizione:</p>
         <NeuTextarea
           v-model="event.description"
           :placeholder="'Aggiungi qui la tua descrizione!'"
         />
       </div>
-      <div class="membri p-5">
+      <div class="w-50 p-5">
         <p class="hightlight mb-1">👑 Proprietario:</p>
         <li class="d-flex align-items-center">
           <Avatar
@@ -192,14 +194,13 @@ export default {
       this.cleanEvent();
     },
     cleanEvent() {
-      console.log(this.currentUser);
       this.event = {
         id: 0,
         title: "",
         timestampBegin: new Date(),
         timestampEnd: new Date(),
         description: "",
-        members: [this.currentUser]
+        members: []
       };
       this.event.timestampEnd.setDate(this.event.timestampEnd.getDate() + 1);
     },
