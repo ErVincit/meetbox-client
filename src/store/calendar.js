@@ -83,10 +83,30 @@ const actions = {
         });
       } else {
         console.log("ERRORE:", json);
-        commit("changeEvent", {
-          event: oldEvent,
-          oldEvent
+      }
+    }
+  },
+
+  async removeEvent({ commit }, { workgroupId, event }) {
+    const response = await fetch(
+      `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/calendar/event/${event.id}`,
+      {
+        method: "DELETE",
+        body: JSON.stringify(event),
+        headers: { "Content-Type": "application/json" },
+        credentials: "include"
+      }
+    );
+    const json = await response.json();
+    if (response.status == 200) {
+      if (!json.error) {
+        json.data.timestampBegin = new Date(json.data.timestampBegin);
+        json.data.timestampEnd = new Date(json.data.timestampEnd);
+        commit("removeEvent", {
+          event
         });
+      } else {
+        console.log("ERRORE:", json);
       }
     }
   }
@@ -113,6 +133,10 @@ const mutations = {
     state.calendar = calendarUtils.interpolateCalendarEvents(state.calendar, [
       event
     ]);
+  },
+  removeEvent: (state, { event }) => {
+    //Rimuovere evento precedente nel calendario
+    state.calendar = calendarUtils.deleteEvent(state.calendar, event);
   }
 };
 

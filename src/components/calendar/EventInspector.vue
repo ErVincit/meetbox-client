@@ -17,6 +17,7 @@
           :color="'#787878'"
           :shadowRadius="5"
           :shadowBlur="10"
+          @click="deleteEvent"
           >🗑️ Elimina</NeuButton
         >
       </div>
@@ -193,7 +194,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["editEvent"]),
+    ...mapActions(["editEvent", "removeEvent"]),
     async addMember(member) {
       for (let i = 0; i < this.ourEvent.members.length; i++)
         if (member.id == this.ourEvent.members[i].id) return;
@@ -246,6 +247,14 @@ export default {
         event: newEvent,
         oldEvent: this.event
       });
+    },
+    async deleteEvent() {
+      const { workgroupId } = this.$route.params;
+      await this.removeEvent({
+        workgroupId,
+        event: this.event
+      });
+      this.$emit("hideEventInspector");
     },
     checkDate() {
       if (this.ourEvent.timestampBegin > this.ourEvent.timestampEnd) {
