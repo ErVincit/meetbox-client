@@ -10,6 +10,16 @@
         v-model="ourEvent.title"
         @blur="setTitle"
       />
+      <div v-if="isEditable" class="px-2 col-auto col-xl-auto">
+        <NeuButton
+          class="px-2"
+          :backgroundColor="'#efeeee'"
+          :color="'#787878'"
+          :shadowRadius="5"
+          :shadowBlur="10"
+          >🗑️ Elimina</NeuButton
+        >
+      </div>
     </div>
     <div class="d-flex">
       <div class="settings">
@@ -142,6 +152,7 @@ import { mapActions, mapGetters } from "vuex";
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import NeuTextarea from "@/components/neu-button/NeuTextarea";
 import NeuInput from "@/components/neu-button/NeuInput";
+import NeuButton from "@/components/neu-button/NeuButton";
 import BigAddButton from "@/components/section/BigAddButton";
 import Avatar from "@/components/avatar/Avatar";
 import UserDropdown from "@/components/task/UserDropdown";
@@ -156,7 +167,8 @@ export default {
     Avatar,
     NeuTextarea,
     NeuInput,
-    UserDropdown
+    UserDropdown,
+    NeuButton
   },
   props: ["event"],
   data() {
