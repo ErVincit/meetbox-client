@@ -25,6 +25,8 @@ import { mapActions, mapGetters } from "vuex";
 
 import calendarUtils from "@/views/calendar/calendar_utils";
 
+const MINIMUM_MINUTE_WIDTH_SLIDER = 15;
+
 export default {
   name: "EventCalendar",
   props: ["eventProps", "rowWidth"],
@@ -231,7 +233,9 @@ export default {
         document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
       const newPos = e.clientX - toLeft - 17;
       // const superMax = left + width - (15 * this.rowSizeX) / (24 * 60);
-      const superMax = this.rowSizeX - (15 * this.rowSizeX) / (24 * 60);
+      const superMax =
+        this.rowSizeX -
+        (MINIMUM_MINUTE_WIDTH_SLIDER * this.rowSizeX) / (24 * 60);
       if (0 <= newPos && newPos <= superMax) {
         target.style.left = newPos + "px";
         const { hours, minutes } = calendarUtils.positionToHours(
@@ -272,7 +276,9 @@ export default {
           document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
         const newPos = e.clientX - toLeft - 17;
         const startEvent = Number.parseInt(target.style.left.replace("px", ""));
-        const min = startEvent + (15 * this.rowSizeX) / (24 * 60);
+        const min =
+          startEvent +
+          (MINIMUM_MINUTE_WIDTH_SLIDER * this.rowSizeX) / (24 * 60);
         if (min <= newPos && newPos <= this.rowSizeX) {
           const { hours, minutes } = calendarUtils.positionToHours(
             newPos,
@@ -281,14 +287,12 @@ export default {
           this.newEndHour = hours;
           this.newEndMinutes = minutes;
           target.style.width = newPos - startEvent + "px";
-        }
-        // else if (newPos <= 0) {
-        //   target.style.left = 0 + "px";
-        //   this.newHour = 0;
-        //   this.newMinutes = 0;
-        //   // e.target.parentNode.style.width = this.widthCalculator() + "px";
-        // }
-        else if (newPos >= this.rowSizeX) {
+        } else if (newPos <= min) {
+          this.newEndHour = 0;
+          this.newEndMinutes = MINIMUM_MINUTE_WIDTH_SLIDER;
+          target.style.width =
+            this.widthCalculator(0, MINIMUM_MINUTE_WIDTH_SLIDER) + "px";
+        } else if (newPos >= this.rowSizeX) {
           this.newEndHour = 23;
           this.newEndMinutes = 59;
           target.style.width = this.widthCalculator(23, 59) + "px";
@@ -308,7 +312,6 @@ export default {
         if (this.event.originalBegin && this.event.originalEnd) {
           timestampBegin = new Date(this.event.originalBegin);
         }
-        //Se è evento giornaliero
 
         const newEvent = {
           id: event.id,
@@ -327,19 +330,6 @@ export default {
     handleShowEvent() {
       if (!this.disableClick) this.$emit("showEvent", this.event);
     },
-    // widthBeginCalculator() {
-    //   const max =
-    //     ((Number.parseInt(this.newHour) * 60 +
-    //       Number.parseInt(this.newMinutes)) *
-    //       this.rowSizeX) /
-    //     (24 * 60);
-    //   const length =
-    //     ((this.event.timestampEnd.getHours() * 60 +
-    //       this.event.timestampEnd.getMinutes()) *
-    //       this.rowSizeX) /
-    //     (24 * 60);
-    //   return length - max;
-    // },
     widthCalculator(hours, minutes) {
       const max =
         ((Number.parseInt(this.newHour) * 60 +
