@@ -214,6 +214,12 @@ export default {
       this.showDropdown = false;
     },
     async setTitle() {
+      if (this.ourEvent.title == "") {
+        this.error = false;
+        this.errorText = "Il titolo dell'evento non può essere vuoto";
+        this.error = true;
+        return;
+      }
       const { workgroupId } = this.$route.params;
       const newEvent = {
         id: this.ourEvent.id,
@@ -259,25 +265,30 @@ export default {
       });
       this.$emit("deletedEvent");
     },
-    checkDate() {
-      if (this.ourEvent.timestampBegin > this.ourEvent.timestampEnd) {
-        const hx = this.ourEvent.timestampEnd.getHours();
-        const mx = this.ourEvent.timestampEnd.getMinutes();
-        this.ourEvent.timestampEnd = new Date(this.ourEvent.timestampBegin);
-        this.ourEvent.timestampEnd.setDate(
-          this.ourEvent.timestampEnd.getDate() + 1
-        );
-        this.ourEvent.timestampEnd.setHours(hx, mx);
-      }
-    },
     async changeDate() {
+      const now = new Date();
+      if (this.ourEvent.timestampBegin <= now) {
+        this.error = false;
+        this.errorText = "L'evento non puo iniziare prima di adesso";
+        this.error = true;
+        return;
+      }
+
+      if (this.ourEvent.timestampBegin >= this.ourEvent.timestampEnd) {
+        this.error = false;
+        this.errorText = "L'evento deve iniziare prima della sua fine";
+        this.error = true;
+        return;
+      }
+
+      this.error = false;
+
       const newEvent = {
         id: this.ourEvent.id,
         timestampBegin: this.ourEvent.timestampBegin,
         timestampEnd: this.ourEvent.timestampEnd
       };
       const { workgroupId } = this.$route.params;
-      console.log(workgroupId, newEvent, this.event);
       await this.editEvent({
         workgroupId,
         event: newEvent,
@@ -303,7 +314,6 @@ export default {
         const m = this.ourEvent.timestampBegin.getMinutes();
         this.ourEvent.timestampBegin = new Date(val);
         this.ourEvent.timestampBegin.setHours(h, m);
-        this.checkDate();
         this.changeDate();
       }
     },
@@ -316,7 +326,6 @@ export default {
         const h = Number.parseInt(split[0]);
         const m = Number.parseInt(split[1]);
         this.ourEvent.timestampBegin.setHours(h, m);
-        this.checkDate();
         this.changeDate();
       }
     },
@@ -329,7 +338,6 @@ export default {
         const m = this.ourEvent.timestampEnd.getMinutes();
         this.ourEvent.timestampEnd = new Date(val);
         this.ourEvent.timestampEnd.setHours(h, m);
-        this.checkDate();
         this.changeDate();
       }
     },
@@ -342,7 +350,6 @@ export default {
         const h = Number.parseInt(split[0]);
         const m = Number.parseInt(split[1]);
         this.ourEvent.timestampEnd.setHours(h, m);
-        this.checkDate();
         this.changeDate();
       }
     },
