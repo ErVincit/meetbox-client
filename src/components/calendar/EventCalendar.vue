@@ -365,12 +365,14 @@ export default {
   width: 100px;
   height: 100%;
   background-color: #2f80ed;
+  border: 1px solid white;
   color: white;
   overflow: hidden;
   padding: 0;
   margin: 0;
   border-radius: 8px;
   white-space: nowrap;
+  text-align: center;
 
   text-overflow: ellipsis;
   display: flex;

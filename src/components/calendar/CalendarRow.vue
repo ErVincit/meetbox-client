@@ -8,19 +8,17 @@
       :rowSizeX="rowSizeX"
       @showEvent="handleShowEvent"
     />
-    <FullDay :events="fullDayEvents" @showEvent="handleShowEvent" />
   </div>
 </template>
 
 <script>
 import RowEventsContainer from "@/components/calendar/RowEventsContainer";
 import WeeksDay from "@/components/calendar/WeeksDay";
-import FullDay from "@/components/calendar/FullDay";
 
 export default {
   name: "CalendarRow",
   props: ["dataprops", "rowSizeX", "nameDay", "day", "fullDayEvents"],
-  components: { WeeksDay, RowEventsContainer, FullDay },
+  components: { WeeksDay, RowEventsContainer },
   methods: {
     handleShowEvent(event) {
       this.$emit("showEvent", event);

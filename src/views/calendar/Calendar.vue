@@ -33,12 +33,15 @@
             <div class="pos-time h-100 w-25 d-flex justify-content-center pr-2">
               18:00
             </div>
+            <!-- <div class="pos-time h-100 w-25 d-flex justify-content-center pr-2">
+              23:59
+            </div> -->
           </div>
-          <div
+          <!-- <div
             class="pos-time fullDayEvent h-100 m-0 p-0 d-flex justify-content-center"
           >
             23:59
-          </div>
+          </div> -->
         </div>
         <div class="space-header d-flex m-0 p-0">
           <div class="dayContainer h-100 m-0 p-2 ml"></div>
@@ -48,7 +51,6 @@
             <div class="mr h-100 w-25"></div>
             <div class="h-100 w-25"></div>
           </div>
-          <div class="fullDayEvent h-100 m-0 p-0 ml"></div>
         </div>
         <div class="position-relative h-100 w-100 m-0 p-0">
           <div class="position-absolute h-100 w-100 p-0 m-0">
@@ -64,7 +66,6 @@
                 <div class="mr h-100 w-25"></div>
                 <div class="h-100 w-25"></div>
               </div>
-              <div class="fullDayEvent h-100 m-0 p-0"></div>
             </div>
           </div>
           <div class="h-100 w-100">
