@@ -240,12 +240,20 @@ export default {
         );
         this.newHour = hours;
         this.newMinutes = minutes;
-        target.style.width = this.widthBeginCalculator() + "px";
+        target.style.width =
+          this.widthCalculator(
+            this.event.timestampEnd.getHours(),
+            this.event.timestampEnd.getMinutes()
+          ) + "px";
       } else if (newPos <= 0) {
         target.style.left = 0 + "px";
         this.newHour = 0;
         this.newMinutes = 0;
-        // e.target.parentNode.style.width = this.widthCalculator() + "px";
+        target.style.width =
+          this.widthCalculator(
+            this.event.timestampEnd.getHours(),
+            this.event.timestampEnd.getMinutes()
+          ) + "px";
       }
       // else if (newPos >= superMax) {
       //   // console.log("minoreee", superMax, newPos);
@@ -319,19 +327,19 @@ export default {
     handleShowEvent() {
       if (!this.disableClick) this.$emit("showEvent", this.event);
     },
-    widthBeginCalculator() {
-      const max =
-        ((Number.parseInt(this.newHour) * 60 +
-          Number.parseInt(this.newMinutes)) *
-          this.rowSizeX) /
-        (24 * 60);
-      const length =
-        ((this.event.timestampEnd.getHours() * 60 +
-          this.event.timestampEnd.getMinutes()) *
-          this.rowSizeX) /
-        (24 * 60);
-      return length - max;
-    },
+    // widthBeginCalculator() {
+    //   const max =
+    //     ((Number.parseInt(this.newHour) * 60 +
+    //       Number.parseInt(this.newMinutes)) *
+    //       this.rowSizeX) /
+    //     (24 * 60);
+    //   const length =
+    //     ((this.event.timestampEnd.getHours() * 60 +
+    //       this.event.timestampEnd.getMinutes()) *
+    //       this.rowSizeX) /
+    //     (24 * 60);
+    //   return length - max;
+    // },
     widthCalculator(hours, minutes) {
       const max =
         ((Number.parseInt(this.newHour) * 60 +
