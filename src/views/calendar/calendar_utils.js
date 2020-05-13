@@ -10,7 +10,6 @@ exports.createCalendar = () => {
       for (var day = 1; day <= this.daysInMonth(month, year); day++) {
         tempCalendar[year][month][day] = {
           events: [],
-          fullDayEvents: [],
           nameDay: this.getNameDay(new Date(year, month, day)),
           day
         };
@@ -207,18 +206,9 @@ exports.interpolateCalendarEvents = (calendar, events) => {
       event.hasPrevious = false;
       // Verify what kind of event is this
       if (this.checkSameDay(tempDate, tempEndDate)) {
-        // fullDayEvents
-        if (this.checkFullDayEvent(tempDate, tempEndDate)) {
-          calendar[tempDate.getFullYear()][tempDate.getMonth()][
-            tempDate.getDate()
-          ].fullDayEvents.push(event);
-        }
-        // Others events who start&finish on same day
-        else {
-          calendar[tempDate.getFullYear()][tempDate.getMonth()][
-            tempDate.getDate()
-          ].events.push(event);
-        }
+        calendar[tempDate.getFullYear()][tempDate.getMonth()][
+          tempDate.getDate()
+        ].events.push(event);
       }
       // Events to separate
       else {
@@ -370,19 +360,9 @@ exports.deleteEvent = (calendar, event) => {
       1
     );
   } else {
-    const fullDayEvents =
-      calendar[date.getFullYear()][date.getMonth()][date.getDate()]
-        .fullDayEvents;
-    const index = this.searchEvent(fullDayEvents, event);
-    if (index != -1) {
-      calendar[date.getFullYear()][date.getMonth()][
-        date.getDate()
-      ].fullDayEvents.splice(index, 1);
-    } else {
-      console.log(
-        "ERRORE: L'elemento che si vuole cancellare non è presente nella lista di eventi di appartenenza"
-      );
-    }
+    console.log(
+      "ERRORE: L'elemento che si vuole cancellare non è presente nella lista di eventi di appartenenza"
+    );
   }
   return calendar;
 };
