@@ -46,7 +46,7 @@
         @click.stop="$emit('showTask', task)"
       />
     </draggable>
-    <NeuContainer v-if="waitingAddTask" class="mx-3">
+    <NeuContainer v-if="waitingAddTask" class="mx-3 mb-3">
       <Loading :show="waitingAddTask" hideMessage />
     </NeuContainer>
     <div class="add-task__container px-3" ref="add-task__container">
@@ -220,7 +220,7 @@ export default {
           sectionId: this.section.id,
           task: {
             title: this.newTaskTitle,
-            label: this.newTaskLabel.id,
+            label: this.newTaskLabel ? this.newTaskLabel.id : null,
             members: this.newTaskMembers.map(m => m.id)
           }
         })

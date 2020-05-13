@@ -33,7 +33,7 @@
         </button>
       </div>
       <BigAddButton @click.stop="addingLabel = true">
-        Crea label
+        Crea etichetta
       </BigAddButton>
     </div>
     <div v-else class="editLabel w-100 h-100" @click.stop>
@@ -176,11 +176,16 @@ export default {
     },
     async removeLabel() {
       if (this.labelToEdit.id !== this.idLabel) {
-        const { workgroupId } = this.$route.params;
-        await this.clearLabel(this.labelToEdit.id);
-        await this.deleteLabel({ workgroupId, labelId: this.labelToEdit.id });
-        this.exitManagement();
-      } else this.message = "Non è possibile rimuovere una label selezionata";
+        if (!this.labelToEdit.color)
+          this.message = "Devi selezionare un colore per creare un'etichetta";
+        else {
+          const { workgroupId } = this.$route.params;
+          this.clearLabel(this.labelToEdit.id);
+          await this.deleteLabel({ workgroupId, labelId: this.labelToEdit.id });
+          this.exitManagement();
+        }
+      } else
+        this.message = "Non è possibile rimuovere un'etichetta selezionata";
     },
     exitManagement() {
       this.labelToEdit = EMPTY_LABEL;
