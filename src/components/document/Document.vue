@@ -11,6 +11,7 @@
           v-model="document.name"
           :disabled="!edit"
           :backgroundHidden="!edit"
+          @click.stop
         />
       </div>
       <div class="document-col w-25">

@@ -5,6 +5,7 @@ import currentUser from "./current-user";
 import tasks from "./tasks";
 import calendar from "./calendar";
 import workgroup from "./workgroup";
+import documents from "./documents";
 
 Vue.use(Vuex);
 
@@ -13,6 +14,7 @@ export default new Vuex.Store({
     currentUser,
     tasks,
     calendar,
-    workgroup
+    workgroup,
+    documents
   }
 });

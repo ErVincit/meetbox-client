@@ -56,6 +56,7 @@
                 Dimensioni
               </div>
             </div>
+            <Loading :show="!tree" />
             <transition-group
               class="documents px-4"
               name="documents-fade"
@@ -126,6 +127,9 @@ import NeuInput from "@/components/neu-button/NeuInput";
 import NeuButton from "@/components/neu-button/NeuButton";
 import FileDropArea from "@/components/task/FileDropArea";
 import Actions from "@/components/actions/Actions";
+import Loading from "@/components/loading/Loading";
+
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Drive",
@@ -136,22 +140,24 @@ export default {
     NeuInput,
     NeuButton,
     FileDropArea,
-    Actions
+    Actions,
+    Loading
   },
   computed: {
-    rootItems() {
-      return this.documents["root"];
-    },
+    ...mapGetters(["tree"]),
     folderWithChild() {
-      return Object.keys(this.documents);
+      return Object.keys(this.tree);
     },
     filteredDocuments() {
-      return this.documents[this.currentPosition].filter(({ name }) =>
-        name.toLowerCase().includes(this.researchString.toLowerCase())
-      );
+      if (this.tree)
+        return this.tree[this.currentPosition].filter(({ name }) =>
+          name.toLowerCase().includes(this.researchString.toLowerCase())
+        );
+      return [];
     }
   },
   methods: {
+    ...mapActions(["fetchTree", "removeDocument"]),
     addFiles(files) {
       // TODO: upload file to server
       for (const file of files) {
@@ -173,9 +179,10 @@ export default {
       // TODO: Upload to server
       console.log("Uploading...", files);
     },
-    deleteDocument() {
+    async deleteDocument() {
+      const { workgroupId } = this.$route.params;
       for (const document of this.filesSelected)
-        console.log("Elimino", document.id);
+        await this.removeDocument({ workgroupId, documentId: document.id });
     },
     editName() {
       this.rename = !this.rename;
@@ -188,551 +195,12 @@ export default {
       researchString: "",
       editmode: false,
       filesSelected: [],
-      rename: false,
-      documents: {
-        "14": [
-          {
-            id: 27,
-            name: "File della vita 2",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 28,
-            name: "File della vita 3",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 29,
-            name: "File della vita 4",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 30,
-            name: "Cartella",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: true,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 32,
-            name: "Cartella",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 33,
-            name: "file.mp4",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 34,
-            name: "file2.mp4",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 35,
-            name: "file3.mp4",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 36,
-            name: "file4.mp4",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 37,
-            name: "file5.mp4",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 38,
-            name: "file6.jar",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 39,
-            name: "file7.mp4",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 50,
-            name: "amico der cinghiale",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 45,
-            name: "file11.mp4",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 46,
-            name: "file12.mp4",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 47,
-            name: "file13.mp4",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 48,
-            name: "file14.mp4",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 49,
-            name: "amico de ciccio",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 59,
-            name: "file.pdf",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 60,
-            name: "file.jpeg",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 61,
-            name: "file.png",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 62,
-            name: "file.rar",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 14,
-            workgroup: 17,
-            task: null
-          }
-        ],
-        "15": [
-          {
-            id: 19,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 15,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 21,
-            name: "File della vita 2",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 15,
-            workgroup: 17,
-            task: null
-          }
-        ],
-        "18": [
-          {
-            id: 52,
-            name: "Cartella de pasta frolla der cinghiale",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: true,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: 18,
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 57,
-            name: "figlio4Del51.123",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: 18,
-            workgroup: 17,
-            task: null
-          }
-        ],
-        root: [
-          {
-            id: 1,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 2,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 3,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 4,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: true,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 7,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: true,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 9,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: true,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 10,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: true,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 11,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: true,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 12,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: true,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 13,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: true,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 14,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: true,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 15,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 16,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: null,
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 17,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          },
-          {
-            id: 18,
-            name: "File della vita",
-            creationdate: "2020-04-27T00:18:39.000Z",
-            isfolder: false,
-            isnote: false,
-            path: "nomedellapath",
-            size: 10000,
-            owner: 10,
-            folder: "root",
-            workgroup: 17,
-            task: null
-          }
-        ]
-      }
+      rename: false
     };
+  },
+  created() {
+    const { workgroupId } = this.$route.params;
+    this.fetchTree(workgroupId);
   }
 };
 </script>
