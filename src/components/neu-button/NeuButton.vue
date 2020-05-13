@@ -7,11 +7,7 @@
     :borderRadius="10"
     class="neu-button"
   >
-    <button
-      class="btn p-0 m-0 container-fluid"
-      v-on="$listeners"
-      v-bind="$attrs"
-    >
+    <button class="btn p-0 m-0 w-100" v-on="$listeners" v-bind="$attrs">
       <slot />
     </button>
   </NeuContainer>

@@ -15,6 +15,17 @@ const actions = {
     const json = await data.json();
     commit("setWorkgroups", json.data);
   },
+  async createWorkgroup({ commit }, { name, image }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup`;
+    const data = await fetch(url, {
+      credentials: "include",
+      body: JSON.stringify({ name, image }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST"
+    });
+    const json = await data.json();
+    commit("newWorkgroup", json.data);
+  },
   async editLabel({ commit }, { workgroupId, labelId, editObject }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/label/${labelId}/edit`;
     console.log(url);
@@ -53,6 +64,7 @@ const actions = {
 
 const mutations = {
   setWorkgroups: (state, workgroups) => (state.workgroups = workgroups),
+  newWorkgroup: (state, workgroup) => state.workgroups.push(workgroup),
   setLabel: (state, label) => {
     console.log(state.workgroups);
     const workgroup = state.workgroups.find(wg => wg.id === label.workgroup);

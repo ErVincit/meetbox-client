@@ -6,12 +6,12 @@
       class="row flex-grow-1"
       style="height: calc(100% - 100px)"
     >
-      <Recents currentPage="activity" class="h-100" />
-      <main class="col col-lg-9 d-flex flex-column h-100">
+      <LeftNavBar class="h-100" />
+      <main class="col d-flex flex-column h-100 px-4">
         <p class="page__title m-0">Attività</p>
         <hr class="m-0" />
         <div
-          class="row pl-3 py-3 flex-grow-1 align-items-start flex-nowrap"
+          class="row pl-3 py-4 flex-grow-1 align-items-start flex-nowrap"
           style="overflow-x: auto; overflow-y: hidden"
         >
           <Loading :show="!allTasks" />
@@ -22,7 +22,7 @@
             @change="handleSectionMove"
             class="d-flex h-100"
           >
-            <div class="pr-3" v-for="section in allTasks" :key="section.id">
+            <div class="pr-4" v-for="section in allTasks" :key="section.id">
               <Section
                 class="py-3 mh-100 d-flex flex-column"
                 :section="section"
@@ -58,7 +58,7 @@
       <Actions class="h-100">
         <NeuButton
           @click="createSection"
-          class="d-flex justify-content-center align-items-center mt-3"
+          class="d-flex justify-content-center align-items-center"
           style="width: 50px; height: 50px"
           v-tooltip:left="'Crea sezione'"
         >
@@ -71,7 +71,7 @@
 
 <script>
 import PageHeader from "@/components/page-header/PageHeader";
-import Recents from "@/components/recents/Recents";
+import LeftNavBar from "@/components/page-header/LeftNavBar";
 import Section from "@/components/section/Section";
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import TaskInspector from "@/components/task/TaskInspector";
@@ -102,7 +102,7 @@ export default {
   },
   components: {
     PageHeader,
-    Recents,
+    LeftNavBar,
     Section,
     TaskInspector,
     NeuContainer,

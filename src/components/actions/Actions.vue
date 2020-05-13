@@ -1,6 +1,6 @@
 <template>
   <div
-    class="actions col col-lg-1 d-none d-lg-flex flex-column justify-content-center py-2"
+    class="actions col-lg-auto d-none d-lg-flex flex-column justify-content-center py-2"
   >
     <div class="flex-grow-1 d-flex flex-column align-items-center">
       <slot />
@@ -17,35 +17,50 @@
       />
     </div>
     <div
-      class="dropdown d-flex flex-column justify-content-center align-items-center py-3"
+      class="dropleft d-flex flex-column justify-content-center align-items-center py-3"
     >
-      <NeuButton
-        id="dropdownMenuButton"
+      <NeuContainer
+        class="d-flex justify-content-center align-items-center"
+        id="workgroupDropdownBtn"
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
-        style="width: 50px; height: 50px"
+        style="width: 50px; height: 50px; cursor: pointer"
       >
         <img src="@/assets/kebab-icon.svg" />
-      </NeuButton>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <p class="dropdown-item m-0 warning">
-          Elimina workgroup
-        </p>
-      </div>
+      </NeuContainer>
+      <NeuContainer
+        disableHover
+        style="border: none; margin-right: 10px; margin-bottom: 10px;"
+        class="dropdown-menu"
+        aria-labelledby="workgroupDropdownBtn"
+      >
+        <a class="dropdown-item m-0">
+          Cambia immagine workgroup...
+        </a>
+        <a class="dropdown-item m-0">
+          Gestisci membri workgroup...
+        </a>
+        <a class="dropdown-item m-0">
+          Rinomia workgroup...
+        </a>
+        <a class="dropdown-item m-0 warning">
+          Elimina workgroup...
+        </a>
+      </NeuContainer>
     </div>
   </div>
 </template>
 
 <script>
 import Avatar from "@/components/avatar/Avatar";
-import NeuButton from "@/components/neu-button/NeuButton";
+import NeuContainer from "@/components/neu-button/NeuContainer";
 
 import { mapGetters } from "vuex";
 
 export default {
   name: "Actions",
-  components: { Avatar, NeuButton },
+  components: { Avatar, NeuContainer },
   computed: {
     ...mapGetters(["workgroups"]),
     currentWorkgroup() {
