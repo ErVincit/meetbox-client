@@ -194,6 +194,29 @@ exports.checkFullDayEvent = (d1, d2) => {
   );
 };
 
+const colors = [
+  "#c2a60a",
+  "#fb5041",
+  "#3483ba",
+  "#24894d",
+  "#9f3c31",
+  "#618e3e",
+  "#07b9c4",
+  "#3d2265",
+  "#a3228a",
+  "#b2fbc0",
+  "#d229a5",
+  "#39ea49",
+  "#1519d7",
+  "#68664c",
+  "#61dd97",
+  "#4ac882",
+  "#125f4f",
+  "#ca86bd",
+  "#7b3a4b",
+  "#7e838b"
+];
+
 exports.interpolateCalendarEvents = (calendar, events) => {
   for (var i = 0; i < events.length; i++) {
     let event = events[i];
@@ -204,6 +227,7 @@ exports.interpolateCalendarEvents = (calendar, events) => {
       event.timestampEnd = tempEndDate;
       event.hasNext = false;
       event.hasPrevious = false;
+      event.color = colors[event.id % colors.length];
       // Verify what kind of event is this
       if (this.checkSameDay(tempDate, tempEndDate)) {
         calendar[tempDate.getFullYear()][tempDate.getMonth()][
@@ -230,7 +254,8 @@ exports.interpolateCalendarEvents = (calendar, events) => {
             hasPrevious: false,
             originalBegin: event.timestampBegin,
             originalEnd: event.timestampEnd,
-            owner: event.owner
+            owner: event.owner,
+            color: event.color
           };
           if (this.checkSameDay(dateBegin, tempDate)) {
             eventChunk.timestampEnd = new Date(dateBegin);
