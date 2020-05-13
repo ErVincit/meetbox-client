@@ -240,7 +240,7 @@ export default {
         );
         this.newHour = hours;
         this.newMinutes = minutes;
-        target.style.width = this.widthCalculator() + "px";
+        target.style.width = this.widthBeginCalculator() + "px";
       } else if (newPos <= 0) {
         target.style.left = 0 + "px";
         this.newHour = 0;
@@ -280,6 +280,11 @@ export default {
         //   this.newMinutes = 0;
         //   // e.target.parentNode.style.width = this.widthCalculator() + "px";
         // }
+        else if (newPos >= this.rowSizeX) {
+          this.newEndHour = 23;
+          this.newEndMinutes = 59;
+          target.style.width = this.widthCalculator(23, 59) + "px";
+        }
       };
       document.onmouseup = async () => {
         document.onmouseup = null;
@@ -314,7 +319,7 @@ export default {
     handleShowEvent() {
       if (!this.disableClick) this.$emit("showEvent", this.event);
     },
-    widthCalculator() {
+    widthBeginCalculator() {
       const max =
         ((Number.parseInt(this.newHour) * 60 +
           Number.parseInt(this.newMinutes)) *
@@ -325,6 +330,15 @@ export default {
           this.event.timestampEnd.getMinutes()) *
           this.rowSizeX) /
         (24 * 60);
+      return length - max;
+    },
+    widthCalculator(hours, minutes) {
+      const max =
+        ((Number.parseInt(this.newHour) * 60 +
+          Number.parseInt(this.newMinutes)) *
+          this.rowSizeX) /
+        (24 * 60);
+      const length = ((hours * 60 + minutes) * this.rowSizeX) / (24 * 60);
       return length - max;
     },
     ...mapActions(["editEvent"])
