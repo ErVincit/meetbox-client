@@ -83,6 +83,8 @@ const actions = {
   }
 };
 
+import Vue from "vue";
+
 const mutations = {
   setSections: (state, sections) => (state.sections = sections),
   setSection: (state, section) => {
@@ -110,9 +112,21 @@ const mutations = {
     section.tasks[taskIndex] = task;
   },
   clearLabel: (state, labelId) => {
-    for (const section of state.sections)
-      for (const task of section.tasks)
-        if (task.label === labelId) task.label = null;
+    for (
+      let sectionIndex = 0;
+      sectionIndex < state.sections.length;
+      sectionIndex++
+    ) {
+      const section = state.sections[sectionIndex];
+      for (let taskIndex = 0; taskIndex < section.tasks.length; taskIndex++) {
+        const label = section.tasks[taskIndex].label;
+        if (label === labelId) {
+          const task = section.tasks[taskIndex];
+          task.label = null;
+          Vue.set(state.sections, sectionIndex, section);
+        }
+      }
+    }
   }
 };
 

@@ -160,7 +160,6 @@ import FileDropArea from "./FileDropArea";
 import UserDropdown from "./UserDropdown";
 import Label from "./Label";
 import LabelDropdown from "./LabelDropdown";
-// import NeuLabel from "./NeuLabel";
 import Member from "./Member";
 import TaskAttachment from "./TaskAttachment";
 
@@ -177,7 +176,6 @@ export default {
     UserDropdown,
     Label,
     LabelDropdown,
-    // NeuLabel,
     NeuInput,
     Member,
     NeuTextarea,

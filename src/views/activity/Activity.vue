@@ -60,8 +60,9 @@
           @click="createSection"
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
+          v-tooltip:left="'Crea sezione'"
         >
-          <img src="@/assets/addIcon.svg" v-tooltip:left="'Crea sezione'" />
+          <img src="@/assets/addIcon.svg" />
         </NeuButton>
       </Actions>
     </div>
