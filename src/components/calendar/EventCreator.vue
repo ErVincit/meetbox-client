@@ -187,6 +187,14 @@ export default {
         this.error = true;
         return;
       }
+      if (this.event.timestampBegin >= this.event.timestampEnd) {
+        //TODO: Impostare durata minima evento
+        this.error = false;
+        this.errorText =
+          "La data e ora di inizio devono essere maggiore di ora";
+        this.error = true;
+        return;
+      }
 
       const { workgroupId } = this.$route.params;
       await this.addEvent({ workgroupId, event: this.event });
@@ -205,13 +213,23 @@ export default {
       this.event.timestampEnd.setDate(this.event.timestampEnd.getDate() + 1);
     },
     checkDate() {
-      if (this.event.timestampBegin > this.event.timestampEnd) {
-        const hx = this.event.timestampEnd.getHours();
-        const mx = this.event.timestampEnd.getMinutes();
-        this.event.timestampEnd = new Date(this.event.timestampBegin);
-        this.event.timestampEnd.setDate(this.event.timestampEnd.getDate() + 1);
-        this.event.timestampEnd.setHours(hx, mx);
+      const now = new Date();
+      if (this.event.timestampBegin <= now) {
+        this.error = false;
+        this.errorText =
+          "La data e ora di inizio devono essere maggiore di ora";
+        this.error = true;
+        return;
       }
+      if (this.event.timestampBegin >= this.event.timestampEnd) {
+        //TODO: Impostare durata minima evento
+        this.error = false;
+        this.errorText =
+          "La data e ora di inizio devono essere maggiore di ora";
+        this.error = true;
+        return;
+      }
+      this.error = false;
     },
     getMember(idUser) {
       for (let i = 0; i < this.workgroupMembers.length; i++)
@@ -237,13 +255,17 @@ export default {
     },
     inputBeginTime: {
       get() {
+        console.log("Posteriore", this.event.timestampBegin);
         return calendarUtils.dateToTimeType(this.event.timestampBegin);
       },
       set(val) {
         const split = val.split(":");
         const h = Number.parseInt(split[0]);
         const m = Number.parseInt(split[1]);
-        this.event.timestampBegin.setHours(h, m);
+        const timestampBegin = new Date(this.event.timestampBegin);
+        timestampBegin.setHours(h, m);
+        this.event.timestampBegin = timestampBegin;
+        console.log(this.event.timestampBegin);
         this.checkDate();
       }
     },
@@ -267,7 +289,9 @@ export default {
         const split = val.split(":");
         const h = Number.parseInt(split[0]);
         const m = Number.parseInt(split[1]);
-        this.event.timestampEnd.setHours(h, m);
+        const timestampEnd = new Date(this.event.timestampEnd);
+        timestampEnd.setHours(h, m);
+        this.event.timestampEnd = timestampEnd;
         this.checkDate();
       }
     },

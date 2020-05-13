@@ -325,7 +325,9 @@ export default {
         const split = val.split(":");
         const h = Number.parseInt(split[0]);
         const m = Number.parseInt(split[1]);
-        this.ourEvent.timestampBegin.setHours(h, m);
+        const timestampBegin = new Date(this.ourEvent.timestampBegin);
+        timestampBegin.setHours(h, m);
+        this.ourEvent.timestampBegin = timestampBegin;
         this.changeDate();
       }
     },
@@ -349,7 +351,9 @@ export default {
         const split = val.split(":");
         const h = Number.parseInt(split[0]);
         const m = Number.parseInt(split[1]);
-        this.ourEvent.timestampEnd.setHours(h, m);
+        const timestampEnd = new Date(this.ourEvent.timestampEnd);
+        timestampEnd.setHours(h, m);
+        this.ourEvent.timestampEnd = timestampEnd;
         this.changeDate();
       }
     },
