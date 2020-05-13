@@ -203,7 +203,7 @@ export default {
       const toLeft =
         document.getElementsByClassName("row__events_container")[0].offsetLeft +
         document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
-      const newPos = e.clientX - toLeft - this.offSet - 15;
+      const newPos = e.clientX - toLeft - this.offSet - 16; //Margin
       const superMax =
         this.rowSizeX -
         Number.parseInt(this.target.style.width.replace("px", ""));
@@ -258,13 +258,14 @@ export default {
             this.event.timestampEnd.getHours(),
             this.event.timestampEnd.getMinutes()
           ) + "px";
+      } else if (newPos >= superMax) {
+        target.style.left = superMax + "px";
+        this.newHour = 23;
+        let minimum = 60 - MINIMUM_MINUTE_WIDTH_SLIDER;
+        const min = minimum == 60 ? 59 : minimum;
+        this.newMinutes = min;
+        target.style.width = this.widthCalculator(23, 59) + "px";
       }
-      // else if (newPos >= superMax) {
-      //   // console.log("minoreee", superMax, newPos);
-
-      //   this.target.style.left = superMax + "px";
-      //   this.target.style.width = this.widthCalculator() + "px";
-      // }
     },
     async handleRightResizing(e, event) {
       const target = e.target.parentNode;
