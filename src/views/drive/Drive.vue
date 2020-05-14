@@ -2,8 +2,8 @@
   <div class="drive container-fluid h-100 d-flex flex-column">
     <PageHeader />
     <div id="page-content" class="row flex-grow-1">
-      <Recents currentPage="drive" />
-      <main class="col col-lg-9 d-flex flex-column">
+      <LeftNavBar class="h-100" />
+      <main class="col d-flex flex-column h-100 px-4">
         <Breadcrumb
           :currentPosition="currentPosition"
           @set-position="setPosition"
@@ -123,8 +123,8 @@
 </template>
 
 <script>
+import LeftNavBar from "@/components/page-header/LeftNavBar";
 import PageHeader from "@/components/page-header/PageHeader";
-import Recents from "@/components/recents/Recents";
 import Document from "@/components/document/Document";
 import NeuInput from "@/components/neu-button/NeuInput";
 import NeuButton from "@/components/neu-button/NeuButton";
@@ -138,8 +138,8 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   name: "Drive",
   components: {
+    LeftNavBar,
     PageHeader,
-    Recents,
     Document,
     NeuInput,
     NeuButton,

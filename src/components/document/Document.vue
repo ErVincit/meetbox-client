@@ -16,7 +16,7 @@
         />
       </div>
       <div class="document-col w-25">
-        {{ document.owner }}
+        {{ memberName }}
       </div>
       <div class="document-col w-25">
         {{ data }}
@@ -33,12 +33,29 @@ import NeuContainer from "@/components/neu-button/NeuContainer";
 import NeuInput from "@/components/neu-button/NeuInput";
 import Calendarutils from "@/views/calendar/calendar_utils";
 
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Document",
   props: { document: Object, edit: { type: Boolean, default: false } },
   components: { NeuContainer, NeuInput },
+  computed: {
+    ...mapGetters(["workgroups"]),
+    memberName() {
+      const { workgroupId } = this.$route.params;
+      let member = "";
+      if (!this.workgroups) return "";
+      for (let i = 0; i < this.workgroups.length; i++) {
+        if (this.workgroups[i].id == workgroupId) {
+          const m = this.workgroups[i].members.filter(
+            mem => mem.id == this.document.owner
+          );
+          member = m[0].firstname + " " + m[0].lastname;
+        }
+      }
+      return member;
+    }
+  },
   mounted() {
     this.data = Calendarutils.dateToString(
       new Date(this.document.creationdate)
