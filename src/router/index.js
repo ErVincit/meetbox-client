@@ -37,7 +37,7 @@ const routes = [
     component: Calendar
   },
   {
-    path: "/:workgroupId/drive",
+    path: "/:workgroupId/drive*",
     name: "drive",
     component: Drive
   }

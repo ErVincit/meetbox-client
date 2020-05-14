@@ -2,11 +2,14 @@
   <div class="drive container-fluid h-100 d-flex flex-column">
     <PageHeader />
     <div id="page-content" class="row flex-grow-1">
-      <Recents currentPage="drive" />
-      <main class="col col-lg-9 d-flex flex-column">
-        <p class="m-0">Drive</p>
+      <LeftNavBar class="h-100" />
+      <main class="col d-flex flex-column h-100 px-1">
+        <Breadcrumb
+          :currentPosition="currentPosition"
+          @set-position="setPosition"
+        />
         <hr class="mt-0 mb-2" />
-        <div class="d-flex mt-3 px-4">
+        <div class="d-flex mt-3 px-2">
           <div class="d-flex w-50 align-items-center">
             <NeuInput
               type="text"
@@ -42,12 +45,12 @@
             >
               Rilascia il file per caricarlo sul Drive
             </div>
-            <div class="d-flex mt-3 px-4">
+            <div class="d-flex mt-3 px-2">
               <div class="header w-25">
                 Nome
               </div>
               <div class="header w-25">
-                Proprietario
+                Creatore
               </div>
               <div class="header w-25">
                 Data
@@ -57,8 +60,16 @@
               </div>
             </div>
             <Loading :show="!tree" />
+            <p
+              v-if="filteredDocuments.length == 0"
+              class="mt-4 w-100 text-center"
+              style="color:#787878"
+            >
+              Nessun documento presente
+            </p>
             <transition-group
-              class="documents px-4"
+              v-else
+              class="documents px-2 h-100"
               name="documents-fade"
               tag="div"
             >
@@ -120,35 +131,38 @@
 </template>
 
 <script>
+import LeftNavBar from "@/components/page-header/LeftNavBar";
 import PageHeader from "@/components/page-header/PageHeader";
-import Recents from "@/components/recents/Recents";
 import Document from "@/components/document/Document";
 import NeuInput from "@/components/neu-button/NeuInput";
 import NeuButton from "@/components/neu-button/NeuButton";
 import FileDropArea from "@/components/task/FileDropArea";
 import Actions from "@/components/actions/Actions";
 import Loading from "@/components/loading/Loading";
+import Breadcrumb from "./Breadcrumb";
 
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Drive",
   components: {
+    LeftNavBar,
     PageHeader,
-    Recents,
     Document,
     NeuInput,
     NeuButton,
     FileDropArea,
     Actions,
+    Breadcrumb,
     Loading
   },
   computed: {
     ...mapGetters(["tree"]),
-    folderWithChild() {
+    folders() {
       return Object.keys(this.tree);
     },
     filteredDocuments() {
+      if (!this.folders.includes(this.currentPosition)) return [];
       if (this.tree)
         return this.tree[this.currentPosition].filter(({ name }) =>
           name.toLowerCase().includes(this.researchString.toLowerCase())
@@ -169,11 +183,13 @@ export default {
       const index = this.filesSelected.findIndex(doc => doc.id === document.id);
       if (index === -1) this.filesSelected.push(document);
       else this.filesSelected.splice(index, 1);
-      if (this.filesSelected.length === 0) this.editmode = false;
+      if (this.filesSelected.length === 0) {
+        this.editmode = false;
+        this.rename = false;
+      }
     },
     handleDblClick(e, document) {
-      if (document.isfolder && this.folderWithChild.includes(document.id + ""))
-        this.currentPosition = document.id;
+      if (document.isfolder) this.currentPosition = document.id + "";
     },
     handleFileDrop(files) {
       // TODO: Upload to server
@@ -186,6 +202,9 @@ export default {
     },
     editName() {
       this.rename = !this.rename;
+    },
+    setPosition(pos) {
+      this.currentPosition = pos + "";
     }
   },
   data() {

@@ -27,12 +27,23 @@ const actions = {
     // const json = await data.json();
     // console.log(json);
     commit("deleteDocument", documentId);
+  },
+  async editName({ commit }, { workgroupId, documentId, editObject }) {
+    console.log(workgroupId, documentId, editObject);
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${documentId}/edit`;
+    const response = await fetch(url, {
+      credentials: "include",
+      body: JSON.stringify(editObject),
+      headers: { "Content-Type": "application/json" },
+      method: "PUT"
+    });
+    console.log(await response.json());
+    const name = editObject.name;
+    commit("editTitle", { documentId, name });
   }
 };
 
 const delFolder = (tree, folderId) => {
-  console.log("Delete folder", folderId);
-  console.log(tree);
   for (const doc of tree[folderId]) if (doc.isFolder) delFolder(tree, doc.id);
   delete tree[folderId];
 };
@@ -52,6 +63,13 @@ const mutations = {
             doc => doc.id !== documentId
           );
         }
+      }
+  },
+  editTitle: (state, { documentId, name }) => {
+    const values = Object.values(state.tree);
+    for (const folder of values)
+      for (const doc of folder) {
+        if (doc.id === documentId) doc.name = name;
       }
   }
 };

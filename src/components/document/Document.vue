@@ -11,11 +11,12 @@
           v-model="document.name"
           :disabled="!edit"
           :backgroundHidden="!edit"
+          @blur="editTitle"
           @click.stop
         />
       </div>
       <div class="document-col w-25">
-        {{ document.owner }}
+        {{ memberName }}
       </div>
       <div class="document-col w-25">
         {{ data }}
@@ -31,15 +32,36 @@
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import NeuInput from "@/components/neu-button/NeuInput";
 import Calendarutils from "@/views/calendar/calendar_utils";
+
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   name: "Document",
   props: { document: Object, edit: { type: Boolean, default: false } },
   components: { NeuContainer, NeuInput },
+  computed: {
+    ...mapGetters(["workgroups"]),
+    memberName() {
+      const { workgroupId } = this.$route.params;
+      let member = "";
+      if (!this.workgroups) return "";
+      for (let i = 0; i < this.workgroups.length; i++) {
+        if (this.workgroups[i].id == workgroupId) {
+          const m = this.workgroups[i].members.filter(
+            mem => mem.id == this.document.owner
+          );
+          member = m[0].firstname + " " + m[0].lastname;
+        }
+      }
+      return member;
+    }
+  },
   mounted() {
     this.data = Calendarutils.dateToString(
       new Date(this.document.creationdate)
     );
-    this.size = this.humanFileSize(this.document.size);
+    if (this.document.isfolder) this.size = "--";
+    else this.size = this.humanFileSize(this.document.size);
     if (this.document.name.includes(".")) {
       var ext = this.document.name.split(".").pop();
       switch (ext) {
@@ -75,6 +97,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["editName"]),
     humanFileSize(bytes) {
       var thresh = 1024;
       if (Math.abs(bytes) < thresh) {
@@ -87,6 +110,14 @@ export default {
         ++u;
       } while (Math.abs(bytes) >= thresh && u < units.length - 1);
       return bytes.toFixed(1) + " " + units[u];
+    },
+    async editTitle() {
+      const { workgroupId } = this.$route.params;
+      await this.editName({
+        workgroupId,
+        documentId: this.document.id,
+        editObject: { name: this.document.name }
+      });
     }
   }
 };
