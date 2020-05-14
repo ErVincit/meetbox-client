@@ -25,20 +25,16 @@ export default {
     value() {
       if (!this.tree) return [{ id: "root", name: "Drive" }];
       const list = [];
-      console.log(this.currentPosition);
       let folder = this.currentPosition;
       const values = Object.values(this.tree);
-      console.log(folder);
       let count = 0;
       while (folder !== "root" && count < 100) {
         count++;
-        console.log("Searching", folder);
         for (const array of values)
           for (const doc of array) {
             if (doc.id === parseInt(folder)) {
               list.unshift(doc);
               folder = doc.folder;
-              console.log("New Folder:", folder);
             }
           }
       }

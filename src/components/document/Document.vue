@@ -43,7 +43,8 @@ export default {
     this.data = Calendarutils.dateToString(
       new Date(this.document.creationdate)
     );
-    this.size = this.humanFileSize(this.document.size);
+    if (this.document.isfolder) this.size = "--";
+    else this.size = this.humanFileSize(this.document.size);
     if (this.document.name.includes(".")) {
       var ext = this.document.name.split(".").pop();
       switch (ext) {
