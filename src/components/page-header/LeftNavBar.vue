@@ -106,7 +106,7 @@
           v-tooltip:right="workgroup.name"
           @click="
             $router.push({
-              name: 'activity',
+              name: 'drive',
               params: { workgroupId: workgroup.id }
             })
           "

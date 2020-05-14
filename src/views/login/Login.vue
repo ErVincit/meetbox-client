@@ -97,7 +97,7 @@ export default {
     async redirect() {
       await this.fetchWorkgroups();
       if (this.workgroups.length === 0) this.$router.push("/tutorial");
-      else this.$router.push("/" + this.workgroups[0] + "/drive");
+      else this.$router.push("/" + this.workgroups[0].id + "/drive");
     }
   }
 };
