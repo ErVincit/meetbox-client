@@ -1,6 +1,6 @@
 <template>
-  <div v-if="display" class="position-relative col-auto">
-    <li class="fa fa-caret-down">
+  <div v-if="display" class="members position-relative col-auto">
+    <div class="fa fa-caret-down">
       <NeuInput
         class="user-dropdown__search-bar flex-grow-1 mt-2"
         type="text"
@@ -8,7 +8,7 @@
         v-model="keyword"
       ></NeuInput>
       <transition-group
-        class="my-2"
+        class="my-2 members_div"
         name="user-dropdown__element-fade"
         tag="ul"
       >
@@ -28,7 +28,7 @@
           >
         </li>
       </transition-group>
-    </li>
+    </div>
   </div>
 </template>
 
@@ -58,4 +58,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.members {
+  max-height: 210px;
+}
+.members_div {
+  overflow: auto;
+  max-height: 180px;
+}
+</style>

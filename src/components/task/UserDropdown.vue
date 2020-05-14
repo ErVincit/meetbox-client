@@ -1,5 +1,10 @@
 <template>
-  <NeuContainer class="dropdown-menu user-dropdown p-2" disableHover>
+  <NeuContainer
+    class="dropdown-menu user-dropdown p-2"
+    v-bind="$attrs"
+    v-on="$listeners"
+    disableHover
+  >
     <NeuInput
       class="user-dropdown__search-bar flex-grow-1"
       type="text"

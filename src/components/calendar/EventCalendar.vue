@@ -42,11 +42,6 @@ export default {
 
     this.$refs.event.style.left = `${max}px`;
     if (this.event.timestampEnd) {
-      // const length =
-      //   ((this.event.timestampEnd.getHours() * 60 +
-      //     this.event.timestampEnd.getMinutes()) *
-      //     this.rowWidth) /
-      //   (24 * 60);
       const hours = this.event.timestampEnd.getHours();
       const minutes = this.event.timestampEnd.getMinutes();
       const length = this.widthCalculator(hours, minutes);
