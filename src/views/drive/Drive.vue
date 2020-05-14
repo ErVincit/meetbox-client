@@ -4,7 +4,10 @@
     <div id="page-content" class="row flex-grow-1">
       <Recents currentPage="drive" />
       <main class="col col-lg-9 d-flex flex-column">
-        <p class="m-0">Drive</p>
+        <Breadcrumb
+          :currentPosition="currentPosition"
+          @set-position="setPosition"
+        />
         <hr class="mt-0 mb-2" />
         <div class="d-flex mt-3 px-4">
           <div class="d-flex w-50 align-items-center">
@@ -47,7 +50,7 @@
                 Nome
               </div>
               <div class="header w-25">
-                Proprietario
+                Creatore
               </div>
               <div class="header w-25">
                 Data
@@ -128,6 +131,7 @@ import NeuButton from "@/components/neu-button/NeuButton";
 import FileDropArea from "@/components/task/FileDropArea";
 import Actions from "@/components/actions/Actions";
 import Loading from "@/components/loading/Loading";
+import Breadcrumb from "./Breadcrumb";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -141,11 +145,12 @@ export default {
     NeuButton,
     FileDropArea,
     Actions,
+    Breadcrumb,
     Loading
   },
   computed: {
     ...mapGetters(["tree"]),
-    folderWithChild() {
+    folders() {
       return Object.keys(this.tree);
     },
     filteredDocuments() {
@@ -169,11 +174,14 @@ export default {
       const index = this.filesSelected.findIndex(doc => doc.id === document.id);
       if (index === -1) this.filesSelected.push(document);
       else this.filesSelected.splice(index, 1);
-      if (this.filesSelected.length === 0) this.editmode = false;
+      if (this.filesSelected.length === 0) {
+        this.editmode = false;
+        this.rename = false;
+      }
     },
     handleDblClick(e, document) {
-      if (document.isfolder && this.folderWithChild.includes(document.id + ""))
-        this.currentPosition = document.id;
+      if (document.isfolder && this.folders.includes(document.id + ""))
+        this.currentPosition = document.id + "";
     },
     handleFileDrop(files) {
       // TODO: Upload to server
@@ -186,6 +194,9 @@ export default {
     },
     editName() {
       this.rename = !this.rename;
+    },
+    setPosition(pos) {
+      this.currentPosition = pos + "";
     }
   },
   data() {

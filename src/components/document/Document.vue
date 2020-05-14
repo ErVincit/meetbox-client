@@ -11,6 +11,7 @@
           v-model="document.name"
           :disabled="!edit"
           :backgroundHidden="!edit"
+          @blur="editTitle"
           @click.stop
         />
       </div>
@@ -31,6 +32,9 @@
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import NeuInput from "@/components/neu-button/NeuInput";
 import Calendarutils from "@/views/calendar/calendar_utils";
+
+import { mapActions } from "vuex";
+
 export default {
   name: "Document",
   props: { document: Object, edit: { type: Boolean, default: false } },
@@ -75,6 +79,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["editName"]),
     humanFileSize(bytes) {
       var thresh = 1024;
       if (Math.abs(bytes) < thresh) {
@@ -87,6 +92,14 @@ export default {
         ++u;
       } while (Math.abs(bytes) >= thresh && u < units.length - 1);
       return bytes.toFixed(1) + " " + units[u];
+    },
+    async editTitle() {
+      const { workgroupId } = this.$route.params;
+      await this.editName({
+        workgroupId,
+        documentId: this.document.id,
+        editObject: { name: this.document.name }
+      });
     }
   }
 };
