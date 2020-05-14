@@ -3,7 +3,7 @@
     class="event-inspector px-5 py-4"
     aria-labelledby="filterDropdownBtn"
     :disableHover="true"
-    @click.stop
+    :class="{ hide: !showEventFilter }"
   >
     <h2 class="font-weight-bold">Filtri</h2>
     <div class="d-flex">
@@ -90,7 +90,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "EventFilter",
   components: { NeuContainer, UserSelection },
-  props: ["allMembers"],
+  props: ["allMembers", "showEventFilter"],
   methods: {
     handleRadioButton(value) {
       this.$emit("maxEventSize", value.target.value);
@@ -129,6 +129,9 @@ export default {
 </script>
 
 <style>
+.hide {
+  display: none;
+}
 .panico {
   width: 400px !important;
 }

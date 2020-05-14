@@ -133,8 +133,8 @@
     />
 
     <EventFilter
-      v-if="showEventFilter"
       ref="event_filter"
+      :showEventFilter="showEventFilter"
       @newFilteredUsers="handleFilteredMember"
       @maxEventSize="handleMaxEventSize"
     />
