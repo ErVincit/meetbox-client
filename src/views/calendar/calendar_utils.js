@@ -131,7 +131,7 @@ exports.inCollision = (list, event) => {
       // console.log("CONDIZIONE 1", event.id);
       break;
     } else if (
-      list[listElement].timestampEnd > event.timestampEnd &&
+      list[listElement].timestampEnd >= event.timestampEnd &&
       list[listElement].timestampBegin < event.timestampEnd
     ) {
       collision = true;
