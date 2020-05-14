@@ -69,7 +69,7 @@
             </p>
             <transition-group
               v-else
-              class="documents px-2"
+              class="documents px-2 h-100"
               name="documents-fade"
               tag="div"
             >
