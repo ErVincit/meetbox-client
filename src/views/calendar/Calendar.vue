@@ -267,6 +267,7 @@ export default {
     },
     showEvent(event) {
       this.showEventCreator = false;
+      this.showEventFilter = false;
       this.showEventInspector = true;
       this.eventToShow = event;
     },
