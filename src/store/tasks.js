@@ -13,7 +13,8 @@ const actions = {
       credentials: "include"
     });
     const json = await data.json();
-    commit("setSections", json.data);
+    if (json.error) console.error(json);
+    else commit("setSections", json.data);
   },
   async addTask({ commit }, { workgroupId, sectionId, task }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/section/${sectionId}/task`;
@@ -30,7 +31,9 @@ const actions = {
   async deleteTask({ commit }, { workgroupId, sectionId, taskId }) {
     commit("removeTask", { sectionId, taskId });
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/section/${sectionId}/task/${taskId}`;
-    await fetch(url, { credentials: "include", method: "DELETE" });
+    const data = await fetch(url, { credentials: "include", method: "DELETE" });
+    const json = await data.json();
+    if (json.error) console.error(json);
   },
   async editTask({ commit }, { workgroupId, sectionId, taskId, editObject }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/section/${sectionId}/task/${taskId}/edit`;
@@ -40,10 +43,14 @@ const actions = {
       headers: { "Content-Type": "application/json" },
       method: "PUT"
     });
-    const task = (await response.json()).data;
-    // If the section is changed take the new
-    if (editObject.section) sectionId = editObject.section;
-    commit("setTask", { sectionId, task });
+    const json = await response.json();
+    if (json.error) console.error(json);
+    else {
+      const task = json.data;
+      // If the section is changed take the new
+      if (editObject.section) sectionId = editObject.section;
+      commit("setTask", { sectionId, task });
+    }
   },
   async editSection({ commit }, { workgroupId, sectionId, editObject }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/section/${sectionId}/edit`;
@@ -54,8 +61,11 @@ const actions = {
       method: "PUT"
     });
     const json = await response.json();
-    const section = json.data;
-    commit("setSection", section);
+    if (json.error) console.error(json);
+    else {
+      const section = json.data;
+      commit("setSection", section);
+    }
   },
   async deleteSection({ commit }, { workgroupId, sectionId }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/section/${sectionId}`;
@@ -64,8 +74,11 @@ const actions = {
       method: "DELETE"
     });
     const json = await response.json();
-    const section = json.data;
-    commit("removeSection", section.id);
+    if (json.error) console.error(json);
+    else {
+      const section = json.data;
+      commit("removeSection", section.id);
+    }
   },
   async addSection({ commit }, { workgroupId, section }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/section`;
@@ -75,8 +88,9 @@ const actions = {
       headers: { "Content-Type": "application/json" },
       method: "POST"
     });
-    const newSection = (await response.json()).data;
-    commit("newSection", newSection);
+    const json = await response.json();
+    if (json.error) console.error(json);
+    else commit("newSection", json.data);
   },
   clearLabel({ commit }, labelId) {
     commit("clearLabel", labelId);

@@ -44,7 +44,7 @@
         <a class="dropdown-item m-0">
           Rinomia workgroup...
         </a>
-        <a class="dropdown-item m-0 warning">
+        <a class="dropdown-item m-0 warning" @click.prevent="removeWorkgroup">
           Elimina workgroup...
         </a>
       </NeuContainer>
@@ -56,7 +56,7 @@
 import Avatar from "@/components/avatar/Avatar";
 import NeuContainer from "@/components/neu-button/NeuContainer";
 
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Actions",
@@ -68,6 +68,19 @@ export default {
       if (this.workgroups)
         return this.workgroups.find(wg => wg.id === parseInt(workgroupId));
       return null;
+    }
+  },
+  methods: {
+    ...mapActions(["deleteWorkgroup"]),
+    async removeWorkgroup() {
+      if (this.workgroups.length === 1) {
+        alert("Non puoi eliminare il tuo ultimo grouppo di lavoro");
+        return;
+      }
+      const { workgroupId } = this.$route.params;
+      await this.deleteWorkgroup(workgroupId);
+      const workgroup = this.workgroups[0];
+      this.$router.push(`/${workgroup.id}/activity`);
     }
   }
 };

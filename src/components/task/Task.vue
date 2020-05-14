@@ -1,25 +1,28 @@
 <template>
   <NeuContainer
-    class="task d-flex"
+    class="task"
     :disableHover="disableHover"
     v-bind="$attrs"
     v-on="$listeners"
   >
-    <Label v-if="task.label" :label="label" />
-    <div class="flex-grow-1">
-      <div class="d-flex align-items-center">
-        <p class="m-0 my-1 ml-2 flex-grow-1">
-          {{ task.title }}
-        </p>
-        <p class="m-0">{{ task.completed ? " ✔️" : "" }}</p>
-      </div>
-      <div class="d-flex justify-content-end">
-        <Avatar
-          v-for="member in members"
-          :key="member.id"
-          :firstname="member.firstname"
-          :lastname="member.lastname"
-        />
+    <Loading v-if="!currentWorkgroup" show hideMessage />
+    <div class="w-100 h-100 d-flex" v-else>
+      <Label v-if="task.label" :label="label" />
+      <div class="flex-grow-1">
+        <div class="d-flex align-items-center">
+          <p class="m-0 my-1 ml-2 flex-grow-1">
+            {{ task.title }}
+          </p>
+          <p class="m-0">{{ task.completed ? " ✔️" : "" }}</p>
+        </div>
+        <div class="d-flex justify-content-end">
+          <Avatar
+            v-for="member in members"
+            :key="member.id"
+            :firstname="member.firstname"
+            :lastname="member.lastname"
+          />
+        </div>
       </div>
     </div>
   </NeuContainer>
@@ -29,6 +32,7 @@
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import Label from "./Label";
 import Avatar from "@/components/avatar/Avatar";
+import Loading from "@/components/loading/Loading";
 
 import { mapGetters } from "vuex";
 
@@ -46,7 +50,7 @@ export default {
     },
     disableHover: Boolean
   },
-  components: { NeuContainer, Label, Avatar },
+  components: { NeuContainer, Label, Avatar, Loading },
   computed: {
     ...mapGetters(["workgroups"]),
     currentWorkgroup() {

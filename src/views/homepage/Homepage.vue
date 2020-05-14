@@ -28,8 +28,8 @@
       <div class="row w-75 justify-content-center">
         <div class="p-2 col-12 col-md-6 col-lg-3">
           <NeuContainer class="p-2 text-center">
-            <img src="@/assets/homepage-drive.svg" />
-            <h3>Archivia</h3>
+            <img class="my-3" src="@/assets/homepage-drive.svg" />
+            <h3 style="color: #2F80ED; font-weight: 600">Archivia</h3>
             <p>
               Conserva foto, progetti, disegni, registrazioni, video e molto
               altro
@@ -38,8 +38,8 @@
         </div>
         <div class="p-2 col-12 col-md-6 col-lg-3">
           <NeuContainer class="p-2 text-center">
-            <img src="@/assets/homepage-drive.svg" />
-            <h3>Archivia</h3>
+            <img class="my-3" src="@/assets/homepage-activity.svg" />
+            <h3 style="color: #27AE60; font-weight: 600">Organizza</h3>
             <p>
               Conserva foto, progetti, disegni, registrazioni, video e molto
               altro
@@ -48,8 +48,8 @@
         </div>
         <div class="p-2 col-12 col-md-6 col-lg-3">
           <NeuContainer class="p-2 text-center">
-            <img src="@/assets/homepage-drive.svg" />
-            <h3>Archivia</h3>
+            <img class="my-3" src="@/assets/homepage-calendar.svg" />
+            <h3 style="color: #EB5757; font-weight: 600">Pianifica</h3>
             <p>
               Conserva foto, progetti, disegni, registrazioni, video e molto
               altro
@@ -58,8 +58,8 @@
         </div>
         <div class="p-2 col-12 col-md-6 col-lg-3">
           <NeuContainer class="p-2 text-center">
-            <img src="@/assets/homepage-drive.svg" />
-            <h3>Archivia</h3>
+            <img class="my-3" src="@/assets/homepage-team.svg" />
+            <h3 style="color: #F2C94C; font-weight: 600">Collabora</h3>
             <p>
               Conserva foto, progetti, disegni, registrazioni, video e molto
               altro

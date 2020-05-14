@@ -14,25 +14,35 @@
           class="row pl-3 py-4 flex-grow-1 align-items-start flex-nowrap"
           style="overflow-x: auto; overflow-y: hidden"
         >
-          <Loading :show="!allTasks" />
+          <Loading :show="loading" />
+          <p
+            v-if="!loading && allTasks && allTasks.length == 0"
+            class="mt-2 highlight"
+            style="font-size: 24px; color: #787878; max-width: 750px"
+          >
+            Inizia subito a riempire questo spazio vuoto, crea una sezione con
+            il pulsante a destra!
+          </p>
           <draggable
+            v-if="!loading"
             :list="allTasks"
             :disabled="editingSection"
             ghost-class="ghost"
             @change="handleSectionMove"
-            class="d-flex h-100"
+            class="d-flex h-100 align-items-start"
+            draggable=".aaa"
           >
-            <div class="pr-4" v-for="section in allTasks" :key="section.id">
-              <Section
-                class="py-3 mh-100 d-flex flex-column"
-                :section="section"
-                @showTask="showTask(section.id, ...arguments)"
-                @drag-start="handleDragStart(section.id, ...arguments)"
-                @drag-end="dragging = false"
-                @start-editing="editingSection = true"
-                @end-editing="editingSection = false"
-              />
-            </div>
+            <Section
+              v-for="section in allTasks"
+              :key="section.id"
+              class="py-3 mr-4 mh-100 d-flex flex-column aaa"
+              :section="section"
+              @showTask="showTask(section.id, ...arguments)"
+              @drag-start="handleDragStart(section.id, ...arguments)"
+              @drag-end="dragging = false"
+              @start-editing="editingSection = true"
+              @end-editing="editingSection = false"
+            />
           </draggable>
         </div>
         <TaskInspector
@@ -97,7 +107,8 @@ export default {
       sectionToShow: null,
       dragging: false,
       draggingItemInfo: null,
-      editingSection: false
+      editingSection: false,
+      loading: false
     };
   },
   components: {
@@ -114,7 +125,15 @@ export default {
   computed: mapGetters(["allTasks"]),
   created() {
     const { workgroupId } = this.$route.params;
-    this.fetchTasks(workgroupId);
+    this.loading = true;
+    this.fetchTasks(workgroupId).then(() => (this.loading = false));
+  },
+  watch: {
+    $route() {
+      const { workgroupId } = this.$route.params;
+      this.loading = true;
+      this.fetchTasks(workgroupId).then(() => (this.loading = false));
+    }
   },
   methods: {
     ...mapActions(["fetchTasks", "deleteTask", "addSection", "editSection"]),

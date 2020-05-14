@@ -159,6 +159,7 @@ export default {
   computed: {
     ...mapGetters(["tree"]),
     folders() {
+      if (!this.tree) return [];
       return Object.keys(this.tree);
     },
     filteredDocuments() {

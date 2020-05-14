@@ -7,6 +7,8 @@ import Signup from "@/views/signup/Signup";
 import Activity from "@/views/activity/Activity";
 import Calendar from "@/views/calendar/Calendar";
 import Drive from "@/views/drive/Drive";
+import NotFound from "@/views/not-found/NotFound";
+import Tutorial from "@/views/tutorial/Tutorial";
 
 Vue.use(VueRouter);
 
@@ -27,6 +29,11 @@ const routes = [
     component: Signup
   },
   {
+    path: "/tutorial",
+    name: "tutorial",
+    component: Tutorial
+  },
+  {
     path: "/:workgroupId/activity",
     name: "activity",
     component: Activity
@@ -37,10 +44,16 @@ const routes = [
     component: Calendar
   },
   {
-    path: "/:workgroupId/drive*",
+    path: "/:workgroupId/drive",
     name: "drive",
     component: Drive
-  }
+  },
+  {
+    path: "/:workgroupId/drive*",
+    name: "drive-subfolder",
+    component: Drive
+  },
+  { path: "*", name: "notfound", component: NotFound }
 ];
 
 const router = new VueRouter({

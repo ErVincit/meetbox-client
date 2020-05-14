@@ -1,5 +1,9 @@
 <template>
-  <NeuContainer class="new-workgroup" alwaysHover>
+  <NeuContainer
+    class="new-workgroup"
+    style="position: fixed; right: -310px; top: 0; width: 300px; z-index: 1000; cursor: auto"
+    disableHover
+  >
     <div style="position: relative">
       <p class=" mb-0 highlight" style="line-height: 20px">
         Crea workgroup
@@ -78,7 +82,6 @@ export default {
       console.log("Creating workgroup");
       await this.createWorkgroup({ name: this.name, image: this.image });
       // TODO:
-      // - Create workgroup
       // - Redirect to new workgroup
       this.exit();
     }

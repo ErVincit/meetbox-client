@@ -31,7 +31,7 @@ export default {
 
 <style scoped>
 .loading {
-  color: #2f80ed;
+  color: #1c4885;
 }
 .loading > div {
   width: 3rem;

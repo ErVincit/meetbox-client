@@ -1,5 +1,9 @@
 <template>
-  <div class="d-flex align-items-center">
+  <div
+    class="member d-flex align-items-center"
+    v-bind="$attrs"
+    v-on="$listeners"
+  >
     <Avatar
       class="mr-2"
       :firstname="member.firstname"
@@ -7,6 +11,7 @@
     />
     {{ member.firstname }} {{ member.lastname }}
     <button
+      v-if="!dontClose"
       type="button"
       class="close ml-auto mr-2"
       aria-label="Close"
@@ -22,7 +27,10 @@ import Avatar from "@/components/avatar/Avatar";
 
 export default {
   name: "Member",
-  props: { member: { id: Number, fistname: String, lastname: String } },
+  props: {
+    member: { id: Number, fistname: String, lastname: String },
+    dontClose: { type: Boolean, default: false }
+  },
   components: { Avatar }
 };
 </script>

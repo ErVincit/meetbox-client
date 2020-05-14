@@ -34,6 +34,18 @@ const actions = {
       return true;
     }
     return false;
+  },
+  async signoutUser({ commit }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/login/signout`;
+    const response = await fetch(url, {
+      method: "PUT",
+      credentials: "include"
+    });
+    if (response.ok) {
+      commit("setCurrentUser", null);
+      return true;
+    }
+    return false;
   }
 };
 

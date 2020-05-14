@@ -20,6 +20,7 @@ const bsTooltip = (el, binding) => {
     title: binding.value,
     placement: binding.arg || "top",
     trigger: t.join(" "),
+    boundary: "window",
     html: !!binding.modifiers.html
   });
 };

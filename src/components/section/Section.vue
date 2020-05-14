@@ -35,7 +35,7 @@
       @end="handleDragEnd"
       draggable=".task"
       class="flex-grow-1"
-      style="overflow-y: auto"
+      style="overflow-y: auto; overflow-x: hidden"
     >
       <Task
         class="mt-3 p-2 mx-3"

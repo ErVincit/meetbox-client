@@ -1,11 +1,14 @@
 <template>
-  <nav class="navbar col-auto d-none d-lg-block">
-    <NeuContainer disableHover>
+  <nav
+    class="navbar col-auto flex-column align-items-center justify-content-start h-100 d-none d-lg-flex pb-3"
+    style="max-width: 300px"
+  >
+    <NeuContainer class="w-100" disableHover>
       <ul class="navbar-nav">
         <router-link
           :to="{
             name: 'drive',
-            params: $route.params
+            params: { workgroupId: $route.params.workgroupId }
           }"
         >
           <li
@@ -88,8 +91,12 @@
       </ul>
     </NeuContainer>
 
-    <NeuContainer class="mt-3" disableHover>
-      <ul class="navbar-nav">
+    <NeuContainer
+      class="mt-3"
+      style="overflow-y: auto; overflow-x: hidden"
+      disableHover
+    >
+      <ul class="navbar-nav w-100">
         <li v-if="!workgroups"><Loading show hideMessage /></li>
         <li
           class="mt-2 px-2 d-flex align-items-center workgroup"
@@ -99,7 +106,7 @@
           v-tooltip:right="workgroup.name"
           @click="
             $router.push({
-              name: 'drive',
+              name: 'activity',
               params: { workgroupId: workgroup.id }
             })
           "
@@ -110,39 +117,43 @@
         <li
           class="my-2 px-2 d-flex align-items-center add-workgroup"
           @click="handleNewWorkgroup"
-          v-tooltip:right="'Crea nuovo'"
+          style="position: relative"
         >
-          <svg
-            width="50"
-            height="50"
-            viewBox="0 0 50 50"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle
-              cx="25"
-              cy="25"
-              r="24"
-              stroke="#787878"
-              stroke-width="2"
-              stroke-dasharray="5 5"
-            />
-            <path
-              d="M25 15V24.75M25 34.5V24.75M25 24.75H15H34.5"
-              stroke="#787878"
-              stroke-width="2"
-            />
-          </svg>
-          <span v-if="!compressed" class="px-2">Crea nuovo</span>
-        </li>
-        <li v-if="addingWorkgroup" class="my-2 px-3">
-          <NewWorkgroup class="p-2" @exit="addingWorkgroup = false" />
+          <div class="w-100" v-tooltip:right="'Crea nuovo'">
+            <svg
+              width="50"
+              height="50"
+              viewBox="0 0 50 50"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="25"
+                cy="25"
+                r="24"
+                stroke="#787878"
+                stroke-width="2"
+                stroke-dasharray="5 5"
+              />
+              <path
+                d="M25 15V24.75M25 34.5V24.75M25 24.75H15H34.5"
+                stroke="#787878"
+                stroke-width="2"
+              />
+            </svg>
+            <span v-if="!compressed" class="px-2">Crea nuovo</span>
+          </div>
+          <NewWorkgroup
+            v-if="addingWorkgroup"
+            class="p-2"
+            @exit="addingWorkgroup = false"
+          />
         </li>
       </ul>
     </NeuContainer>
 
     <NeuButton
-      class="mt-3 p-2 expand-btn"
+      class="mt-3 p-2 w-100 expand-btn"
       style="height: auto"
       @click="toggleExpand"
       v-tooltip:right="compressed ? 'Espandi' : 'Comprimi'"
@@ -184,6 +195,7 @@ export default {
     ...mapActions(["fetchWorkgroups"]),
     toggleExpand() {
       this.compressed = !this.compressed;
+      localStorage.setItem("navbar-compressed", this.compressed);
     },
     handleNewWorkgroup() {
       this.compressed = false;
@@ -203,8 +215,9 @@ export default {
     this.fetchWorkgroups();
   },
   data() {
+    const storeValue = localStorage.getItem("navbar-compressed");
     return {
-      compressed: false,
+      compressed: storeValue ? storeValue === "true" : false,
       addingWorkgroup: false
     };
   }
@@ -212,6 +225,10 @@ export default {
 </script>
 
 <style>
+.tooltip {
+  position: fixed;
+}
+
 .navbar {
   transition: all 500ms;
 }
@@ -223,16 +240,21 @@ export default {
   border-radius: 10px;
   cursor: pointer;
 }
-.navbar a.router-link-active li,
+.navbar-nav li span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.navbar a.router-link-exact-active li,
 .navbar-nav li:hover {
   color: #1c4885;
 }
-.navbar a.router-link-active svg circle,
+.navbar a.router-link-exact-active svg circle,
 .navbar-nav li:hover svg circle {
   fill: #1c4885;
   stroke: white;
 }
-.navbar a.router-link-active path,
+.navbar a.router-link-exact-active path,
 .navbar-nav li:hover svg path {
   fill: white;
 }
@@ -244,6 +266,7 @@ export default {
 .workgroup img {
   width: 50px;
   height: 50px;
+  object-fit: cover;
 }
 .workgroup.selected,
 .workgroup:hover {

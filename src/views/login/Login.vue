@@ -72,31 +72,32 @@ export default {
       alertMessage: ""
     };
   },
-  computed: mapGetters(["currentUser"]),
+  computed: mapGetters(["currentUser", "workgroups"]),
   async created() {
     if (this.currentUser) {
-      this.redirect();
+      await this.redirect();
     } else {
       const validated = await this.validateUser();
-      if (validated) this.redirect();
+      if (validated) await this.redirect();
     }
   },
   methods: {
-    ...mapActions(["validateUser", "loginUser"]),
+    ...mapActions(["validateUser", "loginUser", "fetchWorkgroups"]),
     async onSubmit() {
       const { email, password } = this;
       if (email && password) {
         const logged = await this.loginUser({ email, password });
-        if (logged) this.redirect();
+        if (logged) await this.redirect();
         else {
           this.alertMessage = "Autenticazione fallita. Riprovare...";
           this.showAlert = true;
         }
       }
     },
-    redirect() {
-      const lastWorkgroupId = "17"; // localStorage.getItem("lastWorkgroupId");
-      this.$router.push("/" + lastWorkgroupId + "/drive");
+    async redirect() {
+      await this.fetchWorkgroups();
+      if (this.workgroups.length === 0) this.$router.push("/tutorial");
+      else this.$router.push("/" + this.workgroups[0] + "/drive");
     }
   }
 };
