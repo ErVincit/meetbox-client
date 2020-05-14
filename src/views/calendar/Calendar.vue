@@ -186,11 +186,14 @@ const handleOutsideClick = function(event) {
 export default {
   name: "Calendar",
   created() {
-    this.initCalendar();
-    this.fetchEvents();
-    this.calendarIdentifier = calendarUtils.calendarWeeklyPosition(
-      this.currentDate
-    );
+    if (!this.calendar) {
+      const { workgroupId } = this.$route.params;
+      this.initCalendar();
+      this.fetchEvents({ workgroupId });
+      this.calendarIdentifier = calendarUtils.calendarWeeklyPosition(
+        this.currentDate
+      );
+    }
   },
   components: {
     PageHeader,

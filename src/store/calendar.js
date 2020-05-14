@@ -11,14 +11,14 @@ const getters = {
 const actions = {
   initCalendar: ({ commit }) =>
     commit("setCalendar", calendarUtils.createCalendar()),
-  async fetchEvents({ commit }) {
+  async fetchEvents({ commit }, { workgroupId }) {
     var tmpDate = new Date();
     const range = 10;
     const actualYear = tmpDate.getFullYear();
     const response = await fetch(
       `${
         process.env.VUE_APP_SERVER_ADDRESS
-      }/api/workgroup/17/calendar/events?from=${actualYear -
+      }/api/workgroup/${workgroupId}/calendar/events?from=${actualYear -
         range}-01-01 00:00:00`,
       {
         method: "GET",
