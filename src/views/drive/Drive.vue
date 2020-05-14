@@ -3,13 +3,13 @@
     <PageHeader />
     <div id="page-content" class="row flex-grow-1">
       <LeftNavBar class="h-100" />
-      <main class="col d-flex flex-column h-100 px-4">
+      <main class="col d-flex flex-column h-100 px-1">
         <Breadcrumb
           :currentPosition="currentPosition"
           @set-position="setPosition"
         />
         <hr class="mt-0 mb-2" />
-        <div class="d-flex mt-3 px-4">
+        <div class="d-flex mt-3 px-2">
           <div class="d-flex w-50 align-items-center">
             <NeuInput
               type="text"
@@ -45,7 +45,7 @@
             >
               Rilascia il file per caricarlo sul Drive
             </div>
-            <div class="d-flex mt-3 px-4">
+            <div class="d-flex mt-3 px-2">
               <div class="header w-25">
                 Nome
               </div>
@@ -60,8 +60,16 @@
               </div>
             </div>
             <Loading :show="!tree" />
+            <p
+              v-if="filteredDocuments.length == 0"
+              class="mt-4 w-100 text-center"
+              style="color:#787878"
+            >
+              Nessun documento presente
+            </p>
             <transition-group
-              class="documents px-4"
+              v-else
+              class="documents px-2"
               name="documents-fade"
               tag="div"
             >
@@ -154,6 +162,7 @@ export default {
       return Object.keys(this.tree);
     },
     filteredDocuments() {
+      if (!this.folders.includes(this.currentPosition)) return [];
       if (this.tree)
         return this.tree[this.currentPosition].filter(({ name }) =>
           name.toLowerCase().includes(this.researchString.toLowerCase())
@@ -180,8 +189,7 @@ export default {
       }
     },
     handleDblClick(e, document) {
-      if (document.isfolder && this.folders.includes(document.id + ""))
-        this.currentPosition = document.id + "";
+      if (document.isfolder) this.currentPosition = document.id + "";
     },
     handleFileDrop(files) {
       // TODO: Upload to server

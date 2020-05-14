@@ -49,4 +49,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.breadcrumb {
+  background-color: transparent;
+}
+</style>
