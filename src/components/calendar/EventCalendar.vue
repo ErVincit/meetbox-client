@@ -71,7 +71,9 @@ export default {
       this.setEventLeght(event);
     }
   },
-  updated() {},
+  updated() {
+    // console.log("Updato", this.event.title, this.event);
+  },
   methods: {
     setEventLeght() {
       this.event.timestampBegin = new Date(this.event.timestampBegin);

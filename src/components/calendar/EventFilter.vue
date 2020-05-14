@@ -17,53 +17,52 @@
           <div class="d-flex align-items-center px-2">
             <input
               type="radio"
-              id="male"
+              id="24ore"
               name="gender"
               value="24ore"
               @change="handleRadioButton"
             />
-            <label class="m-0 ml-2" for="male">Minore di 24 ore</label><br />
+            <label class="m-0 ml-2" for="24ore">Minore di 24 ore</label><br />
           </div>
           <div class="d-flex align-items-center px-2">
             <input
               type="radio"
-              id="female"
+              id="48ore"
               name="gender"
               value="48ore"
               @change="handleRadioButton"
             />
-            <label class="m-0 ml-2" for="female">Minore di 48 ore</label><br />
+            <label class="m-0 ml-2" for="48ore">Minore di 48 ore</label><br />
           </div>
           <div class="d-flex align-items-center px-2">
             <input
               type="radio"
-              id="other"
+              id="72ore"
               name="gender"
               value="72ore"
               @change="handleRadioButton"
             />
-            <label class="m-0 ml-2" for="other">Minore di 72 ore</label>
+            <label class="m-0 ml-2" for="72ore">Minore di 72 ore</label>
           </div>
           <div class="d-flex align-items-center px-2">
             <input
               type="radio"
-              id="other"
+              id="1set"
               name="gender"
               value="1set"
               @change="handleRadioButton"
             />
-            <label class="m-0 ml-2" for="other">Minore di 1 settimana</label>
+            <label class="m-0 ml-2" for="1set">Minore di 1 settimana</label>
           </div>
           <div class="d-flex align-items-center px-2">
             <input
               type="radio"
-              id="other"
+              id="nessuno"
               name="gender"
               value="nessuno"
-              checked
               @change="handleRadioButton"
             />
-            <label class="m-0 ml-2" for="other">Nessuno</label>
+            <label class="m-0 ml-2" for="nessuno">Nessuno</label>
           </div>
         </div>
       </div>
@@ -74,7 +73,7 @@
         <UserSelection
           :allMembers="workgroupMembers"
           :selectedMembers="filteredMembers"
-          :display="activeFilterMember"
+          :display="true"
           @memberSelected="handleSelectedMember"
         />
       </div>
@@ -95,13 +94,8 @@ export default {
   methods: {
     handleRadioButton(value) {
       this.$emit("maxEventSize", value.target.value);
-    },
-    handleClick(val) {
-      this.activeFilterMember = val;
-      this.$emit("showFilteredUser", val);
-    },
-    handleSubmenuClick() {
-      this.$refs.userDropdown.$el.style.display = "block";
+      this.eventsDuration = value.target.value;
+      value.target.checked = true;
     },
     handleSelectedMember(member) {
       const array = [];
@@ -118,9 +112,7 @@ export default {
   data() {
     return {
       eventsDuration: null,
-      filteredMembers: [],
-      activeEventDuration: false,
-      activeFilterMember: true
+      filteredMembers: []
     };
   },
   computed: {

@@ -135,9 +135,7 @@
     <EventFilter
       v-if="showEventFilter"
       ref="event_filter"
-      @showFilteredUser="handleShowFilteredUser"
       @newFilteredUsers="handleFilteredMember"
-      @showMaxEventSize="handleShowMaxEventSize"
       @maxEventSize="handleMaxEventSize"
     />
 
@@ -162,7 +160,6 @@
 
 <script>
 import PageHeader from "@/components/page-header/PageHeader";
-// import Recents from "@/components/recents/Recents";
 import CalendarRow from "@/components/calendar/CalendarRow";
 import NeuButton from "@/components/neu-button/NeuButton";
 import EventInspector from "@/components/calendar/EventInspector";
@@ -214,30 +211,29 @@ export default {
     LeftNavBar
   },
   methods: {
-    handleShowMaxEventSize(val) {
-      this.showMaxEventSize = val;
-      // console.log("Show event max size");
-      if (!val) this.maxEventsSize = null;
-    },
     handleMaxEventSize(newSize) {
-      // console.log("New event size:", newSize);
       switch (newSize) {
         case "24ore":
+          this.showMaxEventSize = true;
           this.maxEventsSize = 86400000;
           break;
         case "48ore":
+          this.showMaxEventSize = true;
           this.maxEventsSize = 172800000;
           break;
         case "72ore":
+          this.showMaxEventSize = true;
           this.maxEventsSize = 259200000;
           break;
         case "1set":
+          this.showMaxEventSize = true;
           this.maxEventsSize = 604800000;
           break;
+        case "nessuno":
+          this.showMaxEventSize = false;
+          this.maxEventsSize = null;
+          break;
       }
-    },
-    handleShowFilteredUser(val) {
-      this.showFilteredUser = val;
     },
     handleFilteredMember(membersFiltered) {
       this.filteredMembers = membersFiltered;
@@ -289,9 +285,27 @@ export default {
         this.deletedEventMessage = false;
       }, 5000);
     },
-    // handleFilter() {
-
-    // },
+    anormal() {
+      if (this.maxEventsSize === "nessuno") this.showMaxEventSize = false;
+      else this.showMaxEventSize = true;
+    },
+    analisys(e) {
+      // console.log(e);
+      if (e.originalBegin && e.originalEnd) {
+        if (
+          e.originalEnd.getTime() - e.originalBegin.getTime() <=
+          this.maxEventsSize
+        )
+          return true;
+        else return false;
+      }
+      if (
+        e.timestampEnd.getTime() - e.timestampBegin.getTime() <=
+        this.maxEventsSize
+      )
+        return true;
+      else return false;
+    },
     ...mapActions(["initCalendar", "fetchEvents"])
   },
   computed: {
@@ -339,14 +353,32 @@ export default {
         const max = today.getDate() + 7 - todayDay;
         const tempDate = new Date(today.getFullYear(), today.getMonth(), min);
         const maxDate = new Date(today.getFullYear(), today.getMonth(), max);
-        while (tempDate <= maxDate) {
-          settimana.push(
-            this.calendar[tempDate.getFullYear()][tempDate.getMonth()][
-              tempDate.getDate()
-            ]
-          );
-          //Cambiare solo event con una filtered
-          tempDate.setDate(tempDate.getDate() + 1);
+        // console.log(this.maxEventsSize);
+        if (this.maxEventsSize && this.maxEventsSize !== null) {
+          while (tempDate <= maxDate) {
+            const events = this.calendar[tempDate.getFullYear()][
+              tempDate.getMonth()
+            ][tempDate.getDate()].events.filter(this.analisys);
+            // console.log("Events:", events);
+            const day = this.calendar[tempDate.getFullYear()][
+              tempDate.getMonth()
+            ][tempDate.getDate()];
+            const obj = Object.assign({}, day);
+            obj.events = events;
+            settimana.push(obj);
+            //Cambiare solo event con una filtered
+            tempDate.setDate(tempDate.getDate() + 1);
+          }
+        } else {
+          while (tempDate <= maxDate) {
+            settimana.push(
+              this.calendar[tempDate.getFullYear()][tempDate.getMonth()][
+                tempDate.getDate()
+              ]
+            );
+            //Cambiare solo event con una filtered
+            tempDate.setDate(tempDate.getDate() + 1);
+          }
         }
       }
       return settimana;
