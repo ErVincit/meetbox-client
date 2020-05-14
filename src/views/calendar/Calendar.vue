@@ -49,15 +49,7 @@
             <div class="pos-time h-100 w-25 d-flex justify-content-center pr-2">
               18:00
             </div>
-            <!-- <div class="pos-time h-100 w-25 d-flex justify-content-center pr-2">
-              23:59
-            </div> -->
           </div>
-          <!-- <div
-            class="pos-time fullDayEvent h-100 m-0 p-0 d-flex justify-content-center"
-          >
-            23:59
-          </div> -->
         </div>
         <div class="space-header d-flex m-0 p-0">
           <div class="dayContainer h-100 m-0 p-2 ml"></div>
@@ -306,6 +298,18 @@ export default {
         return true;
       else return false;
     },
+    filterEventWithMembers(event) {
+      if (this.filteredMembers.filter(m => m.id === event.owner).length > 0)
+        return true;
+      for (let i = 0; i < event.members.length; i++) {
+        if (
+          this.filteredMembers.filter(m => m.id === event.members[i].id)
+            .length > 0
+        )
+          return true;
+      }
+      return false;
+    },
     ...mapActions(["initCalendar", "fetchEvents"])
   },
   computed: {
@@ -380,6 +384,15 @@ export default {
             tempDate.setDate(tempDate.getDate() + 1);
           }
         }
+        if (this.filteredMembers.length > 0) {
+          for (let i = 0; i < settimana.length; i++) {
+            const myEvents = settimana[i].events;
+            const filteredEvents = myEvents.filter(this.filterEventWithMembers);
+            const obj = Object.assign({}, settimana[i]);
+            obj.events = filteredEvents;
+            settimana[i] = obj;
+          }
+        }
       }
       return settimana;
     },
@@ -412,6 +425,12 @@ export default {
   },
   destroyed() {
     document.removeEventListener("click", handleOutsideClick.bind(this));
+  },
+  watch: {
+    filteredMembers: function() {
+      if (this.filteredMembers.length === 0) this.showFilteredUser = false;
+      else this.showFilteredUser = true;
+    }
   }
 };
 </script>

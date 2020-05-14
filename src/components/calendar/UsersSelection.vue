@@ -16,16 +16,40 @@
           v-for="user in membersToShow"
           :key="user.id"
           class="d-flex align-items-center user-dropdown__element px-2"
-          @click.stop="$emit('memberSelected', user)"
+          d-flex
+          align-items-center
+          px-2
+          @click.stop="
+            $emit('memberSelected', user);
+            handleMember(user);
+          "
         >
-          <Avatar
-            class="mr-1 my-1"
-            :firstname="user.firstname"
-            :lastname="user.lastname"
-          />
-          <span class="mx-1 text-nowrap"
-            >{{ user.firstname }} {{ user.lastname }}</span
+          <div
+            v-if="!selected.find(m => m.id === user.id)"
+            class="d-flex align-items-center px-2"
           >
+            <Avatar
+              class="mr-1 my-1"
+              :firstname="user.firstname"
+              :lastname="user.lastname"
+            />
+            <span class="mx-1 text-nowrap"
+              >{{ user.firstname }} {{ user.lastname }}</span
+            >
+          </div>
+          <div
+            v-if="selected.find(m => m.id === user.id)"
+            class="d-flex align-items-center px-2 selected"
+          >
+            <Avatar
+              class="mr-1 my-1"
+              :firstname="user.firstname"
+              :lastname="user.lastname"
+            />
+            <span class="mx-1 text-nowrap"
+              >{{ user.firstname }} {{ user.lastname }}</span
+            >
+          </div>
         </li>
       </transition-group>
     </div>
@@ -42,8 +66,21 @@ export default {
   props: ["allMembers", "selectedMembers", "display"],
   data() {
     return {
-      keyword: ""
+      keyword: "",
+      selected: []
     };
+  },
+  methods: {
+    handleMember(member) {
+      const array = [];
+      if (this.selected.filter(m => m.id === member.id).length > 0) {
+        for (let i = 0; i < this.selected.length; i++)
+          if (this.selected[i].id !== member.id) {
+            array.push(this.selected[i]);
+          }
+        this.selected = array;
+      } else this.selected.push(member);
+    }
   },
   computed: {
     membersToShow: function() {
@@ -58,7 +95,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.selected {
+  opacity: 0.4;
+}
 .members {
   max-height: 210px;
 }
