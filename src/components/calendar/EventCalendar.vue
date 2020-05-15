@@ -41,12 +41,10 @@ export default {
     this.newMinutes = this.event.timestampBegin.getMinutes();
 
     this.$refs.event.style.left = `${max}px`;
-    if (this.event.timestampEnd) {
-      const hours = this.event.timestampEnd.getHours();
-      const minutes = this.event.timestampEnd.getMinutes();
-      const length = this.widthCalculator(hours, minutes);
-      this.$refs.event.style.width = `${length - max}px`;
-    }
+    const hours = this.event.timestampEnd.getHours();
+    const minutes = this.event.timestampEnd.getMinutes();
+    const length = this.widthCalculator(hours, minutes);
+    this.$refs.event.style.width = `${length}px`;
   },
   data() {
     return {

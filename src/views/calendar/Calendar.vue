@@ -1,96 +1,113 @@
 <template>
   <div class="activity container-fluid h-100 d-flex flex-column">
     <PageHeader />
-    <div id="page-content" class="row flex-grow-1">
-      <LeftNavBar />
-      <main class="main_column_calendar d-flex flex-column col-lg-9">
+    <div
+      id="page-content"
+      class="row flex-grow-1"
+      style="height: calc(100% - 100px)"
+    >
+      <LeftNavBar class="h-100" />
+      <main class="main_column_calendar col d-flex flex-column">
         <p class="m-0 title_page">Calendario</p>
         <hr class="mt-0 mb-2" />
-        <div
-          class="days_controller d-flex position-relative text-align-center h-100"
-        >
-          <NeuButton @click="handlePrevious" class="calendar_button cb_left">
-            <img src="../../assets/calendar-left.svg" />
-          </NeuButton>
-          <div class="calendar_identifier mr-4 ml-4">
-            {{ calendarIdentifier }}
-          </div>
-          <NeuButton @click="handleNext" class="calendar_button cb_rigth">
-            <img src="../../assets/calendar-right.svg" />
-          </NeuButton>
+        <div class="d-flex flex-column px-3 flex-grow-1">
           <div
-            v-if="showFilteredUser || showMaxEventSize"
-            class="filter h-100 flex-column justify-content-center position-absolute ml-2"
+            class="days_controller d-flex position-relative text-align-center my-2"
+            style="height: 60px"
           >
-            <div class="d-flex justify-content-center">
-              <p class="filterName m-0">Filtri:</p>
+            <NeuButton @click="handlePrevious" class="calendar_button cb_left">
+              <img src="../../assets/calendar-left.svg" />
+            </NeuButton>
+            <div class="calendar_identifier mr-4 ml-4">
+              {{ calendarIdentifier }}
             </div>
-            <div v-if="showMaxEventSize" class="d-flex justify-content-center">
-              <p class="m-0">{{ textMaxEvents }}</p>
-            </div>
-            <div v-if="showFilteredUser" class="d-flex justify-content-center">
-              <p class="m-0">{{ textFilteredMembers }}</p>
-            </div>
-          </div>
-        </div>
-        <hr class="mt-0 mb-2" />
-        <div class="time-header d-flex m-0 p-0">
-          <div class="dayContainer h-100 m-0 p-2"></div>
-          <div class="event-container d-flex h-100 m-0 p-0">
-            <div class="pos-time h-100 w-25 d-flex justify-content-center pl-2">
-              00:00
-            </div>
-            <div class="pos-time h-100 w-25 d-flex justify-content-center">
-              06:00
-            </div>
-            <div class="pos-time h-100 w-25 d-flex justify-content-center">
-              12:00
-            </div>
-            <div class="pos-time h-100 w-25 d-flex justify-content-center pr-2">
-              18:00
-            </div>
-          </div>
-        </div>
-        <div class="space-header d-flex m-0 p-0">
-          <div class="dayContainer h-100 m-0 p-2 ml"></div>
-          <div class="event-container d-flex h-100 m-0 p-0">
-            <div class="mr h-100 w-25"></div>
-            <div class="mr h-100 w-25"></div>
-            <div class="mr h-100 w-25"></div>
-            <div class="h-100 w-25"></div>
-          </div>
-        </div>
-        <div class="position-relative h-100 w-100 m-0 p-0">
-          <div class="position-absolute h-100 w-100 p-0 m-0">
+            <NeuButton @click="handleNext" class="calendar_button cb_rigth">
+              <img src="../../assets/calendar-right.svg" />
+            </NeuButton>
             <div
-              class="background d-flex m-0 p-0"
-              v-for="day in days"
-              :key="day.day + 'back'"
+              v-if="showFilteredUser || showMaxEventSize"
+              class="filter h-100 flex-column justify-content-center position-absolute ml-2"
             >
-              <div class="dayContainer h-100 m-0 p-2"></div>
-              <div class="event-container d-flex h-100 m-0 p-0">
-                <div class="mr h-100 w-25"></div>
-                <div class="mr h-100 w-25"></div>
-                <div class="mr h-100 w-25"></div>
-                <div class="h-100 w-25"></div>
+              <div class="d-flex justify-content-center">
+                <p class="filterName m-0">Filtri:</p>
+              </div>
+              <div
+                v-if="showMaxEventSize"
+                class="d-flex justify-content-center"
+              >
+                <p class="m-0">{{ textMaxEvents }}</p>
+              </div>
+              <div
+                v-if="showFilteredUser"
+                class="d-flex justify-content-center"
+              >
+                <p class="m-0">{{ textFilteredMembers }}</p>
               </div>
             </div>
           </div>
-          <div class="h-100 w-100">
-            <CalendarRow
-              v-for="day in days"
-              :key="day.day"
-              :dataprops="day.events"
-              :fullDayEvents="day.fullDayEvents"
-              :nameDay="day.nameDay"
-              :day="day.day"
-              @showEvent="showEvent(...arguments)"
-            >
-            </CalendarRow>
+          <hr class="mt-0 mb-2" />
+          <div class="time-header d-flex m-0 p-0">
+            <div class="dayContainer h-100 m-0 p-2"></div>
+            <div class="event-container d-flex h-100 m-0 p-0">
+              <div
+                class="pos-time h-100 w-25 d-flex justify-content-center pl-2"
+              >
+                00:00
+              </div>
+              <div class="pos-time h-100 w-25 d-flex justify-content-center">
+                06:00
+              </div>
+              <div class="pos-time h-100 w-25 d-flex justify-content-center">
+                12:00
+              </div>
+              <div
+                class="pos-time h-100 w-25 d-flex justify-content-center pr-2"
+              >
+                18:00
+              </div>
+            </div>
+          </div>
+          <div class="space-header d-flex m-0 p-0">
+            <div class="dayContainer h-100 m-0 p-2 ml"></div>
+            <div class="event-container d-flex h-100 m-0 p-0">
+              <div class="mr h-100 w-25"></div>
+              <div class="mr h-100 w-25"></div>
+              <div class="mr h-100 w-25"></div>
+              <div class="h-100 w-25"></div>
+            </div>
+          </div>
+          <div class="position-relative w-100 m-0 p-0 flex-grow-1 mb-2">
+            <div class="position-absolute h-100 w-100 p-0 m-0">
+              <div
+                class="background d-flex m-0 p-0"
+                v-for="day in days"
+                :key="day.day + 'back'"
+              >
+                <div class="dayContainer h-100 m-0 p-2"></div>
+                <div class="event-container d-flex h-100 m-0 p-0">
+                  <div class="mr h-100 w-25"></div>
+                  <div class="mr h-100 w-25"></div>
+                  <div class="mr h-100 w-25"></div>
+                  <div class="h-100 w-25"></div>
+                </div>
+              </div>
+            </div>
+            <div class="w-100 h-100 d-flex flex-column">
+              <CalendarRow
+                v-for="day in days"
+                :key="day.day"
+                :dataprops="day.events"
+                :fullDayEvents="day.fullDayEvents"
+                :nameDay="day.nameDay"
+                :day="day.day"
+                @showEvent="showEvent(...arguments)"
+              >
+              </CalendarRow>
+            </div>
           </div>
         </div>
       </main>
-      <Actions>
+      <Actions class="h-100">
         <NeuButton
           @click.stop="createEvent"
           class="d-flex justify-content-center align-items-center mt-3"
@@ -186,14 +203,12 @@ const handleOutsideClick = function(event) {
 export default {
   name: "Calendar",
   created() {
-    if (!this.calendar) {
-      const { workgroupId } = this.$route.params;
-      this.initCalendar();
-      this.fetchEvents({ workgroupId });
-      this.calendarIdentifier = calendarUtils.calendarWeeklyPosition(
-        this.currentDate
-      );
-    }
+    const { workgroupId } = this.$route.params;
+    this.initCalendar();
+    this.fetchEvents({ workgroupId });
+    this.calendarIdentifier = calendarUtils.calendarWeeklyPosition(
+      this.currentDate
+    );
   },
   components: {
     PageHeader,

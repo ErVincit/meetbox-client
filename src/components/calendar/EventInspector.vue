@@ -10,7 +10,7 @@
         v-model="ourEvent.title"
         @blur="setTitle"
       />
-      <div v-if="isEditable" class="px-2 col-auto col-xl-auto">
+      <div v-if="isErasable" class="px-2 col-auto col-xl-auto">
         <NeuButton
           class="px-2"
           :backgroundColor="'#efeeee'"
@@ -34,14 +34,14 @@
             <NeuInput
               type="date"
               v-model="inputBeginDate"
-              :disabled="!isEditable"
+              :disabled="isTimestampBeginEditable"
               :min="todayDate"
             />
             <NeuInput
               type="time"
               class="w-50"
               v-model="inputBeginTime"
-              :disabled="!isEditable"
+              :disabled="isTimestampBeginEditable"
             />
           </div>
         </div>
@@ -54,6 +54,7 @@
               type="date"
               v-model="inputEndDate"
               :disabled="!isEditable"
+              :min="timestampBeginDate"
             />
             <NeuInput
               type="time"
@@ -267,9 +268,19 @@ export default {
     },
     async changeDate() {
       const now = new Date();
-      if (this.ourEvent.timestampBegin <= now) {
+      if (
+        this.ourEvent.timestampBegin <= now &&
+        !this.isTimestampBeginEditable
+      ) {
         this.error = false;
         this.errorText = "L'evento non puo iniziare prima di adesso";
+        this.error = true;
+        return;
+      }
+
+      if (this.ourEvent.timestampEnd <= now) {
+        this.error = false;
+        this.errorText = "L'evento non puo finire prima di adesso";
         this.error = true;
         return;
       }
@@ -364,6 +375,17 @@ export default {
     },
     isEditable() {
       if (this.deleted) return false;
+      if (this.event.timestampEnd < new Date()) return false;
+      if (this.event.owner == this.currentUser.id) return true;
+      for (let i = 0; i < this.event.members.length; i++)
+        if (this.event.members[i].id == this.currentUser.id) return true;
+      return false;
+    },
+    isTimestampBeginEditable() {
+      return !this.isEditable || this.event.timestampBegin < new Date();
+    },
+    isErasable() {
+      if (this.deleted) return false;
       if (this.event.owner == this.currentUser.id) return true;
       for (let i = 0; i < this.event.members.length; i++)
         if (this.event.members[i].id == this.currentUser.id) return true;
@@ -371,6 +393,9 @@ export default {
     },
     todayDate() {
       return calendarUtils.dateToDateType(new Date());
+    },
+    timestampBeginDate() {
+      return calendarUtils.dateToDateType(this.event.timestampBegin);
     },
     membersId() {
       return this.ourEvent.members.map(m => m.id);

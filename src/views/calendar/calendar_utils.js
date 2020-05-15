@@ -156,6 +156,13 @@ exports.positionToHours = (x, rowSizeX) => {
   return { hours, minutes };
 };
 
+exports.minutesToPosition = (date, rowSizeX) => {
+  const hoursMinutes = date.getHours() * 60;
+  const minutes = date.getMinutes();
+  const solution = (rowSizeX * (hoursMinutes + minutes)) / (24 * 60);
+  return solution;
+};
+
 exports.endTimestampCalculator = (begin, newBegin, end) => {
   const diff = end.getTime() - begin.getTime();
   return new Date(newBegin.getTime() + diff);
