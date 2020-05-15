@@ -102,7 +102,7 @@ export default {
       if (
         e.target.className.split(" ").includes("event") &&
         calendarUtils.verifyAloneEvent(event) &&
-        this.isEditable
+        this.isMoovable
       ) {
         this.offSet = e.offsetX;
         this.target = e.target;
@@ -208,7 +208,8 @@ export default {
       const superMax =
         this.rowSizeX -
         Number.parseInt(this.target.style.width.replace("px", ""));
-      if (0 <= newPos && newPos <= superMax) {
+      var min = 0;
+      if (min <= newPos && newPos <= superMax) {
         this.target.style.left = newPos + "px";
         const { hours, minutes } = calendarUtils.positionToHours(
           newPos,
@@ -346,16 +347,32 @@ export default {
   computed: {
     ...mapGetters(["currentUser"]),
     isEditable() {
+      if (this.event.owner === this.currentUser.id) return true;
       for (let i = 0; i < this.event.members.length; i++)
-        if (this.event.members[i].id == this.currentUser.id) return true;
-      if (this.event.owner == this.currentUser.id) return true;
+        if (this.event.members[i].id === this.currentUser.id) return true;
       return false;
     },
+    isMoovable() {
+      return (
+        this.isEditable &&
+        !this.eventProps.hasPrevious &&
+        this.event.timestampBegin > new Date() &&
+        this.event.timestampEnd > new Date()
+      );
+    },
     isleftResizable() {
-      return this.isEditable && !this.eventProps.hasPrevious;
+      return (
+        this.isEditable &&
+        !this.eventProps.hasPrevious &&
+        this.event.timestampBegin > new Date()
+      );
     },
     isRightResizable() {
-      return this.isEditable && !this.eventProps.hasNext;
+      return (
+        this.isEditable &&
+        !this.eventProps.hasNext &&
+        this.event.timestampEnd > new Date()
+      );
     }
   }
 };
