@@ -246,7 +246,12 @@ export default {
       const superMax =
         this.rowSizeX -
         (MINIMUM_MINUTE_WIDTH_SLIDER * this.rowSizeX) / (24 * 60);
-      if (0 <= newPos && newPos <= superMax) {
+
+      const now = new Date();
+      var min = 0;
+      if (calendarUtils.checkSameDay(this.event.timestampBegin, now))
+        min = calendarUtils.minutesToPosition(now, this.rowSizeX);
+      if (min <= newPos && newPos <= superMax) {
         target.style.left = newPos + "px";
         const { hours, minutes } = calendarUtils.positionToHours(
           newPos,
@@ -259,10 +264,15 @@ export default {
             this.event.timestampEnd.getHours(),
             this.event.timestampEnd.getMinutes()
           ) + "px";
-      } else if (newPos <= 0) {
-        target.style.left = 0 + "px";
-        this.newHour = 0;
-        this.newMinutes = 0;
+      } else if (newPos <= min) {
+        target.style.left = min + "px";
+        if (min === 0) {
+          this.newHour = 0;
+          this.newMinutes = 0;
+        } else {
+          this.newHour = now.getHours();
+          this.newMinutes = now.getMinutes();
+        }
         target.style.width =
           this.widthCalculator(
             this.event.timestampEnd.getHours(),
