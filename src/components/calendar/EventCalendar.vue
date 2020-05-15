@@ -325,9 +325,14 @@ export default {
           document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
         const newPos = e.clientX - toLeft - 17;
         const startEvent = Number.parseInt(target.style.left.replace("px", ""));
-        const min =
+        var min =
           startEvent +
           (MINIMUM_MINUTE_WIDTH_SLIDER * this.rowSizeX) / (24 * 60);
+        const now = new Date();
+        if (this.event.timestampBegin < now)
+          min =
+            calendarUtils.minutesToPosition(now, this.rowSizeX) +
+            (MINIMUM_MINUTE_WIDTH_SLIDER * this.rowSizeX) / (24 * 60);
         if (min <= newPos && newPos <= this.rowSizeX) {
           const { hours, minutes } = calendarUtils.positionToHours(
             newPos,
@@ -337,10 +342,22 @@ export default {
           this.newEndMinutes = minutes;
           target.style.width = newPos - startEvent + "px";
         } else if (newPos <= min) {
-          this.newEndHour = 0;
-          this.newEndMinutes = MINIMUM_MINUTE_WIDTH_SLIDER;
-          target.style.width =
-            this.widthCalculator(0, MINIMUM_MINUTE_WIDTH_SLIDER) + "px";
+          if (
+            min ===
+            startEvent +
+              (MINIMUM_MINUTE_WIDTH_SLIDER * this.rowSizeX) / (24 * 60)
+          ) {
+            this.newEndHour = 0;
+            this.newEndMinutes = MINIMUM_MINUTE_WIDTH_SLIDER;
+            target.style.width =
+              this.widthCalculator(0, MINIMUM_MINUTE_WIDTH_SLIDER) + "px";
+          } else {
+            now.setMinutes(now.getMinutes() + MINIMUM_MINUTE_WIDTH_SLIDER);
+            this.newEndHour = now.getHours();
+            this.newEndMinutes = now.getMinutes();
+            target.style.width =
+              this.widthCalculator(this.newEndHour, this.newEndMinutes) + "px";
+          }
         } else if (newPos >= this.rowSizeX) {
           this.newEndHour = 23;
           this.newEndMinutes = 59;
