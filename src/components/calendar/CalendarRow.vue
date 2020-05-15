@@ -1,6 +1,6 @@
 <template>
   <div
-    class="calendar__row container-fluid d-flex flex-row position-relative w-100"
+    class="calendar__row container-fluid row position-relative w-100 flex-grow-1"
   >
     <WeeksDay :nameDay="nameDay" :day="day" />
     <RowEventsContainer
@@ -47,7 +47,6 @@ export default {
 
 <style scoped>
 .calendar__row {
-  height: calc(100% / 7);
   border-bottom: 1px solid grey;
   overflow: hidden;
 

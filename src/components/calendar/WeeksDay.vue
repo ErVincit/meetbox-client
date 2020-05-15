@@ -1,7 +1,13 @@
 <template>
-  <div class="day_container d-flex flex-row p-2">
-    <div class="name_day">{{ this.nameDay }}</div>
-    <div class="date">{{ this.day }}</div>
+  <div class="day_container d-flex flex-column m-0 p-2 h-100 col-1">
+    <div
+      class="name_day d-flex align-items-center justify-content-center col-auto p-0"
+    >
+      {{ this.nameDay.substring(0, 3) }}
+    </div>
+    <div class="date d-flex justify-content-center align-items-center col p-0">
+      {{ this.day }}
+    </div>
   </div>
 </template>
 
@@ -14,26 +20,17 @@ export default {
 
 <style>
 .day_container {
-  width: 25%;
   border-right: 1px solid rgb(194, 194, 194);
-  height: 100%;
-  padding: 0;
-  margin: 0;
-
   color: #787878;
-  line-height: 80px;
   font-weight: 600;
-  margin: auto;
 }
 
 .name_day {
   /* width: 120px; */
-  width: 75%;
-  text-align: center;
-  font-size: 20px;
+  font-size: 1rem;
 }
 
 .date {
-  font-size: 36px;
+  font-size: 1.7rem;
 }
 </style>

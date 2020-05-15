@@ -1,5 +1,5 @@
 <template>
-  <div class="row__events_container container-fluid position-relative">
+  <div class="row__events_container position-relative col">
     <RowEvents
       v-for="row in rows"
       :key="row[0].id"
