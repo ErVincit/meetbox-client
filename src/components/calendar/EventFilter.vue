@@ -140,7 +140,6 @@ export default {
 }
 .user-dropdown {
   z-index: 1000;
-  /* margin-top: 10px; */
   top: unset;
   right: unset;
   border: none;

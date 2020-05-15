@@ -291,6 +291,8 @@ export default {
     },
     handleDeletedEvent() {
       this.showEventInspector = false;
+      this.showEventFilter = false;
+      this.showEventCreator = false;
       this.deletedEventMessage = true;
       setTimeout(() => {
         this.deletedEventMessage = false;

@@ -259,12 +259,12 @@ export default {
     },
     async deleteEvent() {
       this.deleted = true;
+      this.$emit("deletedEvent");
       const { workgroupId } = this.$route.params;
       await this.removeEvent({
         workgroupId,
         event: this.event
       });
-      this.$emit("deletedEvent");
     },
     async changeDate() {
       const now = new Date();

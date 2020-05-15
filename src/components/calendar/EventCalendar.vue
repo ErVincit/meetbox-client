@@ -26,6 +26,7 @@ import { mapActions, mapGetters } from "vuex";
 import calendarUtils from "@/views/calendar/calendar_utils";
 
 const MINIMUM_MINUTE_WIDTH_SLIDER = 15;
+const PADDING = 33;
 
 export default {
   name: "EventCalendar",
@@ -202,7 +203,7 @@ export default {
       const toLeft =
         document.getElementsByClassName("row__events_container")[0].offsetLeft +
         document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
-      const newPos = e.clientX - toLeft - this.offSet - 16; //Margin
+      const newPos = e.clientX - toLeft - this.offSet - PADDING; //Margin
       const superMax =
         this.rowSizeX -
         Number.parseInt(this.target.style.width.replace("px", ""));
@@ -239,7 +240,7 @@ export default {
       const toLeft =
         document.getElementsByClassName("row__events_container")[0].offsetLeft +
         document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
-      const newPos = e.clientX - toLeft - 17;
+      const newPos = e.clientX - toLeft - PADDING;
       // const superMax = left + width - (15 * this.rowSizeX) / (24 * 60);
       var superMax =
         this.rowSizeX -
@@ -321,7 +322,7 @@ export default {
           document.getElementsByClassName("row__events_container")[0]
             .offsetLeft +
           document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
-        const newPos = e.clientX - toLeft - 17;
+        const newPos = e.clientX - toLeft - PADDING;
         const startEvent = Number.parseInt(target.style.left.replace("px", ""));
         var min =
           startEvent +
