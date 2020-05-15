@@ -224,8 +224,6 @@ const colors = [
   "#7e838b"
 ];
 
-// import Vue from "vue";
-
 exports.interpolateCalendarEvents = (calendar, events) => {
   for (var i = 0; i < events.length; i++) {
     let event = events[i];

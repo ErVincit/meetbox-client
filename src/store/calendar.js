@@ -126,11 +126,10 @@ const mutations = {
   },
   changeEvent: (state, { event, oldEvent }) => {
     //Rimuovere evento precedente nel calendario
-    state.calendar = calendarUtils.deleteEvent(state.calendar, oldEvent);
+    let calendar = calendarUtils.deleteEvent(state.calendar, oldEvent);
     //Aggiunge l'evento salvato nel server nello stato
-    state.calendar = calendarUtils.interpolateCalendarEvents(state.calendar, [
-      event
-    ]);
+    calendar = calendarUtils.interpolateCalendarEvents(calendar, [event]);
+    state.calendar = Object.assign({}, calendar);
   },
   removeEvent: (state, { event }) => {
     //Rimuovere evento precedente nel calendario
