@@ -19,8 +19,16 @@
     <main
       class="flex-grow-1 d-flex align-items-center flex-column position-relative"
     >
-      <img id="draw-left" src="@/assets/homepage-draw-left.svg" />
-      <img id="draw-right" src="@/assets/homepage-draw-right.svg" />
+      <img
+        id="draw-left"
+        class="d-none d-md-block"
+        src="@/assets/homepage-draw-left.svg"
+      />
+      <img
+        id="draw-right"
+        class="d-none d-md-block"
+        src="@/assets/homepage-draw-right.svg"
+      />
       <h1 class="text-center my-5 py-5">
         Collabora in modo
         <br />semplice e veloce

@@ -44,6 +44,12 @@
               @end-editing="editingSection = false"
             />
           </draggable>
+          <Alert
+            v-if="alertShowed"
+            :message="alertMessage"
+            @close="alertShowed = false"
+            :type="alertType"
+          />
         </div>
         <TaskInspector
           v-if="showTaskInspector"
@@ -88,6 +94,7 @@ import TaskInspector from "@/components/task/TaskInspector";
 import Loading from "@/components/loading/Loading";
 import NeuButton from "@/components/neu-button/NeuButton";
 import Actions from "@/components/actions/Actions";
+import Alert from "@/components/alert/Alert";
 
 import { mapGetters, mapActions } from "vuex";
 import draggable from "vuedraggable";
@@ -108,7 +115,10 @@ export default {
       dragging: false,
       draggingItemInfo: null,
       editingSection: false,
-      loading: false
+      loading: false,
+      alertShowed: false,
+      alertMessage: "",
+      alertType: ""
     };
   },
   components: {
@@ -120,6 +130,7 @@ export default {
     Loading,
     NeuButton,
     Actions,
+    Alert,
     draggable
   },
   computed: mapGetters(["allTasks"]),
@@ -149,22 +160,31 @@ export default {
     removeTask() {
       const { section, task } = this.draggingItemInfo;
       const { workgroupId } = this.$route.params;
+      this.showAlert("info", "Rimozione in corso...");
       this.deleteTask({ workgroupId, sectionId: section, taskId: task.id });
+      this.alertShowed = false;
     },
-    createSection() {
+    async createSection() {
       const { workgroupId } = this.$route.params;
-      this.addSection({
+      this.showAlert("info", "Creazione in corso...");
+      await this.addSection({
         workgroupId,
         section: { title: "Nuova sezione" }
       });
+      this.alertShowed = false;
     },
     async handleSectionMove({ moved }) {
       const { workgroupId } = this.$route.params;
-      this.editSection({
+      await this.editSection({
         workgroupId,
         sectionId: moved.element.id,
         editObject: { index: moved.newIndex }
       });
+    },
+    showAlert(type, message) {
+      this.alertType = type;
+      this.alertMessage = message;
+      this.alertShowed = true;
     }
   },
   mounted() {

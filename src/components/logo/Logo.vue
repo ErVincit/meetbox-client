@@ -1,5 +1,8 @@
 <template>
-  <p class="logo m-0">MeetBox</p>
+  <div class="d-flex align-items-center">
+    <img src="@/assets/logo.svg" class="pr-3" wiidth="50" height="50" />
+    <p class="logo m-0">MeetBox</p>
+  </div>
 </template>
 
 <script>

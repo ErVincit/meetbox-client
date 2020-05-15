@@ -1,16 +1,20 @@
 <template>
   <Loading class="w-100 h-100 justify-content-center" v-if="loading" show />
   <div v-else class="tutorial d-flex overflow-auto h-100">
-    <img id="draw-left" src="@/assets/homepage-draw-left.svg" />
+    <img
+      id="draw-left"
+      class="d-none d-md-block"
+      src="@/assets/homepage-draw-left.svg"
+    />
     <div class="col d-flex flex-column align-items-center">
-      <div class="w-75 py-5">
+      <div class="w-75 py-5" style="min-width: 300px">
         <h1 class="w-100 text-center">
           Benvenuto in <span>MeetBox</span>, {{ currentUser.firstname }}!
         </h1>
         <h3 class="mb-5 text-center">Crea il tuo primo gruppo di lavoro 🧑‍🤝‍🧑</h3>
         <div class="pt-3 pb-3 w-100">
           <h4 class="col mb-4 highlight text-left" style="font-weight: 600">
-            1️⃣ Scegli un nome...
+            <span style="font-size: 30px">1)</span> Scegli un nome...
           </h4>
           <div class="d-flex align-items-center px-2 mt-1 w-100">
             <NeuInput
@@ -22,25 +26,28 @@
         </div>
         <div class="py-3 pb-3 w-100">
           <h4 class="col mb-4 highlight text-left" style="font-weight: 600">
-            2️⃣ Scegli un immagine...
+            <span style="font-size: 30px">2)</span> Scegli un immagine...
           </h4>
-          <div class="d-flex align-items-center px-2 mt-1">
-            <img
-              class="rounded-circle"
-              :src="imageURL"
-              width="100"
-              height="100"
-            />
+          <div class="row align-items-center justify-content-center px-2 mt-1">
+            <div class="col-12 col-md-auto row justify-content-center py-2 m-0">
+              <img
+                class="rounded-circle"
+                :src="imageURL"
+                width="100"
+                height="100"
+              />
+            </div>
             <NeuInput
               class="mx-4 col"
               v-model="image"
-              placeholder="es. https://arancie.com/esempio.png"
+              placeholder="es. https://meetbox.com/esempio.png"
             />
           </div>
         </div>
         <div class="py-3 pb-3 w-100">
           <h4 class="col mb-4 highlight text-left" style="font-weight: 600">
-            3️⃣ Aggiungi subito dei membri...
+            <span style="font-size: 30px">3)</span> Aggiungi subito dei
+            membri...
           </h4>
           <div
             class="d-flex flex-column justify-content-center px-2 mt-1 pt-5 position-relative"
@@ -85,7 +92,11 @@
         </NeuButton>
       </div>
     </div>
-    <img id="draw-right" src="@/assets/homepage-draw-right.svg" />
+    <img
+      id="draw-right"
+      class="d-none d-md-block"
+      src="@/assets/homepage-draw-right.svg"
+    />
   </div>
 </template>
 
@@ -114,8 +125,7 @@ export default {
   computed: {
     ...mapGetters(["currentUser"]),
     imageURL() {
-      if (this.image.trim().length === 0)
-        return "https://interactive-examples.mdn.mozilla.net/media/examples/grapefruit-slice-332-332.jpg";
+      if (this.image.trim().length === 0) return require("@/assets/logo.svg");
       return this.image;
     }
   },

@@ -35,6 +35,20 @@ const actions = {
     }
     return false;
   },
+  async signupUser({ commit }, { email, firstname, lastname, password }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/login/registration`;
+    const body = { email, firstName: firstname, lastName: lastname, password };
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" }
+    });
+    if (response.ok) {
+      commit("setCurrentUser", null);
+      return true;
+    }
+    return false;
+  },
   async signoutUser({ commit }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/login/signout`;
     const response = await fetch(url, {

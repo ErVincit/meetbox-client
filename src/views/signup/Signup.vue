@@ -51,6 +51,12 @@
           >
         </form>
       </NeuContainer>
+      <Alert
+        v-if="alertShowed"
+        :message="alertMessage"
+        @close="alertShowed = false"
+        :type="alertType"
+      />
     </div>
     <RedirectWindow v-if="showRedirectWindow" ref="redirect-window" />
     <img id="draw-left" src="@/assets/homepage-draw-left.svg" />
@@ -59,16 +65,25 @@
 </template>
 
 <script>
-//import Store from "@/store/index";
+import Alert from "@/components/alert/Alert";
 import Logo from "@/components/logo/Logo";
 import NeuButton from "@/components/neu-button/NeuButton";
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import NeuInput from "@/components/neu-button/NeuInput";
 import RedirectWindow from "@/components/signup/RedirectWindow";
 
+import { mapActions } from "vuex";
+
 export default {
   name: "Signup",
-  components: { Logo, NeuButton, NeuContainer, NeuInput, RedirectWindow },
+  components: {
+    Logo,
+    NeuButton,
+    NeuContainer,
+    NeuInput,
+    RedirectWindow,
+    Alert
+  },
   data() {
     return {
       email: "",
@@ -76,44 +91,52 @@ export default {
       lastname: "",
       password: "",
       confermaPassword: "",
-      showRedirectWindow: false
+      showRedirectWindow: false,
+      alertShowed: false,
+      alertType: "",
+      alertMessage: ""
     };
   },
-  created() {
-    fetch(`${process.env.VUE_APP_SERVER_ADDRESS}/api/login/validate`, {
-      method: "GET",
-      credentials: "include"
-    }).then(value => {
-      if (value.status === 200) this.$router.push("/17/drive");
-    });
+  async created() {
+    if (this.currentUser) await this.redirect();
+    else {
+      const validated = await this.validateUser();
+      if (validated) await this.redirect();
+    }
   },
   methods: {
-    onSubmit() {
+    ...mapActions(["validateUser", "signupUser", "fetchWorkgroups"]),
+    async onSubmit() {
       const { email, firstname, lastname, password, confermaPassword } = this;
       if (email && firstname && lastname && password && confermaPassword) {
         if (password == confermaPassword) {
-          fetch(
-            `${process.env.VUE_APP_SERVER_ADDRESS}/api/login/registration`,
-            {
-              method: "POST",
-              body: JSON.stringify({
-                email,
-                firstName: firstname,
-                lastName: lastname,
-                password
-              }),
-              headers: { "Content-Type": "application/json" }
-            }
-          ).then(async value => {
-            if (value.status == 200) {
-              this.ShowWindow();
-            }
+          this.showAlert("info", "Registrazione in corso...");
+          const registered = await this.signupUser({
+            email,
+            firstname,
+            lastname,
+            password
           });
+          if (registered) {
+            this.alertShowed = false;
+            this.showRedirectWindow = true;
+          } else this.showAlert("danger", "Registrazione fallita. Riprovare");
         }
       }
     },
-    ShowWindow() {
-      this.showRedirectWindow = true;
+    async redirect() {
+      this.showAlert(
+        "success",
+        "Autenticazione completata. Rindirizzamento in corso..."
+      );
+      await this.fetchWorkgroups();
+      if (this.workgroups.length === 0) this.$router.push("/tutorial");
+      else this.$router.push("/" + this.workgroups[0].id + "/drive");
+    },
+    showAlert(type, message) {
+      this.alertType = type;
+      this.alertMessage = message;
+      this.alertShowed = true;
     }
   }
 };
@@ -127,6 +150,7 @@ export default {
   max-width: 600px;
   min-height: 500px;
   max-height: 80%;
+  max-height: 650px;
 
   top: 50%;
   left: 50%;
@@ -142,8 +166,10 @@ export default {
 @media (max-width: 768px) {
   .signup-container > .neu-container {
     max-width: unset;
+    max-height: unset;
     width: 100%;
     height: 100%;
+    overflow: auto;
   }
   .signup-container > .neu-container .logo {
     flex-grow: unset !important;

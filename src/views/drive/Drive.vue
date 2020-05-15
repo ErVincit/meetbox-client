@@ -89,6 +89,12 @@
               />
             </div>
           </div>
+          <Alert
+            v-if="alertShowed"
+            :message="alertMessage"
+            @close="alertShowed = false"
+            :type="alertType"
+          />
         </FileDropArea>
       </main>
       <Actions>
@@ -140,6 +146,7 @@ import FileDropArea from "@/components/task/FileDropArea";
 import Actions from "@/components/actions/Actions";
 import Loading from "@/components/loading/Loading";
 import Breadcrumb from "./Breadcrumb";
+import Alert from "@/components/alert/Alert";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -154,7 +161,8 @@ export default {
     FileDropArea,
     Actions,
     Breadcrumb,
-    Loading
+    Loading,
+    Alert
   },
   computed: {
     ...mapGetters(["tree", "currentUser"]),
@@ -198,8 +206,18 @@ export default {
     },
     async deleteDocument() {
       const { workgroupId } = this.$route.params;
-      for (const document of this.filesSelected)
+      this.showAlert(
+        "info",
+        "Cancellazione in corso...0/" + this.filesSelected.length
+      );
+      let count = 0;
+      for (const document of this.filesSelected) {
         await this.removeDocument({ workgroupId, documentId: document.id });
+        count++;
+        this.alertMessage =
+          "Cancellazione in corso..." + count + "/" + this.filesSelected.length;
+      }
+      this.alertShowed = false;
     },
     async addFolder() {
       const { workgroupId } = this.$route.params;
@@ -220,6 +238,7 @@ export default {
       const isFolder = true;
       const isNote = false;
       const folder = this.currentPosition;
+      this.showAlert("info", "Creazione in corso...");
       if (folder === "root")
         await this.addDocument({
           workgroupId,
@@ -243,12 +262,18 @@ export default {
             workgroup: workgroupId
           }
         });
+      this.alertShowed = false;
     },
     editName() {
       this.rename = !this.rename;
     },
     setPosition(pos) {
       this.currentPosition = pos + "";
+    },
+    showAlert(type, message) {
+      this.alertType = type;
+      this.alertMessage = message;
+      this.alertShowed = true;
     }
   },
   data() {
@@ -258,7 +283,10 @@ export default {
       researchString: "",
       editmode: false,
       filesSelected: [],
-      rename: false
+      rename: false,
+      alertShowed: false,
+      alertType: "",
+      alertMessage: ""
     };
   },
   created() {

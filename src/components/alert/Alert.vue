@@ -1,7 +1,7 @@
 <template>
   <div
-    v-if="show"
-    class="alert alert-danger m-2 mb-4 fixed-bottom"
+    class="alert m-2 mb-4 fixed-bottom"
+    :class="'alert-' + type"
     role="alert"
   >
     {{ message }}
@@ -17,7 +17,18 @@
 </template>
 
 <script>
-export default { name: "Alert", props: { show: Boolean, message: String } };
+export default {
+  name: "Alert",
+  props: {
+    message: String,
+    type: {
+      type: String,
+      default: "info",
+      validator: value =>
+        ["success", "danger", "warning", "info"].includes(value)
+    }
+  }
+};
 </script>
 
 <style></style>

@@ -112,9 +112,10 @@
         Aggiungi una nuova attività
       </BigAddButton>
       <Alert
-        :show="showAlert"
+        v-if="alertShowed"
         :message="alertMessage"
-        @close="showAlert = false"
+        @close="alertShowed = false"
+        :type="alertType"
       />
     </div>
   </NeuContainer>
@@ -170,8 +171,9 @@ export default {
       newTaskMembers: [],
       newTaskLabel: null,
       addingTask: false,
-      showAlert: false,
+      alertShowed: false,
       alertMessage: "",
+      alertType: "",
       dragging: false,
       waitingAddTask: false
     };
@@ -208,13 +210,14 @@ export default {
       this.addingTask = true;
       this.$emit("start-editing");
     },
-    handleAddingTask() {
+    async handleAddingTask() {
       this.addingTask = false;
       this.$emit("end-editing");
       this.newTaskTitle = this.newTaskTitle.trim();
       if (this.newTaskTitle.length !== 0) {
         this.waitingAddTask = true;
         const { workgroupId } = this.$route.params;
+        this.showAlert("info", "Aggiunta in corso...");
         this.addTask({
           workgroupId,
           sectionId: this.section.id,
@@ -224,7 +227,10 @@ export default {
             members: this.newTaskMembers.map(m => m.id)
           }
         })
-          .then(() => (this.waitingAddTask = false))
+          .then(() => {
+            this.waitingAddTask = false;
+            this.alertShowed = false;
+          })
           .catch(err => {
             this.alertMessage = "Creazione task fallita. " + err.message;
             this.showAlert = true;
@@ -274,21 +280,28 @@ export default {
       this.dragging = false;
       this.$emit("drag-end");
     },
-    setTitle() {
+    async setTitle() {
       const { workgroupId } = this.$route.params;
-      this.editSection({
+      await this.editSection({
         workgroupId,
         sectionId: this.section.id,
         editObject: { title: this.section.title }
       });
       this.$emit("end-editing");
     },
-    removeSection() {
+    async removeSection() {
       const { workgroupId } = this.$route.params;
-      this.deleteSection({
+      this.showAlert("info", "Rimozione in corso...");
+      await this.deleteSection({
         workgroupId,
         sectionId: this.section.id
       });
+      this.alertShowed = false;
+    },
+    showAlert(type, message) {
+      this.alertType = type;
+      this.alertMessage = message;
+      this.alertShowed = true;
     }
   }
 };

@@ -35,9 +35,10 @@
       </form>
     </NeuContainer>
     <Alert
-      :show="showAlert"
+      v-if="alertShowed"
       :message="alertMessage"
-      @close="showAlert = false"
+      @close="alertShowed = false"
+      :type="alertType"
     />
     <img
       id="draw-left"
@@ -68,15 +69,15 @@ export default {
     return {
       email: "",
       password: "",
-      showAlert: false,
-      alertMessage: ""
+      alertShowed: false,
+      alertMessage: "",
+      alertType: ""
     };
   },
   computed: mapGetters(["currentUser", "workgroups"]),
   async created() {
-    if (this.currentUser) {
-      await this.redirect();
-    } else {
+    if (this.currentUser) await this.redirect();
+    else {
       const validated = await this.validateUser();
       if (validated) await this.redirect();
     }
@@ -86,18 +87,25 @@ export default {
     async onSubmit() {
       const { email, password } = this;
       if (email && password) {
+        this.showAlert("info", "Autenticazione in corso...");
         const logged = await this.loginUser({ email, password });
         if (logged) await this.redirect();
-        else {
-          this.alertMessage = "Autenticazione fallita. Riprovare...";
-          this.showAlert = true;
-        }
+        else this.showAlert("danger", "Autenticazione fallita. Riprovare");
       }
     },
     async redirect() {
+      this.showAlert(
+        "success",
+        "Autenticazione completata. Rindirizzamento in corso..."
+      );
       await this.fetchWorkgroups();
       if (this.workgroups.length === 0) this.$router.push("/tutorial");
       else this.$router.push("/" + this.workgroups[0].id + "/drive");
+    },
+    showAlert(type, message) {
+      this.alertType = type;
+      this.alertMessage = message;
+      this.alertShowed = true;
     }
   }
 };
@@ -128,6 +136,7 @@ export default {
     max-width: unset;
     width: 100%;
     height: 100%;
+    overflow: auto;
   }
   .login-container > .neu-container .logo {
     flex-grow: unset !important;
