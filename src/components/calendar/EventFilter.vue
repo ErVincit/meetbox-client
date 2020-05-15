@@ -1,13 +1,13 @@
 <template>
   <NeuContainer
-    class="event-inspector px-5 py-4 w-50"
+    class="event-inspector px-5 py-4"
     aria-labelledby="filterDropdownBtn"
     :disableHover="true"
     :class="{ hide: !showEventFilter }"
   >
     <h2 class="font-weight-bold">Filtri</h2>
     <div class="d-flex">
-      <div class="col-auto w-50">
+      <div class="col-auto">
         <div class="d-flex justify-content-between align-items-center px-2">
           <h6 class="hightlight title col m-0 p-0 pb-2">
             Durata massima evento
