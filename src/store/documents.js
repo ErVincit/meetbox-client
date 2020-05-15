@@ -29,17 +29,28 @@ const actions = {
     commit("deleteDocument", documentId);
   },
   async editName({ commit }, { workgroupId, documentId, editObject }) {
-    console.log(workgroupId, documentId, editObject);
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${documentId}/edit`;
-    const response = await fetch(url, {
+    await fetch(url, {
       credentials: "include",
       body: JSON.stringify(editObject),
       headers: { "Content-Type": "application/json" },
       method: "PUT"
     });
-    console.log(await response.json());
     const name = editObject.name;
     commit("editTitle", { documentId, name });
+  },
+  async addDocument({ commit }, { workgroupId, folder, creationDetails }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/create`;
+    const response = await fetch(url, {
+      credentials: "include",
+      body: JSON.stringify(creationDetails),
+      headers: { "Content-Type": "application/json" },
+      method: "POST"
+    });
+    const json = await response.json();
+    if (json.error) throw new Error(json.message);
+    const document = json.data;
+    commit("addFolder", { document, folder });
   }
 };
 
@@ -52,13 +63,11 @@ const delFolder = (tree, folderId) => {
 const mutations = {
   setTree: (state, tree) => (state.tree = tree),
   deleteDocument: (state, documentId) => {
-    console.log(documentId);
     if (state.tree[documentId]) delFolder(state.tree, documentId);
     const values = Object.values(state.tree);
     for (const folder of values)
       for (const doc of folder) {
         if (doc.id === documentId) {
-          console.log("Found document", doc);
           state.tree[doc.folder] = state.tree[doc.folder].filter(
             doc => doc.id !== documentId
           );
@@ -71,6 +80,10 @@ const mutations = {
       for (const doc of folder) {
         if (doc.id === documentId) doc.name = name;
       }
+  },
+  addFolder: (state, { document, folder }) => {
+    if (!document.folder) document.folder = "root";
+    state.tree[folder].push(document);
   }
 };
 

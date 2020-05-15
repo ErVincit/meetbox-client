@@ -1,7 +1,11 @@
 <template>
   <div class="drive container-fluid h-100 d-flex flex-column">
     <PageHeader />
-    <div id="page-content" class="row flex-grow-1">
+    <div
+      id="page-content"
+      class="row flex-grow-1"
+      style="height: calc(100% - 100px)"
+    >
       <LeftNavBar class="h-100" />
       <main class="col d-flex flex-column h-100 px-1">
         <Breadcrumb
@@ -36,7 +40,7 @@
           @file-enter="draggingFile = true"
           @file-leave="draggingFile = false"
           @file-drop="handleFileDrop"
-          class="flex-grow-1 m-1"
+          class="flex-grow-1 m-1 overflow-hidden"
         >
           <div class="position-relative w-100 h-100 p-2 d-flex flex-column">
             <div
@@ -67,12 +71,7 @@
             >
               Nessun documento presente
             </p>
-            <transition-group
-              v-else
-              class="documents px-2 h-100"
-              name="documents-fade"
-              tag="div"
-            >
+            <div v-else class="documents h-100 p-2">
               <Document
                 v-for="document in filteredDocuments"
                 :key="document.id"
@@ -88,7 +87,7 @@
                 @click.stop="handleClick(document)"
                 @dblclick.stop="handleDblClick($event, document)"
               />
-            </transition-group>
+            </div>
           </div>
         </FileDropArea>
       </main>
@@ -96,6 +95,7 @@
         <NeuButton
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
+          @click="addFolder"
         >
           <img
             src="@/assets/addIcon.svg"
@@ -157,7 +157,7 @@ export default {
     Loading
   },
   computed: {
-    ...mapGetters(["tree"]),
+    ...mapGetters(["tree", "currentUser"]),
     folders() {
       if (!this.tree) return [];
       return Object.keys(this.tree);
@@ -172,7 +172,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchTree", "removeDocument"]),
+    ...mapActions(["fetchTree", "removeDocument", "addDocument"]),
     addFiles(files) {
       // TODO: upload file to server
       for (const file of files) {
@@ -200,6 +200,49 @@ export default {
       const { workgroupId } = this.$route.params;
       for (const document of this.filesSelected)
         await this.removeDocument({ workgroupId, documentId: document.id });
+    },
+    async addFolder() {
+      const { workgroupId } = this.$route.params;
+      const documents = this.tree[this.currentPosition];
+      const checkNewFolder = (docs, digit) => {
+        let found;
+        if (digit === 0)
+          found = docs.findIndex(doc => doc.name === "Nuova cartella");
+        else
+          found = docs.findIndex(
+            doc => doc.name === "Nuova cartella (" + digit + ")"
+          );
+        if (found === -1) return digit;
+        return checkNewFolder(docs, digit + 1);
+      };
+      const index = checkNewFolder(documents, 0);
+      const name = "Nuova cartella" + (index === 0 ? "" : " (" + index + ")");
+      const isFolder = true;
+      const isNote = false;
+      const folder = this.currentPosition;
+      if (folder === "root")
+        await this.addDocument({
+          workgroupId,
+          folder,
+          creationDetails: {
+            name: name,
+            isFolder: isFolder,
+            isNote: isNote,
+            workgroup: workgroupId
+          }
+        });
+      else
+        await this.addDocument({
+          workgroupId,
+          folder,
+          creationDetails: {
+            name: name,
+            isFolder: isFolder,
+            isNote: isNote,
+            folder: folder,
+            workgroup: workgroupId
+          }
+        });
     },
     editName() {
       this.rename = !this.rename;
