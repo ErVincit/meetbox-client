@@ -208,7 +208,10 @@ export default {
       const superMax =
         this.rowSizeX -
         Number.parseInt(this.target.style.width.replace("px", ""));
+      const now = new Date();
       var min = 0;
+      if (calendarUtils.checkSameDay(this.event.timestampBegin, now))
+        min = calendarUtils.minutesToPosition(now, this.rowSizeX);
       if (min <= newPos && newPos <= superMax) {
         this.target.style.left = newPos + "px";
         const { hours, minutes } = calendarUtils.positionToHours(
@@ -217,10 +220,15 @@ export default {
         );
         this.newHour = hours;
         this.newMinutes = minutes;
-      } else if (newPos <= 0) {
-        this.target.style.left = 0 + "px";
-        this.newHour = 0;
-        this.newMinutes = 0;
+      } else if (newPos <= min) {
+        this.target.style.left = min + "px";
+        if (min === 0) {
+          this.newHour = 0;
+          this.newMinutes = 0;
+        } else {
+          this.newHour = now.getHours();
+          this.newMinutes = now.getMinutes();
+        }
       } else if (newPos >= superMax) {
         this.target.style.left = superMax + "px";
         // TODO: Assegnare valore massimi
