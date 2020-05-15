@@ -5,7 +5,7 @@
     v-on="$listeners"
   >
     <div class="d-flex">
-      <div class="document-col justify-content-start w-25">
+      <div class="document-col justify-content-start w-25 text-truncate">
         <img class="mx-2" src="@/assets/folderIcon.svg" ref="icon" />
         <NeuInput
           v-model="document.name"
@@ -13,6 +13,7 @@
           :backgroundHidden="!edit"
           @blur="editTitle"
           @click.stop
+          class="text-truncate"
         />
       </div>
       <div class="document-col w-25">
@@ -41,19 +42,18 @@ export default {
   components: { NeuContainer, NeuInput },
   computed: {
     ...mapGetters(["workgroups"]),
-    memberName() {
+    currentWorkgroup() {
       const { workgroupId } = this.$route.params;
-      let member = "";
-      if (!this.workgroups) return "";
-      for (let i = 0; i < this.workgroups.length; i++) {
-        if (this.workgroups[i].id == workgroupId) {
-          const m = this.workgroups[i].members.filter(
-            mem => mem.id == this.document.owner
-          );
-          member = m[0].firstname + " " + m[0].lastname;
-        }
-      }
-      return member;
+      if (this.workgroups)
+        return this.workgroups.find(wg => wg.id === parseInt(workgroupId));
+      return null;
+    },
+    memberName() {
+      if (!this.currentWorkgroup) return "";
+      const member = this.currentWorkgroup.members.find(
+        mem => mem.id == this.document.owner
+      );
+      return member.firstname + " " + member.lastname;
     }
   },
   mounted() {
