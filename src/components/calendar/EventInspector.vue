@@ -382,6 +382,8 @@ export default {
       return false;
     },
     isTimestampBeginEditable() {
+      if (this.event.originalBegin)
+        return !this.isEditable || this.event.originalBegin < new Date();
       return !this.isEditable || this.event.timestampBegin < new Date();
     },
     isErasable() {
@@ -395,7 +397,12 @@ export default {
       return calendarUtils.dateToDateType(new Date());
     },
     timestampBeginDate() {
-      return calendarUtils.dateToDateType(this.event.timestampBegin);
+      const now = new Date();
+      if (this.event.originalBegin && this.event.originalBegin <= now)
+        return calendarUtils.dateToDateType(this.event.originalBegin);
+      else if (this.event.timestampBegin <= now)
+        return calendarUtils.dateToDateType(this.event.timestampBegin);
+      else return calendarUtils.dateToDateType(now);
     },
     membersId() {
       return this.ourEvent.members.map(m => m.id);
