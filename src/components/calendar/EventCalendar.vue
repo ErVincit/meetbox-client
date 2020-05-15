@@ -243,7 +243,7 @@ export default {
         document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
       const newPos = e.clientX - toLeft - 17;
       // const superMax = left + width - (15 * this.rowSizeX) / (24 * 60);
-      const superMax =
+      var superMax =
         this.rowSizeX -
         (MINIMUM_MINUTE_WIDTH_SLIDER * this.rowSizeX) / (24 * 60);
 
@@ -251,6 +251,13 @@ export default {
       var min = 0;
       if (calendarUtils.checkSameDay(this.event.timestampBegin, now))
         min = calendarUtils.minutesToPosition(now, this.rowSizeX);
+      if (calendarUtils.checkSameDay(this.event.timestampEnd, now))
+        superMax =
+          calendarUtils.minutesToPosition(
+            this.event.timestampEnd,
+            this.rowSizeX
+          ) -
+          (MINIMUM_MINUTE_WIDTH_SLIDER * this.rowSizeX) / (24 * 60);
       if (min <= newPos && newPos <= superMax) {
         target.style.left = newPos + "px";
         const { hours, minutes } = calendarUtils.positionToHours(
@@ -280,11 +287,32 @@ export default {
           ) + "px";
       } else if (newPos >= superMax) {
         target.style.left = superMax + "px";
-        this.newHour = 23;
-        let minimum = 60 - MINIMUM_MINUTE_WIDTH_SLIDER;
-        const min = minimum == 60 ? 59 : minimum;
-        this.newMinutes = min;
-        target.style.width = this.widthCalculator(23, 59) + "px";
+        if (
+          superMax ===
+          this.rowSizeX -
+            (MINIMUM_MINUTE_WIDTH_SLIDER * this.rowSizeX) / (24 * 60)
+        ) {
+          this.newHour = 23;
+          let minimum = 60 - MINIMUM_MINUTE_WIDTH_SLIDER;
+          const min = minimum == 60 ? 59 : minimum;
+          this.newMinutes = min;
+          target.style.width = this.widthCalculator(23, 59) + "px";
+        } else {
+          const tempDate = new Date(this.event.timestampEnd);
+          tempDate.setMinutes(
+            tempDate.getMinutes() - MINIMUM_MINUTE_WIDTH_SLIDER
+          );
+          this.newHour = tempDate.getHours();
+          let minimum = tempDate.getMinutes();
+          if (tempDate.getHours() === 23)
+            this.newMinutes = minimum == 60 ? 59 : minimum;
+          else this.newMinutes = tempDate.getMinutes();
+          target.style.width =
+            this.widthCalculator(
+              this.event.timestampEnd.getHours(),
+              this.event.timestampEnd.getMinutes()
+            ) + "px";
+        }
       }
     },
     async handleRightResizing(e, event) {
