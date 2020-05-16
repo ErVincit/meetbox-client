@@ -11,20 +11,46 @@
       <LeftNavBar class="h-100" :open="openNavBar" />
       <main class="main_column_calendar col d-flex flex-column">
         <p class="m-0 title_page d-none d-lg-block">Calendario</p>
-        <hr class="mt-0 mb-2" />
-        <div class="d-flex flex-column px-3 flex-grow-1">
+        <hr class="m-0" />
+        <div
+          class="calendar_container d-flex flex-column justify-content-center px-1 flex-grow-1"
+        >
           <div
-            class="days_controller d-flex position-relative text-align-center my-2"
+            class="days_controller d-flex px-2 justify-content-between align-items-center w-lg-50 mx-lg-auto my-2"
             style="height: 60px"
           >
-            <NeuButton @click="handlePrevious" class="calendar_button cb_left">
+            <NeuButton
+              @click.stop="createEvent"
+              class="mob"
+              style="width: 50px; height: 50px; left: 0"
+            >
+              <img src="@/assets/addIcon.svg" v-tooltip:left="'Crea evento'" />
+            </NeuButton>
+
+            <NeuButton @click="handlePrevious" class="calendar_button">
               <img src="../../assets/calendar-left.svg" />
             </NeuButton>
-            <div class="calendar_identifier mr-4 ml-4">
+            <div class="calendar_identifier m-0 mx-4 text-nowrap norm">
               {{ calendarIdentifier }}
             </div>
-            <NeuButton @click="handleNext" class="calendar_button cb_rigth">
+            <div class="calendar_identifier mob">
+              <div>
+                {{ compactName.split(" - ")[0] }}
+              </div>
+              <div>
+                {{ compactName.split(" - ")[1] }}
+              </div>
+            </div>
+            <NeuButton @click="handleNext" class="calendar_button">
               <img src="../../assets/calendar-right.svg" />
+            </NeuButton>
+
+            <NeuButton
+              class="mob"
+              style="width: 50px; height: 50px; right: 0"
+              @click.stop="handleShowEventFilter"
+            >
+              <img src="@/assets/filterIcon.svg" v-tooltip:left="'Filtra'" />
             </NeuButton>
             <div
               v-if="showFilteredUser || showMaxEventSize"
@@ -54,49 +80,58 @@
               class="event-container d-flex h-100 m-0 p-0 justify-content-between flex-grow-1"
             >
               <div
-                class="pos-time first h-100 d-flex justify-content-center time_container mr-2"
+                class="pos-time first h-100 d-flex justify-content-center time_container"
               >
-                00:00
+                <span class="mob">0h</span>
+                <span class="norm">00:00</span>
               </div>
               <div
-                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
+                class="pos-time h-100 d-flex justify-content-center time_container"
               >
-                03:00
+                <span class="mob">3h</span>
+                <span class="norm">03:00</span>
               </div>
               <div
-                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
+                class="pos-time h-100 d-flex justify-content-center time_container"
               >
-                06:00
+                <span class="mob">6h</span>
+                <span class="norm">06:00</span>
               </div>
               <div
-                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
+                class="pos-time h-100 d-flex justify-content-center time_container"
               >
-                09:00
+                <span class="mob">9h</span>
+                <span class="norm">09:00</span>
               </div>
               <div
-                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
+                class="pos-time h-100 d-flex justify-content-center time_container"
               >
-                12:00
+                <span class="mob">12h</span>
+                <span class="norm">12:00</span>
               </div>
               <div
-                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
+                class="pos-time h-100 d-flex justify-content-center time_container"
               >
-                15:00
+                <span class="mob">15h</span>
+                <span class="norm">15:00</span>
               </div>
               <div
-                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
+                class="pos-time h-100 d-flex justify-content-center time_container"
               >
-                18:00
+                <span class="mob">18h</span>
+                <span class="norm">18:00</span>
               </div>
               <div
-                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
+                class="pos-time h-100 d-flex justify-content-center time_container"
               >
-                21:00
+                <span class="mob">21h</span>
+                <span class="norm">21:00</span>
               </div>
               <div
-                class="pos-time last d-flex justify-content-center time_container mr-2"
+                class="pos-time last d-flex justify-content-center time_container"
               >
-                23:59
+                <span class="mob">24h</span>
+                <span class="norm">23:59</span>
               </div>
             </div>
           </div>
@@ -107,13 +142,14 @@
             <div
               class="event-container d-flex h-100 m-0 p-0 justify-content-between flex-grow-1"
             >
-              <div class="mr h-100"></div>
-              <div class="mr h-100"></div>
-              <div class="mr h-100"></div>
-              <div class="mr h-100"></div>
-              <div class="mr h-100"></div>
-              <div class="mr h-100"></div>
-              <div class="mr h-100"></div>
+              <div class="h-100"></div>
+              <div class="h-100"></div>
+              <div class="h-100"></div>
+              <div class="h-100"></div>
+              <div class="h-100"></div>
+              <div class="h-100"></div>
+              <div class="h-100"></div>
+              <div class="h-100"></div>
               <div class="h-100"></div>
             </div>
           </div>
@@ -165,15 +201,14 @@
         >
           <img src="@/assets/addIcon.svg" v-tooltip:left="'Crea evento'" />
         </NeuButton>
-        <div class="dropleft">
-          <NeuButton
-            class="d-flex justify-content-center align-items-center mt-3"
-            style="width: 50px; height: 50px"
-            @click.stop="handleShowEventFilter"
-          >
-            <img src="@/assets/filterIcon.svg" v-tooltip:left="'Filtra'" />
-          </NeuButton>
-        </div>
+
+        <NeuButton
+          class="d-flex justify-content-center align-items-center mt-3"
+          style="width: 50px; height: 50px"
+          @click.stop="handleShowEventFilter"
+        >
+          <img src="@/assets/filterIcon.svg" v-tooltip:left="'Filtra'" />
+        </NeuButton>
       </Actions>
     </div>
 
@@ -469,6 +504,9 @@ export default {
     },
     currentMonth: function() {
       return calendarUtils.getMonthName(new Date().getMonth());
+    },
+    compactName() {
+      return calendarUtils.compactWeeklyPosition(this.currentDate);
     }
   },
   data() {
@@ -517,20 +555,48 @@ export default {
 .filterName {
   color: grey;
 }
-.days_controller {
-  justify-content: center;
-}
 
 .calendar_identifier {
-  min-width: 400px;
-  width: 50%;
+  min-width: 500px;
   text-align: center;
   color: var(--primary);
-  font-size: 36px;
+  font-size: 2rem;
   font-weight: 600;
-  margin: auto;
 }
 
+.norm {
+  display: block;
+}
+.mob {
+  display: none;
+}
+@media screen and (max-width: 991px) {
+  .calendar_identifier {
+    text-align: center;
+    color: var(--primary);
+    font-size: 1.2rem;
+    font-weight: 600;
+    width: auto;
+    min-width: auto;
+    margin: 0;
+  }
+  .calendar_button {
+    position: relative;
+  }
+  .calendar_container {
+    padding: 0;
+  }
+  .calendar_container,
+  .main_column_calendar {
+    padding: 0;
+  }
+  .norm {
+    display: none;
+  }
+  .mob {
+    display: block;
+  }
+}
 .dayContainer {
   width: 25%;
 }

@@ -44,6 +44,30 @@ exports.calendarWeeklyPosition = date => {
   );
 };
 
+exports.compactWeeklyPosition = date => {
+  let todayDay = date.getDay();
+
+  const min = date.getDate() - todayDay + 1;
+  const max = date.getDate() + 7 - todayDay;
+
+  const minDate = new Date(date.getFullYear(), date.getMonth(), min);
+  const maxDate = new Date(date.getFullYear(), date.getMonth(), max);
+
+  return (
+    minDate.getDate() +
+    "-" +
+    (minDate.getMonth() + 1) +
+    "-" +
+    minDate.getFullYear() +
+    " - " +
+    maxDate.getDate() +
+    "-" +
+    (maxDate.getMonth() + 1) +
+    "-" +
+    maxDate.getFullYear()
+  );
+};
+
 exports.getNameDay = date => {
   switch (date.toString().split(" ")[0]) {
     case "Mon":
