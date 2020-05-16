@@ -92,6 +92,13 @@
         </NeuButton>
       </div>
     </div>
+    <Alert
+      v-if="alertShowed"
+      :message="alertMessage"
+      @close="alertShowed = false"
+      :type="alertType"
+      :timeout="5000"
+    />
     <img
       id="draw-right"
       class="d-none d-md-block"
@@ -106,12 +113,13 @@ import NeuInput from "@/components/neu-button/NeuInput";
 import NeuButton from "@/components/neu-button/NeuButton";
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import Member from "@/components/task/Member";
+import Alert from "@/components/alert/Alert";
 
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Tutorial",
-  components: { Loading, NeuInput, NeuButton, Member, NeuContainer },
+  components: { Loading, NeuInput, NeuButton, Member, NeuContainer, Alert },
   data() {
     return {
       loading: true,
@@ -119,7 +127,10 @@ export default {
       name: "",
       memberEmail: "",
       searchMembers: [],
-      selectedMembers: []
+      selectedMembers: [],
+      alertShowed: false,
+      alertMessage: "",
+      alertType: ""
     };
   },
   computed: {
@@ -150,18 +161,33 @@ export default {
     },
     async newWorkgroup() {
       const { name, image } = this;
+      this.showAlert("info", "Creazione gruppo di lavoro in corso...");
       const workgroup = await this.createWorkgroup({ name, image });
-      for (const member of this.selectedMembers)
+      this.showAlert("info", "Aggiungendo membri...");
+      let count = 0;
+      for (const member of this.selectedMembers) {
+        this.showAlert(
+          "info",
+          "Aggiungendo membri..." + count + "/" + this.selectedMembers.length
+        );
         await this.addMember({
           workgroupId: workgroup.id,
           memberId: member.id
         });
+        count++;
+      }
+      this.alertShowed = false;
       this.$router.push(`/${workgroup.id}/drive`);
     },
     selectMember(member) {
       this.selectedMembers.unshift(member);
       this.memberEmail = "";
       this.searchMembers = [];
+    },
+    showAlert(type, message) {
+      this.alertType = type;
+      this.alertMessage = message;
+      this.alertShowed = true;
     }
   },
   async mounted() {

@@ -157,11 +157,15 @@ export default {
       this.draggingItemInfo = { section: sectionIndex, task: taskIndex };
       this.dragging = true;
     },
-    removeTask() {
+    async removeTask() {
       const { section, task } = this.draggingItemInfo;
       const { workgroupId } = this.$route.params;
       this.showAlert("info", "Rimozione in corso...");
-      this.deleteTask({ workgroupId, sectionId: section, taskId: task.id });
+      await this.deleteTask({
+        workgroupId,
+        sectionId: section,
+        taskId: task.id
+      });
       this.alertShowed = false;
     },
     async createSection() {

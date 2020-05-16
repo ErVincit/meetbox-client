@@ -5,12 +5,7 @@
     role="alert"
   >
     {{ message }}
-    <button
-      type="button"
-      class="close"
-      aria-label="Close"
-      @click.stop="$emit('close')"
-    >
+    <button type="button" class="close" aria-label="Close" @click.stop="exit">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -26,7 +21,25 @@ export default {
       default: "info",
       validator: value =>
         ["success", "danger", "warning", "info"].includes(value)
+    },
+    timeout: {
+      type: Number,
+      default: null
     }
+  },
+  data() {
+    return { timer: null };
+  },
+  methods: {
+    exit() {
+      this.$emit("close");
+    }
+  },
+  mounted() {
+    if (this.timeout) this.timer = setTimeout(this.exit, this.timeout);
+  },
+  destroyed() {
+    if (this.timeout) clearTimeout(this.timer);
   }
 };
 </script>
