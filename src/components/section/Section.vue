@@ -19,11 +19,15 @@
         >
           <img src="@/assets/kebab-icon.svg" />
         </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <NeuContainer
+          class="dropdown-menu"
+          aria-labelledby="dropdownMenuButton"
+          style="border: none"
+        >
           <p class="dropdown-item m-0 warning" @click="removeSection">
             Elimina
           </p>
-        </div>
+        </NeuContainer>
       </div>
     </div>
     <draggable

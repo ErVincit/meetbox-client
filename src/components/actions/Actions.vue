@@ -30,7 +30,6 @@
         <img src="@/assets/kebab-icon.svg" />
       </NeuContainer>
       <NeuContainer
-        disableHover
         style="border: none; margin-right: 10px; margin-bottom: 10px;"
         class="dropdown-menu"
         aria-labelledby="workgroupDropdownBtn"
