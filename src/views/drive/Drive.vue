@@ -65,13 +65,13 @@
             </div>
             <Loading :show="!tree" />
             <p
-              v-if="filteredDocuments.length == 0"
+              v-if="filteredDocuments && filteredDocuments.length === 0"
               class="mt-4 w-100 text-center"
               style="color:#787878"
             >
               Nessun documento presente
             </p>
-            <div v-else class="documents h-100 p-2">
+            <div v-else-if="tree" class="documents h-100 p-2">
               <Document
                 v-for="document in filteredDocuments"
                 :key="document.id"
@@ -292,6 +292,12 @@ export default {
   created() {
     const { workgroupId } = this.$route.params;
     this.fetchTree(workgroupId);
+  },
+  watch: {
+    $route() {
+      const { workgroupId } = this.$route.params;
+      this.fetchTree(workgroupId);
+    }
   }
 };
 </script>

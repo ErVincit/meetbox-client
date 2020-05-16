@@ -5,7 +5,7 @@
     v-on="$listeners"
   >
     <div class="d-flex">
-      <div class="document-col justify-content-start w-25 text-truncate">
+      <div class="document-col justify-content-start w-25">
         <img class="mx-2" src="@/assets/folderIcon.svg" ref="icon" />
         <NeuInput
           v-model="document.name"
@@ -13,7 +13,6 @@
           :backgroundHidden="!edit"
           @blur="editTitle"
           @click.stop
-          class="text-truncate"
         />
       </div>
       <div class="document-col w-25">
@@ -126,6 +125,11 @@ export default {
 <style>
 .document {
   border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.document input {
+  text-overflow: ellipsis;
 }
 
 .document-col {
