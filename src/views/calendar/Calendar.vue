@@ -47,33 +47,72 @@
           </div>
           <hr class="mt-0 mb-2" />
           <div class="time-header d-flex m-0 p-0">
-            <div class="dayContainer h-100 m-0 p-2"></div>
-            <div class="event-container d-flex h-100 m-0 p-0">
+            <div class="dayContainer h-100 col-1 m-0 p-2"></div>
+            <div
+              class="event-container d-flex h-100 m-0 p-0 justify-content-between flex-grow-1"
+            >
               <div
-                class="pos-time h-100 w-25 d-flex justify-content-center pl-2"
+                class="pos-time first h-100 d-flex justify-content-center time_container mr-2"
               >
                 00:00
               </div>
-              <div class="pos-time h-100 w-25 d-flex justify-content-center">
+              <div
+                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
+              >
+                03:00
+              </div>
+              <div
+                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
+              >
                 06:00
               </div>
-              <div class="pos-time h-100 w-25 d-flex justify-content-center">
+              <div
+                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
+              >
+                09:00
+              </div>
+              <div
+                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
+              >
                 12:00
               </div>
               <div
-                class="pos-time h-100 w-25 d-flex justify-content-center pr-2"
+                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
+              >
+                15:00
+              </div>
+              <div
+                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
               >
                 18:00
+              </div>
+              <div
+                class="pos-time h-100 d-flex justify-content-center time_container mr-2"
+              >
+                21:00
+              </div>
+              <div
+                class="pos-time last d-flex justify-content-center time_container mr-2"
+              >
+                23:59
               </div>
             </div>
           </div>
           <div class="space-header d-flex m-0 p-0">
-            <div class="dayContainer h-100 m-0 p-2 ml"></div>
-            <div class="event-container d-flex h-100 m-0 p-0">
-              <div class="mr h-100 w-25"></div>
-              <div class="mr h-100 w-25"></div>
-              <div class="mr h-100 w-25"></div>
-              <div class="h-100 w-25"></div>
+            <div
+              class="day_container d-flex flex-column m-0 p-2 h-100 col-1"
+            ></div>
+            <div
+              class="event-container d-flex h-100 m-0 p-0 justify-content-between flex-grow-1"
+            >
+              <div class="mr h-100"></div>
+              <div class="mr h-100"></div>
+              <div class="mr h-100"></div>
+              <div class="mr h-100"></div>
+              <div class="mr h-100"></div>
+              <div class="mr h-100"></div>
+              <div class="mr h-100"></div>
+              <div class="h-100"></div>
             </div>
           </div>
           <div class="position-relative w-100 m-0 p-0 flex-grow-1 mb-2">
@@ -83,12 +122,21 @@
                 v-for="day in days"
                 :key="day.day + 'back'"
               >
-                <div class="dayContainer h-100 m-0 p-2"></div>
-                <div class="event-container d-flex h-100 m-0 p-0">
-                  <div class="mr h-100 w-25"></div>
-                  <div class="mr h-100 w-25"></div>
-                  <div class="mr h-100 w-25"></div>
-                  <div class="h-100 w-25"></div>
+                <div
+                  class="day_container d-flex flex-column m-0 p-2 h-100 col-1"
+                ></div>
+                <div
+                  class="event-container d-flex h-100 m-0 p-0 justify-content-between flex-grow-1"
+                >
+                  <div class="mr h-100 "></div>
+                  <div class="mr h-100 "></div>
+                  <div class="mr h-100 "></div>
+                  <div class="mr h-100 "></div>
+                  <div class="mr h-100 "></div>
+                  <div class="mr h-100 "></div>
+                  <div class="mr h-100 "></div>
+                  <div class="mr h-100 "></div>
+                  <div class="mr h-100 "></div>
                 </div>
               </div>
             </div>
@@ -516,7 +564,9 @@ export default {
 .event-container {
   width: 100%;
 }
-
+/* .time_container {
+  width: calc(100% / 8);
+} */
 .mr {
   border-right: 1px solid rgb(194, 194, 194);
 }
@@ -531,10 +581,15 @@ export default {
 .space-header {
   height: 5px;
 }
-
-.pos-time {
+/* .first {
   transform: translateX(-50%);
+} */
+.pos-time {
   font-size: 16px;
   color: #787878;
 }
+/* .last {
+  right: 0;
+  transform: translateX(+50%);
+} */
 </style>
