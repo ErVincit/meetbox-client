@@ -25,9 +25,7 @@ export default {
   },
   mounted() {
     this.setActualRowSize();
-    window.addEventListener("resize", () => {
-      this.setActualRowSize();
-    });
+    window.addEventListener("resize", this.setActualRowSize);
   },
   watch: {
     row: function(newVal) {
@@ -43,6 +41,9 @@ export default {
       this.rowSizeX = rowElement.scrollWidth; // !!! Non prende margin o padding
       this.rowSizeY = rowElement.scrollHeight;
     }
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.setActualRowSize);
   }
 };
 </script>
