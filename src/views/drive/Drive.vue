@@ -77,7 +77,7 @@
             </div>
             <Loading :show="!tree" />
             <p
-              v-if="filteredDocuments && filteredDocuments.length === 0"
+              v-if="tree && filteredDocuments && filteredDocuments.length === 0"
               class="mt-4 w-100 text-center"
               style="color:#787878"
             >
@@ -210,7 +210,11 @@ export default {
       }
     },
     handleDblClick(e, document) {
-      if (document.isfolder) this.currentPosition = document.id + "";
+      if (document.isfolder) {
+        this.currentPosition = document.id + "";
+        this.editmode = false;
+        this.filesSelected = [];
+      }
     },
     handleFileDrop(files) {
       // TODO: Upload to server
@@ -326,7 +330,7 @@ export default {
   align-items: center;
 }
 .documents {
-  overflow: auto;
+  overflow: hidden auto;
 }
 .drag-title {
   border: 4px dashed purple;

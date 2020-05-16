@@ -10,7 +10,7 @@
       >
         <img src="@/assets/hamburger.svg" @click="$emit('open-navbar')"
       /></NeuContainer>
-      <div class="col"><slot /></div>
+      <div class="col-9"><slot /></div>
       <div
         class="dropdown d-flex flex-column justify-content-center align-items-center py-3"
       >
