@@ -54,7 +54,7 @@
             </NeuButton>
             <div
               v-if="showFilteredUser || showMaxEventSize"
-              class="filter h-100 flex-column justify-content-center position-absolute ml-2"
+              class="norm filter h-100 flex-column justify-content-center position-absolute ml-2"
             >
               <div class="d-flex justify-content-center">
                 <p class="filterName m-0">Filtri:</p>
