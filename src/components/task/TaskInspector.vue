@@ -100,10 +100,10 @@
           </p>
           <TaskAttachment
             class="my-2"
-            v-for="attachment in task.attachments"
-            :key="attachment.id"
+            v-for="(attachment, index) in task.attachments"
+            :key="index"
             :attachment="attachment"
-            @delete="removeAttachment"
+            @delete="removeAttachment(attachment)"
           />
           <BigAddButton class="col mt-2" @click="$refs.file.click()">
             Aggiungi un nuovo allegato
@@ -147,6 +147,12 @@
         </div>
       </div>
     </NeuContainer>
+    <Alert
+      v-if="alertShowed"
+      :message="alertMessage"
+      :type="alertType"
+      @close="alertShowed"
+    />
   </FileDropArea>
 </template>
 
@@ -162,6 +168,7 @@ import Label from "./Label";
 import LabelDropdown from "./LabelDropdown";
 import Member from "./Member";
 import TaskAttachment from "./TaskAttachment";
+import Alert from "@/components/alert/Alert";
 
 import calendarUtils from "@/views/calendar/calendar_utils";
 import { mapActions, mapGetters } from "vuex";
@@ -179,7 +186,8 @@ export default {
     NeuInput,
     Member,
     NeuTextarea,
-    TaskAttachment
+    TaskAttachment,
+    Alert
   },
   props: {
     sectionId: Number,
@@ -210,8 +218,16 @@ export default {
           ? new Date(this.task.deadline)
           : new Date();
         const array = value.split("-");
+        if (array.length != 3) return;
+        if (array[2].length > 2) return;
+        let intVal = parseInt(array[2]);
+        if (intVal < 0 || intVal > 31) return;
         date.setDate(array[2]);
+        if (array[1].length > 2) return;
+        intVal = parseInt(array[1]);
+        if (intVal < 0 || intVal > 12) return;
         date.setMonth(array[1]);
+        if (parseInt(array[0]) < 1900) return;
         date.setFullYear(array[0]);
         this.task.deadline = date.getTime();
       }
@@ -246,43 +262,72 @@ export default {
   },
   data() {
     return {
-      draggingFile: false
+      draggingFile: false,
+      alertType: "",
+      alertShowed: false,
+      alertMessage: ""
     };
   },
   methods: {
-    ...mapActions(["deleteTask", "editTask"]),
-    onDelete() {
+    ...mapActions([
+      "deleteTask",
+      "editTask",
+      "uploadAttachment",
+      "deleteAttachment"
+    ]),
+    async onDelete() {
       const { workgroupId } = this.$route.params;
-      this.deleteTask({
+      this.showAlert("info", "Eliminazione in corso...");
+      await this.deleteTask({
         workgroupId,
         sectionId: this.sectionId,
         taskId: this.task.id
       });
+      this.alertShowed = false;
       this.$emit("hide");
     },
-    onComplete() {
+    async onComplete() {
       const { workgroupId } = this.$route.params;
       this.task.completed = !this.task.completed;
-      this.editTask({
+      this.showAlert("info", "Operazione in corso...");
+      await this.editTask({
         workgroupId,
         sectionId: this.sectionId,
         taskId: this.task.id,
         editObject: { completed: this.task.completed }
       });
+      this.alertShowed = false;
       this.$emit("hide");
     },
-    onFileDrop(files) {
-      // TODO: upload file to server
+    async onFileDrop(files) {
+      const { workgroupId } = this.$route.params;
+      let count = 0;
       for (const file of files) {
-        this.task.attachments.push(file);
-        console.log("File uploaded!", file);
+        this.showAlert(
+          "info",
+          "Caricamento dei file in corso..." + count + "/" + files.length
+        );
+        await this.uploadAttachment({
+          workgroupId,
+          sectionId: this.sectionId,
+          taskId: this.task.id,
+          file
+        });
+        count++;
       }
+      this.alertShowed = false;
       this.draggingFile = false;
     },
-    removeAttachment(attachment) {
-      this.task.attachments = this.task.attachments.filter(
-        file => file !== attachment
-      );
+    async removeAttachment(attachment) {
+      const { workgroupId } = this.$route.params;
+      this.showAlert("info", "Rimozione dell'allegato in corso...");
+      await this.deleteAttachment({
+        workgroupId,
+        sectionId: this.sectionId,
+        taskId: this.task.id,
+        file: attachment
+      });
+      this.alertShowed = false;
     },
     addMember(member) {
       const { workgroupId } = this.$route.params;
@@ -353,6 +398,11 @@ export default {
         taskId: this.task.id,
         editObject: { deadline: this.task.deadline }
       });
+    },
+    showAlert(type, message) {
+      this.alertType = type;
+      this.alertMessage = message;
+      this.alertShowed = true;
     }
   }
 };
@@ -360,10 +410,10 @@ export default {
 
 <style>
 .drag-over {
-  border: 4px dashed purple !important;
+  border: 4px dashed var(--file-drop-border) !important;
 }
 .task-inspector .completed {
-  color: white;
+  color: var(--text-color-primary);
 }
 
 .attachments-drop {
@@ -406,7 +456,7 @@ export default {
 .task-inspector .neu-input > input,
 .task-inspector .neu-textarea > textarea,
 .highlight {
-  color: #1c4885 !important;
+  color: var(--primary) !important;
 }
 .task-inspector .neu-button,
 .task-inspector .neu-input > input {

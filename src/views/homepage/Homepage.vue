@@ -1,7 +1,9 @@
 <template>
   <div class="homepage h-100 d-flex flex-column overflow-auto">
     <header class="container-fluid row align-items-center m-0 p-2 pb-3 pb-lg-2">
-      <Logo class="col-12 col-lg-8 pb-3 pb-lg-0 text-center text-lg-left" />
+      <Logo
+        class="col-12 col-lg-8 pb-3 pb-lg-0 d-flex justify-content-center justify-content-lg-start"
+      />
       <router-link to="/login" class="col-6 col-lg-2">
         <NeuButton class="w-100" color="#2F80ED">Accedi</NeuButton>
       </router-link>

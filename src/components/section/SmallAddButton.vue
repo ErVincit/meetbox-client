@@ -35,8 +35,8 @@ button.small-add-btn:active {
   transform: scale(0.9);
 }
 button.small-add-btn:hover {
-  fill: #1c4885;
-  color: #1c4885;
-  border-color: #1c4885;
+  fill: var(--primary);
+  color: var(--primary);
+  border-color: var(--primary);
 }
 </style>

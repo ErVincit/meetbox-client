@@ -555,7 +555,7 @@ export default {
 }
 
 .filterName {
-  color: grey;
+  color: var(--secondary);
 }
 
 .calendar_identifier {
@@ -621,7 +621,7 @@ export default {
 .background {
   height: calc(100% / 7);
   width: 100%;
-  border-bottom: 1px solid rgb(194, 194, 194);
+  border-bottom: 1px solid var(--grid-border);
   overflow: hidden;
   min-height: 80px;
   padding: 0;
@@ -639,11 +639,11 @@ export default {
   width: calc(100% / 8);
 } */
 .mr {
-  border-right: 1px solid rgb(194, 194, 194);
+  border-right: 1px solid var(--grid-border);
 }
 
 .bl {
-  border-left: 1px solid rgb(194, 194, 194);
+  border-left: 1px solid var(--grid-border);
 }
 
 .time-header {
@@ -657,7 +657,7 @@ export default {
 } */
 .pos-time {
   font-size: 16px;
-  color: #787878;
+  color: var(--text-color-bg);
 }
 /* .last {
   right: 0;

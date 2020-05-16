@@ -36,7 +36,7 @@ export default {
   z-index: 1000;
 }
 .hightlight {
-  color: #1c4885;
+  color: var(--primary);
 }
 #messaggio {
   display: flex;

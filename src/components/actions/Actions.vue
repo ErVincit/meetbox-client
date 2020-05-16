@@ -91,7 +91,7 @@ export default {
   height: 50px;
   font-size: 16px;
   margin-bottom: -10px;
-  --background-color: #efeeee;
+  --background-color: var(--primary-bg-color);
 }
 .actions .avatar:last-child {
   margin-bottom: 0px;

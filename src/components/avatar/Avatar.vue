@@ -44,7 +44,7 @@ export default {
   height: 40px;
   border: 3px solid var(--background-color);
   font-size: 15px;
-  color: white;
+  color: var(--text-color-primary);
 }
 .avatar:hover {
   z-index: 100;

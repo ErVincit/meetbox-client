@@ -209,7 +209,7 @@ h1 > span {
   line-height: 65px;
   letter-spacing: -0.055em;
 
-  color: #2f80ed;
+  color: var(--primary);
 }
 
 .tutorial .neu-input input {
@@ -225,8 +225,8 @@ h1 > span {
   margin-bottom: 8px;
 }
 .tutorial .search-box .member:hover {
-  background-color: #2f80ed;
-  color: white;
+  background-color: var(--primary);
+  color: var(--text-color-primary);
   cursor: pointer;
 }
 

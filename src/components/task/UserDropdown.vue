@@ -89,7 +89,7 @@ export default {
 }
 
 .user-dropdown__element:hover {
-  background-color: lightgrey;
+  background-color: var(--primary);
   cursor: pointer;
 }
 

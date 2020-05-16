@@ -379,7 +379,7 @@ export default {
 
 <style>
 .carica {
-  color: #1c4885;
+  color: var(--primary);
 }
 .header {
   width: 100%;
@@ -391,10 +391,10 @@ export default {
   overflow: hidden auto;
 }
 .drag-title {
-  border: 4px dashed purple;
+  border: 4px dashed var(--file-drop-border);
   border-radius: 10px;
   position: absolute;
-  background-color: #efeeee;
+  background-color: var(--primary-bg-color);
   top: 0;
   left: 0;
   width: 100%;
@@ -402,7 +402,7 @@ export default {
   font-size: 30px;
 }
 .document.selected {
-  border: 1px solid purple !important;
+  border: 1px solid var(--file-drop-border) !important;
 }
 .documents-fade-enter-active,
 .documents-fade-leave-active {

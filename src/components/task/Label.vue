@@ -34,7 +34,7 @@ export default {
   background-color: var(--label-bg-color);
 }
 span {
-  color: white;
+  color: var(--text-color-primary);
   font-size: 12px;
 }
 </style>

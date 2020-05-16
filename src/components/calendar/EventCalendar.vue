@@ -444,9 +444,9 @@ export default {
 .event {
   width: 100px;
   height: 100%;
-  background-color: #2f80ed;
-  border: 1px solid white;
-  color: white;
+  background-color: var(--primary);
+  border: 1px solid var(--text-color-primary);
+  color: var(--text-color-primary);
   overflow: hidden;
   padding: 0;
   margin: 0;

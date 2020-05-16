@@ -81,6 +81,6 @@ export default {
   color: var(--primary);
 }
 .breadcrumb-item:hover span {
-  background-color: rgba(black, 0.3);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 </style>

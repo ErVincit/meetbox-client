@@ -452,7 +452,7 @@ export default {
   list-style: none;
 }
 .event-inspector span:hover {
-  color: rgb(211, 76, 76);
+  color: var(--danger);
   cursor: pointer;
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-items-center">
+  <div class="d-flex justify-content-center align-items-center">
     <img src="@/assets/logo.svg" class="pr-3" wiidth="50" height="50" />
     <p class="logo m-0">MeetBox</p>
   </div>
@@ -20,6 +20,6 @@ p {
   line-height: 65px;
   letter-spacing: -0.055em;
 
-  color: #2f80ed;
+  color: var(--primary);
 }
 </style>

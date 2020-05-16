@@ -37,7 +37,7 @@ export default {
 
 <style scoped>
 .close:hover {
-  color: orangered;
+  color: var(--danger);
   cursor: pointer;
 }
 </style>

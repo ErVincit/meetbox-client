@@ -21,7 +21,7 @@ export default {
 <style>
 .day_container {
   /* border-right: 1px solid rgb(194, 194, 194); */
-  color: #787878;
+  color: var(--text-color-bg);
   font-weight: 600;
 }
 

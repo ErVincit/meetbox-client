@@ -315,6 +315,6 @@ export default {
 
 <style>
 .hightlight {
-  color: #1c4885;
+  color: var(--primary);
 }
 </style>

@@ -246,7 +246,7 @@ export default {
   z-index: 0;
   cursor: pointer;
   border: none;
-  background-color: #1c4885;
+  background-color: var(--primary);
 }
 .label-dropdown .label-container button:hover {
   background-color: #787878;
@@ -255,7 +255,7 @@ export default {
   fill: white;
 }
 .label-dropdown .selected {
-  border: 3px solid #1c4885;
+  border: 3px solid var(--primary);
   box-shadow: 3px 3px 6px #cbcbcb, -3px -3px 6px #fff;
 }
 .label-dropdown .neu-input input {

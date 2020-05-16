@@ -29,7 +29,7 @@ button.big-add-btn {
   text-align: center;
   cursor: pointer;
   border-radius: 10px;
-  border: 1px solid lightgrey;
+  border: 1px solid var(--big-add-border);
   fill: var(--color);
   outline: none;
   transition: transform 200ms;
@@ -39,8 +39,8 @@ button.big-add-btn:active {
   transform: scale(0.9);
 }
 button.big-add-btn:hover {
-  fill: #1c4885;
-  color: #1c4885;
-  border-color: #1c4885;
+  fill: var(--primary);
+  color: var(--primary);
+  border-color: var(--primary);
 }
 </style>

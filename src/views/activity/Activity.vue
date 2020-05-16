@@ -219,14 +219,14 @@ export default {
   justify-content: center;
   align-items: center;
   margin: 10px;
-  border: 2px dashed rgb(252, 109, 109);
+  border: 2px dashed var(--danger);
   color: black !important;
   border-radius: 30px;
 }
 
 .trash p {
   font-size: 30px;
-  color: rgb(252, 109, 109);
+  color: var(--danger);
 }
 
 .page__title {

@@ -47,7 +47,7 @@ export default {
 
 <style scoped>
 .calendar__row {
-  border-bottom: 1px solid grey;
+  border-bottom: 1px solid var(--grid-border);
   overflow: hidden;
   min-height: 80px;
   padding: 0;

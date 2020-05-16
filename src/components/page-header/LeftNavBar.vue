@@ -240,7 +240,7 @@ export default {
 }
 .navbar a {
   text-decoration: none;
-  color: #787878;
+  color: var(--text-color-bg);
 }
 .navbar-nav li {
   border-radius: 10px;
@@ -253,16 +253,16 @@ export default {
 }
 .navbar a.router-link-exact-active li,
 .navbar-nav li:hover {
-  color: #1c4885;
+  color: var(--primary);
 }
 .navbar a.router-link-exact-active svg circle,
 .navbar-nav li:hover svg circle {
-  fill: #1c4885;
-  stroke: white;
+  fill: var(--primary);
+  stroke: var(--text-color-primary);
 }
 .navbar a.router-link-exact-active path,
 .navbar-nav li:hover svg path {
-  fill: white;
+  fill: var(--text-color-primary);
 }
 
 .workgroup {
@@ -276,15 +276,15 @@ export default {
 }
 .workgroup.selected,
 .workgroup:hover {
-  background-color: #1c4885;
-  color: white !important;
+  background-color: var(--primary);
+  color: var(--text-color-primary) !important;
 }
 
 .expand-btn button {
   text-align: left;
 }
 .expand-btn button:hover {
-  color: #1c4885;
+  color: var(--primary);
 }
 .expand-btn .rotate {
   transform: rotate(180deg);
@@ -292,9 +292,9 @@ export default {
 
 .add-workgroup:hover svg circle {
   fill: none !important;
-  stroke: #1c4885 !important;
+  stroke: var(--primary) !important;
 }
 .add-workgroup:hover svg path {
-  stroke: #1c4885 !important;
+  stroke: var(--primary) !important;
 }
 </style>

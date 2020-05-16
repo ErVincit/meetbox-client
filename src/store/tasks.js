@@ -94,6 +94,45 @@ const actions = {
   },
   clearLabel({ commit }, labelId) {
     commit("clearLabel", labelId);
+  },
+  async uploadAttachment({ commit }, { workgroupId, sectionId, taskId, file }) {
+    const formData = new FormData();
+    formData.append("fileToUpload", file);
+    let url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/upload`;
+    let response = await fetch(url, {
+      method: "POST",
+      body: formData,
+      credentials: "include"
+    });
+    let json = await response.json();
+    const creationDetails = {
+      name: file.name,
+      isFolder: false,
+      isNote: false,
+      task: taskId,
+      path: json.path,
+      size: json.size
+    };
+    url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/create`;
+    response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(creationDetails),
+      headers: { "Content-Type": "application/json" },
+      credentials: "include"
+    });
+    json = await response.json();
+    if (json.error) console.error(json);
+    else commit("newAttachment", { sectionId, taskId, document: json.data });
+  },
+  async deleteAttachment({ commit }, { workgroupId, sectionId, taskId, file }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${file.id}`;
+    const response = await fetch(url, {
+      method: "DELETE",
+      credentials: "include"
+    });
+    const json = await response.json();
+    if (json.error) console.error(json);
+    else commit("removeAttachment", { sectionId, taskId, file });
   }
 };
 
@@ -141,6 +180,19 @@ const mutations = {
         }
       }
     }
+  },
+  newAttachment: (state, { sectionId, taskId, document }) => {
+    const section = state.sections.find(section => section.id === sectionId);
+    const task = section.tasks.find(t => t.id === taskId);
+    task.attachments.push(document);
+  },
+  removeAttachment: (state, { sectionId, taskId, file }) => {
+    const section = state.sections.find(section => section.id === sectionId);
+    const task = section.tasks.find(t => t.id === taskId);
+    const attachmentIndex = task.attachments.findIndex(
+      att => att.id === file.id
+    );
+    task.attachments.splice(attachmentIndex, 1);
   }
 };
 

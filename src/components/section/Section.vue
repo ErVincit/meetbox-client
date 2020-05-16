@@ -316,7 +316,7 @@ export default {
   width: 300px;
 }
 .activity__section .neu-input > input {
-  color: #1c4885;
+  color: var(--primary);
   font-size: 16px;
 }
 .activity__section .task:last-child {
@@ -342,19 +342,16 @@ export default {
 }
 
 .add-task {
-  border: 1px solid #1c4885;
+  border: 1px solid var(--primary);
 }
 .add-task__save,
 .add-task__save:focus {
-  background-color: #1c4885;
+  background-color: var(--primary);
   border: none;
-  color: white;
+  color: var(--text-color-primary);
   border-radius: 10px;
   font-size: 18px;
   outline: none;
-}
-.add-task__save:hover {
-  box-shadow: 2px 2px 6px #133f7c, -2px -2px 6px #2d5fa5;
 }
 .add-task__close {
   cursor: pointer;
@@ -388,11 +385,11 @@ export default {
   cursor: pointer;
 }
 .dropdown-item.warning {
-  color: orangered;
+  color: var(--danger);
 }
 .dropdown-item:active,
 .dropdown-item:hover {
-  color: white;
-  background-color: orangered;
+  color: var(--text-color-primary);
+  background-color: var(--danger);
 }
 </style>
