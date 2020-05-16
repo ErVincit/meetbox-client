@@ -63,16 +63,22 @@
             </div>
             <div class="row mt-3 px-2 d-none d-md-flex">
               <div class="header col-3 p-0">
-                Nome
+                <p style="cursor:pointer" @click="orderBy = 'nome'">Nome</p>
               </div>
               <div class="header col-3 p-0">
-                Creatore
+                <p style="cursor:pointer" @click="orderBy = 'creatore'">
+                  Creatore
+                </p>
               </div>
               <div class="header col-3 p-0">
-                Data
+                <p style="cursor:pointer" @click="orderBy = 'dataCreazione'">
+                  Data
+                </p>
               </div>
               <div class="header col-3 p-0">
-                Dimensioni
+                <p style="cursor:pointer" @click="orderBy = 'dimensione'">
+                  Dimensione
+                </p>
               </div>
             </div>
             <Loading :show="!tree" />
@@ -177,17 +183,44 @@ export default {
     Alert
   },
   computed: {
-    ...mapGetters(["tree", "currentUser"]),
+    ...mapGetters(["tree", "currentUser", "workgroups"]),
+    currentWorkgroup() {
+      const { workgroupId } = this.$route.params;
+      if (this.workgroups)
+        return this.workgroups.find(wg => wg.id === parseInt(workgroupId));
+      return null;
+    },
     folders() {
       if (!this.tree) return [];
       return Object.keys(this.tree);
     },
     filteredDocuments() {
       if (!this.folders.includes(this.currentPosition)) return [];
-      if (this.tree)
-        return this.tree[this.currentPosition].filter(({ name }) =>
+      if (this.tree) {
+        const documentsFolder = this.tree[
+          this.currentPosition
+        ].filter(({ name }) =>
           name.toLowerCase().includes(this.researchString.toLowerCase())
         );
+        if (this.orderBy === "def")
+          return documentsFolder.sort((a, b) => b.isfolder - a.isfolder);
+        else if (this.orderBy === "nome")
+          return documentsFolder.sort((a, b) =>
+            a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+          );
+        else if (this.orderBy === "creatore") {
+          return documentsFolder.sort((a, b) =>
+            this.ownerName(a)
+              .toLowerCase()
+              .localeCompare(this.ownerName(b).toLowerCase())
+          );
+        } else if (this.orderBy === "dataCreazione")
+          return documentsFolder.sort(
+            (a, b) => new Date(b.creationdate) - new Date(a.creationdate)
+          );
+        else if (this.orderBy === "dimensione")
+          return documentsFolder.sort((a, b) => b.size - a.size);
+      }
       return [];
     }
   },
@@ -227,12 +260,22 @@ export default {
         this.filesSelected = [];
       } else {
         const { workgroupId } = this.$route.params;
-        window.location.href = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${document.id}/download`;
+        window.open(
+          `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${document.id}/download`,
+          "_blank"
+        );
       }
     },
     handleFileDrop(files) {
       // TODO: Upload to server
       console.log("Uploading...", files);
+    },
+    ownerName(document) {
+      if (!this.currentWorkgroup) return "";
+      const owner = this.currentWorkgroup.members.find(
+        mem => mem.id == document.owner
+      );
+      return owner.firstname + " " + owner.lastname;
     },
     async deleteDocument() {
       const { workgroupId } = this.$route.params;
@@ -317,7 +360,8 @@ export default {
       alertShowed: false,
       alertType: "",
       alertMessage: "",
-      openNavBar: false
+      openNavBar: false,
+      orderBy: "dimensione"
     };
   },
   created() {
