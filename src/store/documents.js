@@ -18,6 +18,27 @@ const actions = {
     const json = await data.json();
     commit("setTree", json.result);
   },
+  async uploadDocument({ dispatch }, { workgroupId, folder, file }) {
+    const formData = new FormData();
+    formData.append("fileToUpload", file);
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/upload`;
+    const response = await fetch(url, {
+      method: "POST",
+      body: formData,
+      credentials: "include"
+    });
+    const json = await response.json();
+    const creationDetails = {
+      name: file.name,
+      isFolder: false,
+      isNote: false,
+      workgroup: workgroupId,
+      path: json.path,
+      size: json.size
+    };
+    if (folder !== "root") creationDetails.folder = folder;
+    dispatch("addDocument", { workgroupId, folder, creationDetails });
+  },
   async removeDocument({ commit }, { workgroupId, documentId }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${documentId}`;
     await fetch(url, {

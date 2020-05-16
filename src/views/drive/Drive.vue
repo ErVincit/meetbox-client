@@ -192,11 +192,22 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchTree", "removeDocument", "addDocument"]),
-    addFiles(files) {
-      // TODO: upload file to server
+    ...mapActions([
+      "fetchTree",
+      "removeDocument",
+      "addDocument",
+      "uploadDocument"
+    ]),
+    async addFiles(files) {
+      const { workgroupId } = this.$route.params;
       for (const file of files) {
-        console.log("File uploaded!", file);
+        console.log("Uploading...", file);
+        await this.uploadDocument({
+          workgroupId,
+          folder: this.currentPosition,
+          file
+        });
+        console.log("Uploaded!", file.name);
       }
     },
     handleClick(document) {
@@ -214,6 +225,9 @@ export default {
         this.currentPosition = document.id + "";
         this.editmode = false;
         this.filesSelected = [];
+      } else {
+        const { workgroupId } = this.$route.params;
+        window.location.href = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${document.id}/download`;
       }
     },
     handleFileDrop(files) {
