@@ -1,6 +1,6 @@
 <template>
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
+    <ol class="breadcrumb m-0 p-0">
       <li
         class="breadcrumb-item"
         v-for="folder in value"

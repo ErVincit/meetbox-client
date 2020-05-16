@@ -13,16 +13,21 @@
           @set-position="setPosition"
         />
         <hr class="mt-0 mb-2" />
-        <div class="d-flex mt-3 px-2">
-          <div class="d-flex w-50 align-items-center">
+        <div class="row justify-content-between m-0 mt-3 px-2">
+          <div
+            class="d-flex col-12 col-sm-6 col-md-4 col-xl-3 my-2 align-items-center"
+          >
             <NeuInput
               type="text"
               placeholder="Cerca..."
               v-model="researchString"
+              class="w-100 search-bar"
             />
           </div>
-          <div class="d-flex w-50 justify-content-end">
-            <NeuButton class="w-50 rounded-pill" @click="$refs.file.click()">
+          <div
+            class="d-flex col-12 col-sm-6 col-md-4 col-xl-3 my-2 justify-content-end"
+          >
+            <NeuButton class="w-100 rounded-pill" @click="$refs.file.click()">
               <div class="d-flex justify-content-center align-items-center">
                 <img class="mr-3" src="@/assets/cloud-upload.svg" />
                 <p class="carica m-0">Carica</p>
@@ -49,17 +54,17 @@
             >
               Rilascia il file per caricarlo sul Drive
             </div>
-            <div class="d-flex mt-3 px-2">
-              <div class="header w-25">
+            <div class="row mt-3 px-2 d-none d-md-flex">
+              <div class="header col-3 p-0">
                 Nome
               </div>
-              <div class="header w-25">
+              <div class="header col-3 p-0">
                 Creatore
               </div>
-              <div class="header w-25">
+              <div class="header col-3 p-0">
                 Data
               </div>
-              <div class="header w-25">
+              <div class="header col-3 p-0">
                 Dimensioni
               </div>
             </div>
@@ -308,7 +313,6 @@ export default {
 }
 .header {
   width: 100%;
-  margin: 3pt;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -340,5 +344,12 @@ export default {
 }
 .documents-fade-move {
   transition: transform 1s;
+}
+
+.search-bar {
+  border-radius: 50rem !important;
+}
+.search-bar input {
+  height: 40px !important;
 }
 </style>

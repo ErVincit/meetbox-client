@@ -4,8 +4,8 @@
     v-bind="$attrs"
     v-on="$listeners"
   >
-    <div class="d-flex">
-      <div class="document-col justify-content-start w-25">
+    <div class="row px-2">
+      <div class="document-col justify-content-start col-12 col-md-3">
         <img class="mx-2" src="@/assets/folderIcon.svg" ref="icon" />
         <NeuInput
           v-model="document.name"
@@ -15,13 +15,13 @@
           @click.stop
         />
       </div>
-      <div class="document-col w-25">
+      <div class="document-col col-3 d-none d-md-flex">
         {{ memberName }}
       </div>
-      <div class="document-col w-25">
+      <div class="document-col col-3 d-none d-md-flex">
         {{ data }}
       </div>
-      <div class="document-col w-25">
+      <div class="document-col col-3 d-none d-md-flex">
         {{ size }}
       </div>
     </div>
