@@ -19,7 +19,7 @@
           <Loading :show="loading" />
           <p
             v-if="!loading && allTasks && allTasks.length == 0"
-            class="mt-2 highlight"
+            class="d-none d-lg-block mt-2 highlight"
             style="font-size: 24px; color: #787878; max-width: 750px"
           >
             Inizia subito a riempire questo spazio vuoto, crea una sezione con
@@ -46,6 +46,11 @@
               @end-editing="editingSection = false"
             />
           </draggable>
+          <NeuContainer v-if="!loading" class="p-3 d-block d-lg-none">
+            <BigAddButton @click.stop>
+              Aggiungi una nuova sezione
+            </BigAddButton>
+          </NeuContainer>
           <Alert
             v-if="alertShowed"
             :message="alertMessage"
@@ -97,6 +102,7 @@ import Loading from "@/components/loading/Loading";
 import NeuButton from "@/components/neu-button/NeuButton";
 import Actions from "@/components/actions/Actions";
 import Alert from "@/components/alert/Alert";
+import BigAddButton from "@/components/section/BigAddButton";
 
 import { mapGetters, mapActions } from "vuex";
 import draggable from "vuedraggable";
@@ -134,6 +140,7 @@ export default {
     NeuButton,
     Actions,
     Alert,
+    BigAddButton,
     draggable
   },
   computed: mapGetters(["allTasks"]),
