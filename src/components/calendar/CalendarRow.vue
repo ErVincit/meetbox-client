@@ -49,7 +49,7 @@ export default {
 .calendar__row {
   border-bottom: 1px solid grey;
   overflow: hidden;
-
+  min-height: 80px;
   padding: 0;
   margin: 0;
 }

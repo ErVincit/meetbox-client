@@ -9,11 +9,11 @@
       style="height: calc(100% - 100px)"
     >
       <LeftNavBar class="h-100" :open="openNavBar" />
-      <main class="main_column_calendar col d-flex flex-column">
+      <main class="main_column_calendar h-100 col d-flex flex-column">
         <p class="m-0 title_page d-none d-lg-block">Calendario</p>
         <hr class="m-0" />
         <div
-          class="calendar_container d-flex flex-column justify-content-center px-1 flex-grow-1"
+          class="calendar_container h-100 d-flex flex-column justify-content-center px-1 flex-grow-1"
         >
           <div
             class="days_controller d-flex px-2 justify-content-between align-items-center w-lg-50 mx-lg-auto my-2"
@@ -153,7 +153,9 @@
               <div class="h-100"></div>
             </div>
           </div>
-          <div class="position-relative w-100 m-0 p-0 flex-grow-1 mb-2">
+          <div
+            class="position-relative overflow-auto w-100 m-0 p-0 flex-grow-1 mb-2"
+          >
             <div class="position-absolute h-100 w-100 p-0 m-0">
               <div
                 class="background d-flex m-0 p-0"
@@ -621,7 +623,7 @@ export default {
   width: 100%;
   border-bottom: 1px solid rgb(194, 194, 194);
   overflow: hidden;
-
+  min-height: 80px;
   padding: 0;
   margin: 0;
 }
