@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="navbar col-auto flex-column align-items-center justify-content-start h-100 d-none d-lg-flex pb-3"
+    class="navbar col-auto flex-column align-items-center justify-content-start h-100 d-none d-lg-flex flex-nowrap pb-3"
     :class="{ 'd-flex position-absolute mobile-opened': open }"
     style="max-width: 300px"
   >
