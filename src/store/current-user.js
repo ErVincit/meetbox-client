@@ -55,11 +55,7 @@ const actions = {
       method: "PUT",
       credentials: "include"
     });
-    if (response.ok) {
-      commit("setCurrentUser", null);
-      return true;
-    }
-    return false;
+    if (response.ok) commit("setCurrentUser", null);
   }
 };
 

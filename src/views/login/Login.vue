@@ -12,7 +12,7 @@
           v-model="email"
           placeholder="Email"
           autofocus
-          autocomplete="username"
+          autocomplete="email"
         />
         <NeuInput
           class="my-4 w-75"

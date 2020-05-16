@@ -30,7 +30,6 @@
         <img src="@/assets/kebab-icon.svg" />
       </NeuContainer>
       <NeuContainer
-        disableHover
         style="border: none; margin-right: 10px; margin-bottom: 10px;"
         class="dropdown-menu"
         aria-labelledby="workgroupDropdownBtn"
@@ -74,13 +73,13 @@ export default {
     ...mapActions(["deleteWorkgroup"]),
     async removeWorkgroup() {
       if (this.workgroups.length === 1) {
-        alert("Non puoi eliminare il tuo ultimo grouppo di lavoro");
+        alert("Non puoi eliminare il tuo ultimo gruppo di lavoro");
         return;
       }
       const { workgroupId } = this.$route.params;
       await this.deleteWorkgroup(workgroupId);
       const workgroup = this.workgroups[0];
-      this.$router.push(`/${workgroup.id}/activity`);
+      this.$router.push(`/${workgroup.id}/drive`);
     }
   }
 };

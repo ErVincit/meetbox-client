@@ -12,30 +12,35 @@
             type="email"
             v-model="email"
             placeholder="Email"
+            autocomplete="email"
           />
           <NeuInput
             class="my-4 w-75"
             type="text"
             v-model="firstname"
             placeholder="Nome"
+            autocomplete="given-name"
           />
           <NeuInput
             class="my-4 w-75"
             type="text"
             v-model="lastname"
             placeholder="Cognome"
+            autocomplete="family-name"
           />
           <NeuInput
             class="my-4 w-75"
             type="password"
             v-model="password"
             placeholder="Password"
+            autocomplete="new-password"
           />
           <NeuInput
             class="my-4 w-75"
             type="password"
             v-model="confermaPassword"
             placeholder="Conferma password"
+            autocomplete="new-password"
           />
           <p>
             Hai già un account?

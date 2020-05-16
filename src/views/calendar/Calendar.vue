@@ -1,14 +1,16 @@
 <template>
   <div class="activity container-fluid h-100 d-flex flex-column">
-    <PageHeader />
+    <PageHeader @open-navbar="openNavBar = !openNavBar">
+      <p class="m-0 title_page mx-2">Calendario</p>
+    </PageHeader>
     <div
       id="page-content"
       class="row flex-grow-1"
       style="height: calc(100% - 100px)"
     >
-      <LeftNavBar class="h-100" />
+      <LeftNavBar class="h-100" :open="openNavBar" />
       <main class="main_column_calendar col d-flex flex-column">
-        <p class="m-0 title_page">Calendario</p>
+        <p class="m-0 title_page d-none d-lg-block">Calendario</p>
         <hr class="mt-0 mb-2" />
         <div class="d-flex flex-column px-3 flex-grow-1">
           <div
@@ -486,7 +488,8 @@ export default {
       filteredMembers: [],
       showMaxEventSize: false,
       maxEventsSize: null,
-      showEventFilter: false
+      showEventFilter: false,
+      openNavBar: false
     };
   },
   mounted() {
@@ -522,7 +525,7 @@ export default {
   min-width: 400px;
   width: 50%;
   text-align: center;
-  color: #1c4885;
+  color: var(--primary);
   font-size: 36px;
   font-weight: 600;
   margin: auto;
@@ -543,8 +546,8 @@ export default {
 }
 
 .title_page {
-  color: #1c4885;
-  font-size: 24px;
+  color: var(--primary);
+  font-size: 2rem;
 }
 
 .background {

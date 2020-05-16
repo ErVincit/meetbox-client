@@ -71,7 +71,7 @@
             v-for="color in colors"
             :key="color"
             :class="{ selected: '#' + labelToEdit.color === color }"
-            @click="labelToEdit.color = color.substring(1)"
+            @click="selectColor(color)"
           >
             <div
               class="w-100 h-100 rounded-pill"
@@ -101,9 +101,11 @@
       </div>
     </div>
     <Alert
-      :show="message !== null"
+      v-if="message !== null"
       :message="message"
       @close="message = null"
+      :type="alertType"
+      :timeout="alertTimeout"
     />
   </NeuContainer>
 </template>
@@ -141,7 +143,9 @@ export default {
       addingLabel: false,
       labelToEdit: EMPTY_LABEL,
       colors,
-      message: null
+      message: null,
+      alertType: "",
+      alertTimeout: null
     };
   },
   computed: {
@@ -157,35 +161,52 @@ export default {
       this.editingLabel = true;
       this.labelToEdit = label;
     },
-    changeLabel() {
-      if (this.editingLabel) {
-        const { workgroupId } = this.$route.params;
-        this.editLabel({
-          workgroupId,
-          labelId: this.labelToEdit.id,
-          editObject: this.labelToEdit
-        });
+    async changeLabel() {
+      if (!this.labelToEdit.color) {
+        this.alertType = "warning";
+        this.alertTimeout = 5000;
+        this.message = "Devi selezionare un colore";
       } else {
-        const { workgroupId } = this.$route.params;
-        this.createLabel({
-          workgroupId,
-          label: this.labelToEdit
-        });
+        if (this.editingLabel) {
+          const { workgroupId } = this.$route.params;
+          this.editLabel({
+            workgroupId,
+            labelId: this.labelToEdit.id,
+            editObject: this.labelToEdit
+          });
+        } else {
+          const { workgroupId } = this.$route.params;
+          this.alertType = "info";
+          this.message = "Creazione in corso...";
+          await this.createLabel({
+            workgroupId,
+            label: this.labelToEdit
+          });
+          this.message = null;
+        }
+        this.exitManagement();
       }
-      this.exitManagement();
     },
     async removeLabel() {
       if (this.labelToEdit.id !== this.idLabel) {
-        if (!this.labelToEdit.color)
-          this.message = "Devi selezionare un colore per creare un'etichetta";
-        else {
-          const { workgroupId } = this.$route.params;
-          this.clearLabel(this.labelToEdit.id);
-          await this.deleteLabel({ workgroupId, labelId: this.labelToEdit.id });
-          this.exitManagement();
-        }
-      } else
-        this.message = "Non è possibile rimuovere un'etichetta selezionata";
+        const { workgroupId } = this.$route.params;
+        this.alertType = "info";
+        this.message = "Eliminazione in corso...";
+        this.clearLabel(this.labelToEdit.id);
+        await this.deleteLabel({ workgroupId, labelId: this.labelToEdit.id });
+        this.message = null;
+        this.exitManagement();
+      } else {
+        this.alertType = "danger";
+        this.alertTimeout = 5000;
+        this.message =
+          "Non è possibile rimuovere un'etichetta attiva attualmente";
+      }
+    },
+    selectColor(color) {
+      const colorStr = color.substring(1);
+      if (this.labelToEdit.color === colorStr) this.labelToEdit.color = null;
+      else this.labelToEdit.color = colorStr;
     },
     exitManagement() {
       this.labelToEdit = EMPTY_LABEL;

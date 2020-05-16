@@ -1,28 +1,40 @@
 <template>
   <div class="drive container-fluid h-100 d-flex flex-column">
-    <PageHeader />
+    <PageHeader @open-navbar="openNavBar = !openNavBar">
+      <Breadcrumb
+        class="d-block d-lg-none px-2"
+        :currentPosition="currentPosition"
+        @set-position="setPosition"
+      />
+    </PageHeader>
     <div
       id="page-content"
       class="row flex-grow-1"
       style="height: calc(100% - 100px)"
     >
-      <LeftNavBar class="h-100" />
+      <LeftNavBar class="h-100" :open="openNavBar" />
       <main class="col d-flex flex-column h-100 px-1">
         <Breadcrumb
+          class="d-none d-lg-block"
           :currentPosition="currentPosition"
           @set-position="setPosition"
         />
         <hr class="mt-0 mb-2" />
-        <div class="d-flex mt-3 px-2">
-          <div class="d-flex w-50 align-items-center">
+        <div class="row justify-content-between m-0 mt-3 px-2">
+          <div
+            class="d-flex col-12 col-sm-6 col-md-4 col-xl-3 my-2 align-items-center"
+          >
             <NeuInput
               type="text"
               placeholder="Cerca..."
               v-model="researchString"
+              class="w-100 search-bar"
             />
           </div>
-          <div class="d-flex w-50 justify-content-end">
-            <NeuButton class="w-50 rounded-pill" @click="$refs.file.click()">
+          <div
+            class="d-flex col-12 col-sm-6 col-md-4 col-xl-3 my-2 justify-content-end"
+          >
+            <NeuButton class="w-100 rounded-pill" @click="$refs.file.click()">
               <div class="d-flex justify-content-center align-items-center">
                 <img class="mr-3" src="@/assets/cloud-upload.svg" />
                 <p class="carica m-0">Carica</p>
@@ -49,29 +61,29 @@
             >
               Rilascia il file per caricarlo sul Drive
             </div>
-            <div class="d-flex mt-3 px-2">
-              <div class="header w-25">
+            <div class="row mt-3 px-2 d-none d-md-flex">
+              <div class="header col-3 p-0">
                 Nome
               </div>
-              <div class="header w-25">
+              <div class="header col-3 p-0">
                 Creatore
               </div>
-              <div class="header w-25">
+              <div class="header col-3 p-0">
                 Data
               </div>
-              <div class="header w-25">
+              <div class="header col-3 p-0">
                 Dimensioni
               </div>
             </div>
             <Loading :show="!tree" />
             <p
-              v-if="filteredDocuments.length == 0"
+              v-if="tree && filteredDocuments && filteredDocuments.length === 0"
               class="mt-4 w-100 text-center"
               style="color:#787878"
             >
               Nessun documento presente
             </p>
-            <div v-else class="documents h-100 p-2">
+            <div v-else-if="tree" class="documents h-100 p-2">
               <Document
                 v-for="document in filteredDocuments"
                 :key="document.id"
@@ -180,11 +192,22 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchTree", "removeDocument", "addDocument"]),
-    addFiles(files) {
-      // TODO: upload file to server
+    ...mapActions([
+      "fetchTree",
+      "removeDocument",
+      "addDocument",
+      "uploadDocument"
+    ]),
+    async addFiles(files) {
+      const { workgroupId } = this.$route.params;
       for (const file of files) {
-        console.log("File uploaded!", file);
+        console.log("Uploading...", file);
+        await this.uploadDocument({
+          workgroupId,
+          folder: this.currentPosition,
+          file
+        });
+        console.log("Uploaded!", file.name);
       }
     },
     handleClick(document) {
@@ -198,7 +221,14 @@ export default {
       }
     },
     handleDblClick(e, document) {
-      if (document.isfolder) this.currentPosition = document.id + "";
+      if (document.isfolder) {
+        this.currentPosition = document.id + "";
+        this.editmode = false;
+        this.filesSelected = [];
+      } else {
+        const { workgroupId } = this.$route.params;
+        window.location.href = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${document.id}/download`;
+      }
     },
     handleFileDrop(files) {
       // TODO: Upload to server
@@ -286,12 +316,19 @@ export default {
       rename: false,
       alertShowed: false,
       alertType: "",
-      alertMessage: ""
+      alertMessage: "",
+      openNavBar: false
     };
   },
   created() {
     const { workgroupId } = this.$route.params;
     this.fetchTree(workgroupId);
+  },
+  watch: {
+    $route() {
+      const { workgroupId } = this.$route.params;
+      this.fetchTree(workgroupId);
+    }
   }
 };
 </script>
@@ -302,13 +339,12 @@ export default {
 }
 .header {
   width: 100%;
-  margin: 3pt;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .documents {
-  overflow: auto;
+  overflow: hidden auto;
 }
 .drag-title {
   border: 4px dashed purple;
@@ -334,5 +370,12 @@ export default {
 }
 .documents-fade-move {
   transition: transform 1s;
+}
+
+.search-bar {
+  border-radius: 50rem !important;
+}
+.search-bar input {
+  height: 40px !important;
 }
 </style>
