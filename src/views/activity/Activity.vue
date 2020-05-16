@@ -1,14 +1,16 @@
 <template>
   <div class="activity container-fluid h-100 d-flex flex-column">
-    <PageHeader />
+    <PageHeader @open-navbar="openNavBar = !openNavBar">
+      <p class="page__title m-0 mx-2">Attività</p>
+    </PageHeader>
     <div
       id="page-content"
       class="row flex-grow-1"
       style="height: calc(100% - 100px)"
     >
-      <LeftNavBar class="h-100" />
+      <LeftNavBar class="h-100" :open="openNavBar" />
       <main class="col d-flex flex-column h-100 px-4">
-        <p class="page__title m-0">Attività</p>
+        <p class="page__title m-0 d-none d-lg-block">Attività</p>
         <hr class="m-0" />
         <div
           class="row pl-3 py-4 flex-grow-1 align-items-start flex-nowrap"
@@ -30,12 +32,12 @@
             ghost-class="ghost"
             @change="handleSectionMove"
             class="d-flex h-100 align-items-start"
-            draggable=".aaa"
+            draggable=".section"
           >
             <Section
               v-for="section in allTasks"
               :key="section.id"
-              class="py-3 mr-4 mh-100 d-flex flex-column aaa"
+              class="py-3 mr-4 mh-100 d-flex flex-column"
               :section="section"
               @showTask="showTask(section.id, ...arguments)"
               @drag-start="handleDragStart(section.id, ...arguments)"
@@ -118,7 +120,8 @@ export default {
       loading: false,
       alertShowed: false,
       alertMessage: "",
-      alertType: ""
+      alertType: "",
+      openNavBar: false
     };
   },
   components: {
@@ -219,10 +222,8 @@ export default {
   color: rgb(252, 109, 109);
 }
 
-@media (max-width: 991.98px) {
-  .page__title {
-    font-size: 2rem;
-    color: #2f80ed;
-  }
+.page__title {
+  font-size: 2rem;
+  color: var(--primary);
 }
 </style>

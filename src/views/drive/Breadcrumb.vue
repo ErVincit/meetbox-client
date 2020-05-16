@@ -1,6 +1,6 @@
 <template>
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb m-0 p-0">
+    <ol class="breadcrumb m-0 p-0 d-flex align-items-center">
       <li
         class="breadcrumb-item"
         v-for="folder in value"
@@ -8,7 +8,7 @@
         @click="setPosition(folder.id)"
         style="cursor: pointer"
       >
-        {{ folder.name }}
+        <span class="px-1 rounded text-truncate">{{ folder.name }}</span>
       </li>
     </ol>
   </nav>
@@ -52,5 +52,15 @@ export default {
 <style>
 .breadcrumb {
   background-color: transparent;
+}
+.breadcrumb-item:first-child {
+  font-size: 2rem;
+}
+.breadcrumb-item {
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+.breadcrumb-item:hover span {
+  background-color: #00000009;
 }
 </style>

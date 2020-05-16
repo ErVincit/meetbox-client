@@ -1,14 +1,21 @@
 <template>
   <div class="drive container-fluid h-100 d-flex flex-column">
-    <PageHeader />
+    <PageHeader @open-navbar="openNavBar = !openNavBar">
+      <Breadcrumb
+        class="d-block d-lg-none px-2"
+        :currentPosition="currentPosition"
+        @set-position="setPosition"
+      />
+    </PageHeader>
     <div
       id="page-content"
       class="row flex-grow-1"
       style="height: calc(100% - 100px)"
     >
-      <LeftNavBar class="h-100" />
+      <LeftNavBar class="h-100" :open="openNavBar" />
       <main class="col d-flex flex-column h-100 px-1">
         <Breadcrumb
+          class="d-none d-lg-block"
           :currentPosition="currentPosition"
           @set-position="setPosition"
         />
@@ -291,7 +298,8 @@ export default {
       rename: false,
       alertShowed: false,
       alertType: "",
-      alertMessage: ""
+      alertMessage: "",
+      openNavBar: false
     };
   },
   created() {

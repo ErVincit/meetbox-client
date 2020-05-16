@@ -35,7 +35,7 @@
       @end="handleDragEnd"
       draggable=".task"
       class="flex-grow-1"
-      style="overflow-y: auto; overflow-x: hidden"
+      style="overflow: hidden auto; min-height: 20px"
     >
       <Task
         class="mt-3 p-2 mx-3"
@@ -60,7 +60,7 @@
               </SmallAddButton>
             </div>
             <LabelDropdown
-              :labelId="newTaskLabel"
+              :idLabel="newTaskLabel ? newTaskLabel.id : null"
               @selected="addNewTaskLabel"
               ref="labelsDropdownBtn"
               aria-labelledby="labelsDropdown"

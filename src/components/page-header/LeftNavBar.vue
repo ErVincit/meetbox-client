@@ -1,6 +1,7 @@
 <template>
   <nav
     class="navbar col-auto flex-column align-items-center justify-content-start h-100 d-none d-lg-flex pb-3"
+    :class="{ 'd-flex position-absolute mobile-opened': open }"
     style="max-width: 300px"
   >
     <NeuContainer class="w-100" disableHover>
@@ -190,6 +191,7 @@ import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "LeftNavBar",
+  props: { open: { type: Boolean, default: false } },
   components: { NeuContainer, NeuButton, NewWorkgroup, Loading },
   methods: {
     ...mapActions(["fetchWorkgroups"]),
@@ -225,6 +227,10 @@ export default {
 </script>
 
 <style>
+.mobile-opened {
+  z-index: 1000;
+}
+
 .tooltip {
   position: fixed;
 }
