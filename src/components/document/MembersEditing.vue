@@ -72,14 +72,14 @@ export default {
   methods: {
     addMember(member) {
       //const { workgroupId } = this.$route.params;
-      this.task.members.push(member.id);
+      this.document.members.push(member.id);
       //metodo che richiama store per query
     },
     removeMember(member) {
       //const { workgroupId } = this.$route.params;
-      const members = this.task.members.filter(id => id !== member.id);
-      this.task.members = members;
-      //metodo che richiama store per query;ù
+      const members = this.document.members.filter(id => id !== member.id);
+      this.document.members = members;
+      //metodo che richiama store per query
     }
   }
 };
