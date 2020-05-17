@@ -73,12 +73,14 @@
         </div>
       </div>
     </div>
-    <button
-      class="mx-4 mt-5 mb-2 delete-btn rounded-pill"
-      @click="removeWorkgroup"
-    >
-      Elimina
-    </button>
+    <div class="mt-3 d-flex justify-content-center">
+      <button
+        class="mx-4 mt-5 mb-2 delete-btn rounded-pill"
+        @click="removeWorkgroup"
+      >
+        ⚠ Elimina workgroup ⚠
+      </button>
+    </div>
     <Alert
       :type="alertType"
       v-if="alertShowed"
@@ -255,8 +257,7 @@ export default {
   color: var(--text-color-primary);
   height: 40px;
   font-size: 1.2rem;
-  width: 200px;
-  float: right;
+  width: 300px;
   outline: none;
 }
 </style>
