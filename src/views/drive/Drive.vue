@@ -314,7 +314,9 @@ export default {
     },
     async addFolder() {
       const { workgroupId } = this.$route.params;
-      const documents = this.tree[this.currentPosition];
+      const documents = this.tree[this.currentPosition]
+        ? this.tree[this.currentPosition]
+        : [];
       const checkNewFolder = (docs, digit) => {
         let found;
         if (digit === 0)
