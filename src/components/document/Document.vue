@@ -6,7 +6,12 @@
   >
     <div class="row px-2">
       <div class="document-col justify-content-start col-12 col-md-3">
-        <img class="mx-2" src="@/assets/folderIcon.svg" ref="icon" />
+        <img
+          class="mx-2"
+          style="width: 40px"
+          src="@/assets/folderIcon.svg"
+          ref="icon"
+        />
         <NeuInput
           v-model="document.name"
           :disabled="!edit"
@@ -74,6 +79,7 @@ export default {
           break;
         case "png":
         case "jpeg":
+        case "jpg":
         case "svg":
           this.$refs.icon.src = require("@/assets/imageIcon.svg");
           break;

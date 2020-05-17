@@ -247,15 +247,20 @@ export default {
     ]),
     async addFiles(files) {
       const { workgroupId } = this.$route.params;
+      this.showAlert("info", "Caricamento in corso...0/" + files.length);
+      let count = 0;
       for (const file of files) {
-        console.log("Uploading...", file);
         await this.uploadDocument({
           workgroupId,
           folder: this.currentPosition,
           file
         });
-        console.log("Uploaded!", file.name);
+        count++;
+        this.alertMessage =
+          "Caricamento in corso..." + count + "/" + files.length;
       }
+      this.alertShowed = false;
+      files = [];
     },
     handleClick(document) {
       this.editmode = true;
@@ -281,8 +286,8 @@ export default {
       }
     },
     handleFileDrop(files) {
-      // TODO: Upload to server
-      console.log("Uploading...", files);
+      this.addFiles(files);
+      this.draggingFile = false;
     },
     ownerName(document) {
       if (!this.currentWorkgroup) return "";
@@ -305,6 +310,7 @@ export default {
           "Cancellazione in corso..." + count + "/" + this.filesSelected.length;
       }
       this.alertShowed = false;
+      this.filesSelected = [];
     },
     async addFolder() {
       const { workgroupId } = this.$route.params;
@@ -412,6 +418,7 @@ export default {
   background-color: var(--primary-bg-color);
   top: 0;
   left: 0;
+  z-index: 1000;
   width: 100%;
   height: 100%;
   font-size: 30px;
