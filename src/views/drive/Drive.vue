@@ -375,7 +375,7 @@ export default {
       alertType: "",
       alertMessage: "",
       openNavBar: false,
-      orderBy: "dimensione"
+      orderBy: "def"
     };
   },
   created() {
