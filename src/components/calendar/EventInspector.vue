@@ -16,7 +16,7 @@
         type="button"
         class="close col-1 d-block d-md-none p-2"
         aria-label="Close"
-        @click="$emit('hide')"
+        @click="$emit('hideEventInspector')"
       >
         <span aria-hidden="true">&times;</span>
       </button>

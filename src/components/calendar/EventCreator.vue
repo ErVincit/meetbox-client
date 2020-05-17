@@ -12,7 +12,7 @@
         type="button"
         class="close col-1 d-block d-md-none p-2"
         aria-label="Close"
-        @click="$emit('hide')"
+        @click="$emit('hideEventCreator')"
       >
         <span aria-hidden="true">&times;</span>
       </button>
@@ -107,11 +107,7 @@
         class="close"
         data-dismiss="alert"
         aria-label="Close"
-        @click.stop="
-          e => {
-            error = false;
-          }
-        "
+        @click.stop="error = false"
       >
         <span aria-hidden="true">&times;</span>
       </button>

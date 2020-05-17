@@ -5,7 +5,17 @@
     :disableHover="true"
     :class="{ hide: !showEventFilter }"
   >
-    <h2 class="font-weight-bold">Filtri</h2>
+    <div class="row m-0 align-items-center justify-content-between">
+      <h2 class="font-weight-bold">Filtri</h2>
+      <button
+        type="button"
+        class="close col-1 d-block d-md-none p-2"
+        aria-label="Close"
+        @click="showEventFilter = false"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <div class="row">
       <div class="col-12 col-md-6 my-3 mt-md-0">
         <h6 class="hightlight title col m-0 mx-2 p-0 pb-2">
