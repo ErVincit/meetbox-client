@@ -46,11 +46,13 @@
               @end-editing="editingSection = false"
             />
           </draggable>
-          <NeuContainer v-if="!loading" class="p-3 d-block d-lg-none">
-            <BigAddButton @click.stop>
-              Aggiungi una nuova sezione
-            </BigAddButton>
-          </NeuContainer>
+          <div class="d-flex h-100 align-items-start">
+            <NeuContainer v-if="!loading" class="p-3 mr-4 d-flex d-lg-none">
+              <BigAddButton @click.stop>
+                Aggiungi una nuova sezione
+              </BigAddButton>
+            </NeuContainer>
+          </div>
           <Alert
             v-if="alertShowed"
             :message="alertMessage"

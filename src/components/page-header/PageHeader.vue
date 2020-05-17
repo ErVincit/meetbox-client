@@ -31,10 +31,11 @@
           aria-labelledby="optionsDropdownBtn"
         >
           <a class="dropdown-item m-0" @click="signout">Disconnetti utente</a>
-          <a class="dropdown-item m-0">
+          <a class="dropdown-item m-0" @click="showSettings = true">
             Impostazioni workgroup
           </a>
         </NeuContainer>
+        <WorkgroupSettings v-if="showSettings" @exit="showSettings = false" />
       </div>
     </nav>
     <Alert
@@ -51,17 +52,19 @@ import NeuContainer from "@/components/neu-button/NeuContainer";
 import Logo from "@/components/logo/Logo";
 import Alert from "@/components/alert/Alert";
 import UserInfo from "./UserInfo";
+import WorkgroupSettings from "@/components/actions/WorkgroupSettings";
 
 import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "PageHeader",
-  components: { Logo, UserInfo, NeuContainer, Alert },
+  components: { Logo, UserInfo, NeuContainer, Alert, WorkgroupSettings },
   data() {
     return {
       alertShowed: false,
       alertType: "",
-      alertMessage: ""
+      alertMessage: "",
+      showSettings: false
     };
   },
   computed: mapGetters(["currentUser"]),

@@ -34,19 +34,21 @@ export default {
         this.isLightTheme || this.backgroundColor !== "#efeeee"
           ? this.backgroundColor
           : "#333333";
-      const value = this.isLightTheme ? 0.15 : 0.6;
-      const darkColor = this.computeColor(background, -1 * value);
-      const lightColor = this.computeColor(background, value);
-
-      return {
+      const object = {
         "--background-color": background,
         "--color": this.color,
-        "--dark-color": darkColor,
-        "--light-color": lightColor,
-        "--border-radius": this.borderRadius + "px",
-        "--shadow-radius": this.shadowRadius + "px",
-        "--shadow-blur": this.shadowBlur + "px"
+        "--border-radius": this.borderRadius + "px"
       };
+
+      const value = this.isLightTheme ? 0.15 : 0.6;
+      if (!background.startsWith("var")) {
+        object["--dark-color"] = this.computeColor(background, -1 * value);
+        object["--light-color"] = this.computeColor(background, value);
+        object["--shadow-radius"] = this.shadowRadius + "px";
+        object["--shadow-blur"] = this.shadowBlur + "px";
+      }
+
+      return object;
     }
   },
   methods: {
