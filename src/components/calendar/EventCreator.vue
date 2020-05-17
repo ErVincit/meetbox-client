@@ -1,57 +1,56 @@
 <template>
-  <NeuContainer class="event-inspector w-50 px-5 py-4" disableHover>
-    <div class="row align-items-center justify-content-center">
-      <NeuInput
-        class="hightlight font-weight-bold my-2 mx-3 col-12 col-xl p-0 pb-2 pb-md-0"
-        :placeholder="'Titolo'"
-        v-model="event.title"
-      />
-      <div class="px-2 col-auto col-xl-auto">
-        <NeuButton
-          class="px-2"
-          :backgroundColor="'#efeeee'"
-          :color="'#787878'"
-          :shadowRadius="5"
-          :shadowBlur="10"
-          @click.stop="createEvent"
-          >✔️ Conferma</NeuButton
-        >
+  <NeuContainer class="event-inspector p-4" disableHover>
+    <div class="row m-0 align-items-center justify-content-center">
+      <div class="p-0 py-2 pr-3 col-11 col-md">
+        <NeuInput
+          class="hightlight font-weight-bold p-0"
+          :placeholder="'Titolo'"
+          v-model="event.title"
+        />
+      </div>
+      <button
+        type="button"
+        class="close col-1 d-block d-md-none p-2"
+        aria-label="Close"
+        @click="$emit('hide')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <NeuButton class="col-auto my-3 my-lg-0 px-2" @click.stop="createEvent">
+        ✔️ Conferma
+      </NeuButton>
+    </div>
+    <div class="row m-0 py-2 align-items-center">
+      <p class="hightlight p-0 m-0 mb-3 my-sm-0 col-12 col-sm-4">
+        Inizio
+      </p>
+      <div class="col-6 col-sm-5 px-2">
+        <NeuInput type="date" v-model="inputBeginDate" :min="todayDate" />
+      </div>
+      <div class="col-6 col-sm-3 px-2">
+        <NeuInput type="time" v-model="inputBeginTime" />
       </div>
     </div>
-    <div>
-      <div class="p-2">
-        <div class="d-flex">
-          <div class="d-flex flex-column justify-content-center w-25">
-            <p class="hightlight p-0 m-0 col-sm-4">
-              Inizio
-            </p>
-          </div>
-          <div class="d-flex">
-            <NeuInput type="date" v-model="inputBeginDate" :min="todayDate" />
-            <NeuInput type="time" class="w-50" v-model="inputBeginTime" />
-          </div>
-        </div>
-        <div class="d-flex">
-          <div class="d-flex flex-column justify-content-center w-25">
-            <p class="hightlight p-0 m-0 col-sm-4">Fine</p>
-          </div>
-          <div class="d-flex">
-            <NeuInput type="date" v-model="inputEndDate" :min="minEndDate" />
-            <NeuInput type="time" class="w-50" v-model="inputEndTime" />
-          </div>
-        </div>
+    <div class="row m-0 py-2 align-items-center">
+      <p class="hightlight p-0 m-0 mb-3 my-sm-0 col-12 col-sm-4">Fine</p>
+      <div class="col-6 col-sm-5 px-2">
+        <NeuInput type="date" v-model="inputEndDate" :min="minEndDate" />
+      </div>
+      <div class="col-6 col-sm-3 px-2">
+        <NeuInput type="time" v-model="inputEndTime" />
       </div>
     </div>
-    <div class="d-flex">
-      <div class="w-50">
+    <div class="row m-0 ">
+      <div class="col-12 col-md-6 p-0 pr-3 d-flex flex-column">
         <p class="hightlight mt-4">Descrizione:</p>
         <NeuTextarea
+          class="h-100"
           v-model="event.description"
           :placeholder="'Aggiungi qui la tua descrizione!'"
         />
       </div>
-      <div class="w-50 p-5">
-        <p class="hightlight mb-1">👑 Proprietario:</p>
+      <div class="col-12 col-md-6 p-0 pl-3 d-flex flex-column">
+        <p class="hightlight mt-4 mb-1">👑 Proprietario:</p>
         <li class="d-flex align-items-center">
           <Avatar
             class="mr-2"
@@ -88,6 +87,7 @@
             Aggiungi un nuovo membro
           </BigAddButton>
           <UserDropdown
+            class="mb-2"
             aria-labelledby="membersDropdown"
             :users="workgroupMembers"
             :members="workgroupMembers.filter(m => membersId.includes(m.id))"
@@ -122,7 +122,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import NeuContainer from "@/components/neu-button/NeuContainer";
-import NeuButton from "@/components/neu-button/NeuContainer";
+import NeuButton from "@/components/neu-button/NeuButton";
 import NeuTextarea from "@/components/neu-button/NeuTextarea";
 import NeuInput from "@/components/neu-button/NeuInput";
 import BigAddButton from "@/components/section/BigAddButton";
@@ -316,5 +316,15 @@ export default {
 <style>
 .hightlight {
   color: var(--primary);
+}
+.event-inspector .neu-button,
+.event-inspector .neu-input > input {
+  height: 40px;
+}
+.event-inspector .neu-button > button {
+  font-size: medium;
+}
+.event-inspector .neu-textarea textarea {
+  height: 100% !important;
 }
 </style>

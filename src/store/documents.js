@@ -19,7 +19,7 @@ const actions = {
     const json = await data.json();
     commit("setTree", json.result);
   },
-  async uploadDocument({ dispatch }, { workgroupId, folder, file }) {
+  async uploadDocument({ dispatch }, { workgroupId, members, folder, file }) {
     const formData = new FormData();
     formData.append("fileToUpload", file);
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/upload`;
@@ -34,6 +34,7 @@ const actions = {
       isFolder: false,
       isNote: false,
       workgroup: workgroupId,
+      members,
       path: json.path,
       size: json.size
     };
@@ -81,6 +82,8 @@ const delFolder = (tree, folderId) => {
   delete tree[folderId];
 };
 
+import Vue from "vue";
+
 // Imposta i valori nello stato
 const mutations = {
   setTree: (state, tree) => (state.tree = tree),
@@ -104,8 +107,9 @@ const mutations = {
       }
   },
   addFolder: (state, { document, folder }) => {
-    if (!document.folder) document.folder = "root";
-    state.tree[folder].push(document);
+    if (!document.folder) folder = "root";
+    if (state.tree[folder]) state.tree[folder].push(document);
+    else Vue.set(state.tree, folder, [document]);
   }
 };
 

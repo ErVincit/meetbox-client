@@ -83,6 +83,11 @@ export default {
   border: none;
 }
 
+.user-dropdown ul {
+  max-height: 200px;
+  overflow: hidden auto;
+}
+
 .user-dropdown__search-bar input,
 .user-dropdown__search-bar input:focus {
   font-size: 14px;

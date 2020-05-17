@@ -1,87 +1,84 @@
 <template>
-  <NeuContainer class="event-inspector w-50 px-5 py-4" disableHover>
-    <div class="d-flex space-between justify-content-between mx-2 p-2">
-      <h3 v-if="!isEditable" class="hightlight font-weight-bold my-2">
-        {{ ourEvent.title }}
-      </h3>
-      <NeuInput
-        v-if="isEditable"
-        :placeholder="'Titolo'"
-        v-model="ourEvent.title"
-        @blur="setTitle"
-      />
-      <div v-if="isErasable" class="px-2 col-auto col-xl-auto">
-        <NeuButton
-          class="px-2"
-          :backgroundColor="'#efeeee'"
-          :color="'#787878'"
-          :shadowRadius="5"
-          :shadowBlur="10"
-          @click="deleteEvent"
-          >🗑️ Elimina</NeuButton
-        >
+  <NeuContainer class="event-inspector p-4" disableHover>
+    <div class="row m-0 align-items-center justify-content-center">
+      <div class="p-0 py-2 pr-3 col-11 col-md">
+        <h3 v-if="!isEditable" class="hightlight font-weight-bold my-2">
+          {{ ourEvent.title }}
+        </h3>
+        <NeuInput
+          v-else
+          :placeholder="'Titolo'"
+          v-model="ourEvent.title"
+          @blur="setTitle"
+        />
+      </div>
+      <button
+        type="button"
+        class="close col-1 d-block d-md-none p-2"
+        aria-label="Close"
+        @click="$emit('hide')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <NeuButton
+        v-if="isErasable"
+        class="col-auto my-3 my-lg-0 px-2"
+        @click="deleteEvent"
+      >
+        🗑️ Elimina
+      </NeuButton>
+    </div>
+    <div class="row m-0 py-2 align-items-center">
+      <p class="hightlight p-0 m-0 mb-3 my-sm-0 col-12 col-sm-4">
+        Inizio
+      </p>
+      <div class="col-6 col-sm-5 px-2">
+        <NeuInput
+          type="date"
+          v-model="inputBeginDate"
+          :disabled="isTimestampBeginEditable"
+          :min="todayDate"
+        />
+      </div>
+      <div class="col-6 col-sm-3 px-2">
+        <NeuInput
+          type="time"
+          v-model="inputBeginTime"
+          :disabled="isTimestampBeginEditable"
+        />
       </div>
     </div>
-    <div>
-      <div class="p-2">
-        <div class="d-flex">
-          <div class="d-flex flex-column justify-content-center w-25">
-            <p class="hightlight p-0 m-0 col-sm-4">
-              Inizio
-            </p>
-          </div>
-          <div class="d-flex">
-            <NeuInput
-              type="date"
-              v-model="inputBeginDate"
-              :disabled="isTimestampBeginEditable"
-              :min="todayDate"
-            />
-            <NeuInput
-              type="time"
-              class="w-50"
-              v-model="inputBeginTime"
-              :disabled="isTimestampBeginEditable"
-            />
-          </div>
-        </div>
-        <div class="d-flex">
-          <div class="d-flex flex-column justify-content-center w-25">
-            <p class="hightlight p-0 m-0 col-sm-4">Fine</p>
-          </div>
-          <div class="d-flex">
-            <NeuInput
-              type="date"
-              v-model="inputEndDate"
-              :disabled="!isEditable"
-              :min="timestampBeginDate"
-            />
-            <NeuInput
-              type="time"
-              class="w-50"
-              v-model="inputEndTime"
-              :disabled="!isEditable"
-            />
-          </div>
-        </div>
+    <div class="row m-0 py-2 align-items-center">
+      <p class="hightlight p-0 m-0 mb-3 my-sm-0 col-12 col-sm-4">Fine</p>
+      <div class="col-6 col-sm-5 px-2">
+        <NeuInput
+          type="date"
+          v-model="inputEndDate"
+          :disabled="!isEditable"
+          :min="timestampBeginDate"
+        />
+      </div>
+      <div class="col-6 col-sm-3 px-2">
+        <NeuInput type="time" v-model="inputEndTime" :disabled="!isEditable" />
       </div>
     </div>
-    <div class="row mb-4">
-      <div class="w-50">
+    <div class="row m-0">
+      <div class="col-12 col-md-6 p-0 pr-3 d-flex flex-column">
         <p class="hightlight mt-4">Descrizione:</p>
         <NeuTextarea
+          class="h-100"
           v-if="isEditable"
           v-model="ourEvent.description"
           :placeholder="'Aggiungi qui la tua descrizione!'"
           ref="description"
           @blur="setDescription"
         />
-        <p class="pl-3" v-if="!isEditable">
+        <p class="pl-3" v-else>
           {{ ourEvent.description !== "" ? ourEvent.description : "Ciaoo" }}
         </p>
       </div>
-      <div class="w-50 p-5">
-        <p class="hightlight mb-1">👑 Proprietario:</p>
+      <div class="col-12 col-md-6 p-0 pl-3 d-flex flex-column">
+        <p class="hightlight mt-4 mb-1">👑 Proprietario:</p>
         <li class="d-flex align-items-center">
           <Avatar
             class="mr-2"
@@ -91,7 +88,7 @@
           {{ getMember(event.owner).firstname }}
           {{ getMember(event.owner).lastname }}
         </li>
-        <p class="hightlight">🧑‍🤝‍🧑 Assegnato:</p>
+        <p class="hightlight mt-3">🧑‍🤝‍🧑 Assegnato:</p>
         <li
           v-for="(member, index) in event.members"
           :key="member.id"
@@ -122,6 +119,7 @@
             Aggiungi un nuovo membro
           </BigAddButton>
           <UserDropdown
+            class="mb-2"
             aria-labelledby="membersDropdown"
             :users="workgroupMembers"
             :members="workgroupMembers.filter(m => membersId.includes(m.id))"
@@ -432,12 +430,23 @@ export default {
 <style>
 .event-inspector {
   position: fixed;
-  min-width: 500px;
-  min-height: 300px;
-  top: 40%;
+  top: 45%;
   left: 50%;
+  min-width: 600px;
+  width: 60%;
+  max-width: 800px;
   transform: translate(-50%, -50%);
   z-index: 100;
+  border: 4px dotted transparent;
+}
+@media (max-width: 768px) {
+  .event-inspector {
+    min-width: unset;
+    width: 100vw;
+    height: 100vh;
+    top: 50%;
+    overflow: auto;
+  }
 }
 .hightlight {
   color: #1c4885;
@@ -452,7 +461,6 @@ export default {
   list-style: none;
 }
 .event-inspector span:hover {
-  color: var(--danger);
   cursor: pointer;
 }
 

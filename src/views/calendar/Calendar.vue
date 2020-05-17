@@ -13,7 +13,7 @@
         <p class="m-0 title_page d-none d-lg-block">Calendario</p>
         <hr class="m-0" />
         <div
-          class="calendar_container h-100 d-flex flex-column justify-content-center px-1 flex-grow-1"
+          class="calendar_container d-flex flex-column justify-content-center px-1 flex-grow-1 overflow-hidden"
         >
           <div
             class="days_controller d-flex px-2 justify-content-between align-items-center w-lg-50 mx-lg-auto my-2"

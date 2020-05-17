@@ -445,7 +445,7 @@ export default {
   width: 100px;
   height: 100%;
   background-color: var(--primary);
-  border: 1px solid var(--text-color-primary);
+  border: 1px solid var(--primary-bg-color);
   color: var(--text-color-primary);
   overflow: hidden;
   padding: 0;
