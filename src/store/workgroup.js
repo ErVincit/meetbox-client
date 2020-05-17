@@ -49,6 +49,14 @@ const actions = {
     if (json.error) console.error(json);
     else commit("newMember", { workgroupId, member: json.data });
   },
+  async deleteMember({ commit }, { workgroupId, memberId }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/member/${memberId}`;
+    const response = await fetch(url, {
+      credentials: "include",
+      method: "DELETE"
+    });
+    if (response.ok) commit("removeMember", { workgroupId, memberId });
+  },
   async editLabel({ commit }, { workgroupId, labelId, editObject }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/label/${labelId}/edit`;
     const data = await fetch(url, {
@@ -96,8 +104,17 @@ const mutations = {
     state.workgroups.splice(index, 1);
   },
   newMember: (state, { workgroupId, member }) => {
+    console.log(workgroupId, state.workgroups);
     const workgroup = state.workgroups.find(wg => wg.id === workgroupId);
+    console.log(workgroup);
     workgroup.members.push(member);
+  },
+  removeMember: (state, { workgroupId, memberId }) => {
+    console.log(workgroupId, memberId);
+    const workgroup = state.workgroups.find(wg => wg.id === workgroupId);
+    const memberIndex = workgroup.members.findIndex(m => m.id === memberId);
+    console.log(workgroup);
+    workgroup.members.splice(memberIndex, 1);
   },
   setLabel: (state, label) => {
     const workgroup = state.workgroups.find(wg => wg.id === label.workgroup);

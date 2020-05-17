@@ -6,7 +6,7 @@
       <slot />
     </div>
     <div
-      class="d-flex flex-column justify-content-center align-items-center"
+      class="d-flex flex-column justify-content-center align-items-center members"
       v-if="currentWorkgroup"
     >
       <Avatar
@@ -71,14 +71,14 @@ export default {
 </script>
 
 <style>
-.actions .avatar {
+.actions .members .avatar {
   width: 50px;
   height: 50px;
   font-size: 16px;
   margin-bottom: -10px;
   --background-color: var(--primary-bg-color);
 }
-.actions .avatar:last-child {
+.actions .members .avatar:last-child {
   margin-bottom: 0px;
 }
 .actions .dropdown-menu {

@@ -30,6 +30,49 @@
         />
       </div>
     </div>
+    <div class="mt-3">
+      <p class="col m-0">Membri:</p>
+      <div class="d-flex flex-column px-2 mt-1">
+        <div style="max-height: 200px; overflow-y: auto">
+          <Member
+            v-for="member of members"
+            :key="member.id"
+            :member="member"
+            @remove="removeMember"
+          />
+        </div>
+        <div class="dropdown">
+          <BigAddButton
+            class="w-100 mt-2"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Aggiungi un membro
+          </BigAddButton>
+          <NeuContainer
+            class="p-2 w-100 my-2 dropdown-menu search-box"
+            style="border: none"
+            disableHover
+          >
+            <NeuInput
+              class="col pl-0 pr-2"
+              v-model="memberEmail"
+              @input="search"
+              placeholder="Ricerca membro per email"
+            />
+            <Member
+              class="mx-2 mt-1 rounded-pill"
+              v-for="member in searchMembers"
+              :key="member.id"
+              :member="member"
+              @click="selectMember(member)"
+              dontClose
+            />
+          </NeuContainer>
+        </div>
+      </div>
+    </div>
     <button
       class="mx-4 mt-5 mb-2 delete-btn rounded-pill"
       @click="removeWorkgroup"
@@ -49,19 +92,23 @@
 <script>
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import NeuInput from "@/components/neu-button/NeuInput";
+import Member from "@/components/task/Member";
+import BigAddButton from "@/components/section/BigAddButton";
 import Alert from "@/components/alert/Alert";
 
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "WorkgroupSettings",
-  components: { NeuContainer, Alert, NeuInput },
+  components: { NeuContainer, Alert, NeuInput, Member, BigAddButton },
   data() {
     return {
       alertShowed: false,
       alertMessage: "",
       alertTimeout: null,
-      alertType: ""
+      alertType: "",
+      searchMembers: [],
+      memberEmail: ""
     };
   },
   computed: {
@@ -72,6 +119,9 @@ export default {
         return this.workgroups.find(wg => wg.id === parseInt(workgroupId));
       return null;
     },
+    members() {
+      return this.currentWorkgroup.members;
+    },
     image() {
       return this.currentWorkgroup.image;
     },
@@ -80,17 +130,63 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["deleteWorkgroup"]),
+    ...mapActions(["deleteWorkgroup", "addMember", "deleteMember"]),
     exit() {
       this.$emit("exit");
+    },
+    async search(value) {
+      value = value.trim();
+      if (value.length === 0) {
+        this.searchMembers = [];
+        return;
+      }
+      const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/search`;
+      const response = await fetch(url, {
+        credentials: "include",
+        body: JSON.stringify({ value }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST"
+      });
+      const json = await response.json();
+      if (json.error) console.error(json);
+      else this.searchMembers = json.data;
+    },
+    async selectMember(member) {
+      this.showAlert(
+        "info",
+        "Aggiunta di " + member.firstname + " in corso..."
+      );
+      const { workgroupId } = this.$route.params;
+      await this.addMember({
+        workgroupId: parseInt(workgroupId),
+        memberId: member.id
+      });
+      this.showAlert(
+        "success",
+        member.firstname + " ora fa parte del gruppo di lavoro 😊"
+      );
+      setTimeout(() => (this.alertShowed = false), 3000);
+    },
+    async removeMember(member) {
+      this.showAlert("info", "Salutando " + member.firstname + "...👋");
+      const { workgroupId } = this.$route.params;
+      await this.deleteMember({
+        workgroupId: parseInt(workgroupId),
+        memberId: member.id
+      });
+      this.showAlert(
+        "success",
+        member.firstname + " ora non fa più parte del gruppo di lavoro 😟"
+      );
+      setTimeout(() => (this.alertShowed = false), 3000);
     },
     async removeWorkgroup() {
       if (this.workgroups.length === 1) {
         this.showAlert(
           "danger",
-          "Non puoi eliminare il tuo ultimo gruppo di lavoro",
-          3000
+          "Non puoi eliminare il tuo ultimo gruppo di lavoro"
         );
+        setTimeout(() => (this.alertShowed = false), 3000);
         return;
       }
       this.showAlert("info", "Eliminazione in corso...");
@@ -121,11 +217,25 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-@media (max-width: 400px) {
+@media (max-width: 500px) {
   .workgroup-settings {
     min-width: unset;
     width: 100%;
+    height: 100%;
+    overflow-y: auto;
   }
+}
+
+.workgroup-settings .search-box .member:first {
+  margin-top: 8px;
+}
+.workgroup-settings .search-box .member:last-child {
+  margin-bottom: 8px;
+}
+.workgroup-settings .search-box .member:hover {
+  background-color: var(--primary);
+  color: var(--text-color-primary);
+  cursor: pointer;
 }
 
 .workgroup-settings .close {
