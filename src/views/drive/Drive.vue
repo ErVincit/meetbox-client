@@ -163,6 +163,19 @@
         >
           <img src="@/assets/moveIcon.svg" v-tooltip:left="'Sposta file'" />
         </NeuButton>
+        <NeuButton
+          v-if="editmode && filesSelected.length === 1"
+          class="d-flex justify-content-center align-items-center mt-3"
+          style="width: 50px; height: 50px"
+          @click="switchEditMemb"
+        >
+          <img src="@/assets/membersIcon.svg" v-tooltip:left="'Membri'" />
+        </NeuButton>
+        <MembersEditing
+          class="membersEdit"
+          v-if="editMembers"
+          :document="filesSelected[0]"
+        />
       </Actions>
     </div>
   </div>
@@ -179,6 +192,7 @@ import Actions from "@/components/actions/Actions";
 import Loading from "@/components/loading/Loading";
 import Breadcrumb from "./Breadcrumb";
 import Alert from "@/components/alert/Alert";
+import MembersEditing from "@/components/document/MembersEditing";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -194,7 +208,8 @@ export default {
     Actions,
     Breadcrumb,
     Loading,
-    Alert
+    Alert,
+    MembersEditing
   },
   computed: {
     ...mapGetters(["tree", "currentUser", "workgroups"]),
@@ -268,6 +283,7 @@ export default {
       if (index === -1) this.filesSelected.push(document);
       else this.filesSelected.splice(index, 1);
       if (this.filesSelected.length === 0) {
+        this.editMembers = false;
         this.editmode = false;
         this.rename = false;
       }
@@ -360,6 +376,9 @@ export default {
     editName() {
       this.rename = !this.rename;
     },
+    switchEditMemb() {
+      this.editMembers = !this.editMembers;
+    },
     setPosition(pos) {
       this.currentPosition = pos + "";
     },
@@ -381,7 +400,8 @@ export default {
       alertType: "",
       alertMessage: "",
       openNavBar: false,
-      orderBy: "def"
+      orderBy: "def",
+      editMembers: false
     };
   },
   created() {
@@ -423,6 +443,12 @@ export default {
   width: 100%;
   height: 100%;
   font-size: 30px;
+}
+.membersEdit {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .document.selected {
   border: 1px solid var(--file-drop-border) !important;
