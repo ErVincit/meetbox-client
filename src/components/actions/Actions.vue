@@ -30,23 +30,17 @@
         <img src="@/assets/kebab-icon.svg" />
       </NeuContainer>
       <NeuContainer
-        style="border: none; margin-right: 10px; margin-bottom: 10px;"
-        class="dropdown-menu"
+        class="dropdown-menu px-2"
         aria-labelledby="workgroupDropdownBtn"
       >
-        <a class="dropdown-item m-0">
-          Cambia immagine workgroup...
-        </a>
-        <a class="dropdown-item m-0">
-          Gestisci membri workgroup...
-        </a>
-        <a class="dropdown-item m-0">
-          Rinomia workgroup...
-        </a>
-        <a class="dropdown-item m-0 warning" @click.prevent="removeWorkgroup">
-          Elimina workgroup...
-        </a>
+        <li
+          class="dropdown-item m-0 px-3 rounded-pill"
+          @click="showSettings = true"
+        >
+          Impostazioni workgroup
+        </li>
       </NeuContainer>
+      <WorkgroupSettings v-if="showSettings" @exit="showSettings = false" />
     </div>
   </div>
 </template>
@@ -54,12 +48,16 @@
 <script>
 import Avatar from "@/components/avatar/Avatar";
 import NeuContainer from "@/components/neu-button/NeuContainer";
+import WorkgroupSettings from "./WorkgroupSettings";
 
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Actions",
-  components: { Avatar, NeuContainer },
+  components: { Avatar, NeuContainer, WorkgroupSettings },
+  data() {
+    return { showSettings: false };
+  },
   computed: {
     ...mapGetters(["workgroups"]),
     currentWorkgroup() {
@@ -67,19 +65,6 @@ export default {
       if (this.workgroups)
         return this.workgroups.find(wg => wg.id === parseInt(workgroupId));
       return null;
-    }
-  },
-  methods: {
-    ...mapActions(["deleteWorkgroup"]),
-    async removeWorkgroup() {
-      if (this.workgroups.length === 1) {
-        alert("Non puoi eliminare il tuo ultimo gruppo di lavoro");
-        return;
-      }
-      const { workgroupId } = this.$route.params;
-      await this.deleteWorkgroup(workgroupId);
-      const workgroup = this.workgroups[0];
-      this.$router.push(`/${workgroup.id}/drive`);
     }
   }
 };
@@ -95,5 +80,17 @@ export default {
 }
 .actions .avatar:last-child {
   margin-bottom: 0px;
+}
+.actions .dropdown-menu {
+  border: none;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.actions .dropdown-item {
+  color: var(--text-color-bg);
+}
+.actions .dropdown-item:hover {
+  background-color: var(--primary);
+  color: var(--text-color-primary);
 }
 </style>

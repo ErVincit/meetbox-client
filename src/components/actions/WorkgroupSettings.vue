@@ -1,8 +1,8 @@
 <template>
-  <NeuContainer class="new-workgroup" disableHover>
+  <NeuContainer class="workgroup-settings p-2" disableHover>
     <div style="position: relative">
       <p class=" mb-0 highlight" style="line-height: 30px; font-size: 1.5rem">
-        Crea workgroup
+        Impostazioni gruppo di lavoro
       </p>
       <button type="button" class="close" aria-label="Close" @click.stop="exit">
         <span aria-hidden="true">&times;</span>
@@ -12,7 +12,7 @@
     <div class="mt-3">
       <p class="col m-0">Immagine:</p>
       <div class="d-flex align-items-center px-2 mt-1">
-        <img class="rounded-circle" :src="imageURL" width="50" height="50" />
+        <img class="rounded-circle" :src="image" width="50" height="50" />
         <NeuInput
           class="col px-0 mx-2"
           v-model="image"
@@ -30,21 +30,18 @@
         />
       </div>
     </div>
-    <NeuButton
-      class="col mx-auto m-2 mt-5 w-50"
-      backgroundColor="var(--primary)"
-      color="var(--text-color-primary)"
-      style="height: 35px;"
-      @click="newWorkgroup"
+    <button
+      class="mx-4 mt-5 mb-2 delete-btn rounded-pill"
+      @click="removeWorkgroup"
     >
-      Salva
-    </NeuButton>
+      Elimina
+    </button>
     <Alert
       :type="alertType"
-      @close="alertShowed = false"
       v-if="alertShowed"
       :message="alertMessage"
       :timeout="alertTimeout"
+      @close="alertShowed = false"
     />
   </NeuContainer>
 </template>
@@ -52,54 +49,56 @@
 <script>
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import NeuInput from "@/components/neu-button/NeuInput";
-import NeuButton from "@/components/neu-button/NeuButton";
 import Alert from "@/components/alert/Alert";
 
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "NewWorkgroup",
-  components: { NeuContainer, NeuInput, NeuButton, Alert },
+  name: "WorkgroupSettings",
+  components: { NeuContainer, Alert, NeuInput },
   data() {
     return {
-      image: "",
-      name: "",
-      alertType: "",
+      alertShowed: false,
       alertMessage: "",
       alertTimeout: null,
-      alertShowed: false
+      alertType: ""
     };
   },
   computed: {
-    imageURL() {
-      if (this.image.trim().length === 0) return require("@/assets/logo.svg");
-      return this.image;
+    ...mapGetters(["workgroups"]),
+    currentWorkgroup() {
+      const { workgroupId } = this.$route.params;
+      if (this.workgroups)
+        return this.workgroups.find(wg => wg.id === parseInt(workgroupId));
+      return null;
+    },
+    image() {
+      return this.currentWorkgroup.image;
+    },
+    name() {
+      return this.currentWorkgroup.name;
     }
   },
   methods: {
-    ...mapActions(["createWorkgroup"]),
+    ...mapActions(["deleteWorkgroup"]),
     exit() {
-      this.image = "";
-      this.name = "";
       this.$emit("exit");
     },
-    async newWorkgroup() {
-      if (!this.name)
+    async removeWorkgroup() {
+      if (this.workgroups.length === 1) {
         this.showAlert(
-          "info",
-          "Devi inserire un nome per creare un gruppo di lavoro",
+          "danger",
+          "Non puoi eliminare il tuo ultimo gruppo di lavoro",
           3000
         );
-      else {
-        this.showAlert("info", "Creazione in corso...");
-        const data = await this.createWorkgroup({
-          name: this.name,
-          image: this.imageURL
-        });
-        this.exit();
-        this.alertShowed = false;
-        this.$router.push(`/${data.id}/drive`);
+        return;
       }
+      this.showAlert("info", "Eliminazione in corso...");
+      const { workgroupId } = this.$route.params;
+      await this.deleteWorkgroup(workgroupId);
+      const workgroup = this.workgroups[0];
+      this.exit();
+      this.$router.push(`/${workgroup.id}/drive`);
     },
     showAlert(type, message, timeout) {
       this.alertType = type;
@@ -111,10 +110,10 @@ export default {
 };
 </script>
 
-<style>
-.new-workgroup {
+<style scoped>
+.workgroup-settings {
   position: fixed;
-  min-width: 300px;
+  min-width: 400px;
   width: 40%;
   z-index: 1000;
   cursor: auto;
@@ -122,19 +121,32 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
-.new-workgroup .neu-button button {
-  font-size: 16px !important;
+@media (max-width: 400px) {
+  .workgroup-settings {
+    min-width: unset;
+    width: 100%;
+  }
 }
 
-.new-workgroup .close {
+.workgroup-settings .close {
   position: absolute;
   right: 10px;
   top: 50%;
   transform: translate(0, -50%);
   color: var(--text-color-bg);
 }
-.new-workgroup .close:hover {
+.workgroup-settings .close:hover {
   color: var(--danger);
+}
+
+.workgroup-settings .delete-btn {
+  border: none;
+  background-color: var(--danger);
+  color: var(--text-color-primary);
+  height: 40px;
+  font-size: 1.2rem;
+  width: 200px;
+  float: right;
+  outline: none;
 }
 </style>
