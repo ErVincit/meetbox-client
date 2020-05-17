@@ -1,58 +1,43 @@
 <template>
-  <div v-if="display" class="members position-relative col-auto">
-    <div class="fa fa-caret-down">
-      <NeuInput
-        class="user-dropdown__search-bar flex-grow-1 mt-2"
-        type="text"
-        placeholder="Cerca utente..."
-        v-model="keyword"
-      ></NeuInput>
-      <transition-group
-        class="my-2 members_div"
-        name="user-dropdown__element-fade"
-        tag="ul"
+  <div v-if="display" class="members position-relative d-flex flex-column px-3">
+    <NeuInput
+      class="user-selection__search-bar flex-grow-1 mt-2"
+      type="text"
+      placeholder="Cerca utente..."
+      v-model="keyword"
+    />
+    <transition-group
+      class="my-2 members_div"
+      name="user-selection__element-fade"
+      tag="ul"
+    >
+      <li
+        v-for="user in membersToShow"
+        :key="user.id"
+        class="d-flex align-items-center user-selection__element w-100 px-2"
+        d-flex
+        align-items-center
+        px-2
+        @click.stop="
+          $emit('memberSelected', user);
+          handleMember(user);
+        "
       >
-        <li
-          v-for="user in membersToShow"
-          :key="user.id"
-          class="d-flex align-items-center user-dropdown__element px-2"
-          d-flex
-          align-items-center
-          px-2
-          @click.stop="
-            $emit('memberSelected', user);
-            handleMember(user);
-          "
+        <div
+          class="d-flex align-items-center w-100 px-2 rounded-pill"
+          :class="{ selected: selected.find(m => m.id === user.id) }"
         >
-          <div
-            v-if="!selected.find(m => m.id === user.id)"
-            class="d-flex align-items-center px-2"
+          <Avatar
+            class="mr-1 my-1"
+            :firstname="user.firstname"
+            :lastname="user.lastname"
+          />
+          <span class="mx-1 text-nowrap"
+            >{{ user.firstname }} {{ user.lastname }}</span
           >
-            <Avatar
-              class="mr-1 my-1"
-              :firstname="user.firstname"
-              :lastname="user.lastname"
-            />
-            <span class="mx-1 text-nowrap"
-              >{{ user.firstname }} {{ user.lastname }}</span
-            >
-          </div>
-          <div
-            v-if="selected.find(m => m.id === user.id)"
-            class="d-flex align-items-center px-2 selected"
-          >
-            <Avatar
-              class="mr-1 my-1"
-              :firstname="user.firstname"
-              :lastname="user.lastname"
-            />
-            <span class="mx-1 text-nowrap"
-              >{{ user.firstname }} {{ user.lastname }}</span
-            >
-          </div>
-        </li>
-      </transition-group>
-    </div>
+        </div>
+      </li>
+    </transition-group>
   </div>
 </template>
 
@@ -97,13 +82,11 @@ export default {
 
 <style scoped>
 .selected {
-  opacity: 0.4;
-}
-.members {
-  max-height: 210px;
+  color: var(--text-color-primary);
+  background-color: var(--primary);
 }
 .members_div {
-  overflow: auto;
-  max-height: 180px;
+  overflow: hidden auto;
+  max-height: 200px;
 }
 </style>

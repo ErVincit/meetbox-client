@@ -1,19 +1,17 @@
 <template>
   <NeuContainer
-    class="event-inspector px-5 py-4"
+    class="event-inspector p-4"
     aria-labelledby="filterDropdownBtn"
     :disableHover="true"
     :class="{ hide: !showEventFilter }"
   >
     <h2 class="font-weight-bold">Filtri</h2>
-    <div class="d-flex">
-      <div class="col-auto">
-        <div class="d-flex justify-content-between align-items-center px-2">
-          <h6 class="hightlight title col m-0 p-0 pb-2">
-            Durata massima evento
-          </h6>
-        </div>
-        <div class="col-auto">
+    <div class="row">
+      <div class="col-12 col-md-6 my-3 mt-md-0">
+        <h6 class="hightlight title col m-0 mx-2 p-0 pb-2">
+          Durata massima evento
+        </h6>
+        <div class="px-3">
           <div class="d-flex align-items-center px-2">
             <input
               type="radio"
@@ -66,10 +64,8 @@
           </div>
         </div>
       </div>
-      <div class="col-auto">
-        <div class="d-flex justify-content-between align-items-center px-2">
-          <h6 class="hightlight col m-0 p-0 pb-2">Filtro membri</h6>
-        </div>
+      <div class="col-12 col-md-6 mt-3 mt-md-0">
+        <h6 class="hightlight col m-0 mx-2 p-0 pb-2">Filtro membri</h6>
         <UserSelection
           :allMembers="workgroupMembers"
           :selectedMembers="filteredMembers"
