@@ -37,42 +37,42 @@
       </h1>
       <div class="row w-75 justify-content-center">
         <div class="p-2 col-12 col-md-6 col-lg-3">
-          <NeuContainer class="p-2 text-center">
+          <NeuContainer class="p-2 text-center h-100">
             <img class="my-3" src="@/assets/homepage-drive.svg" />
             <h3 style="color: #2F80ED; font-weight: 600">Archivia</h3>
             <p>
-              Conserva foto, progetti, disegni, registrazioni, video e molto
-              altro
+              Puoi archiviare qualsiasi formato. Conserva foto, progetti,
+              disegni, registrazioni, video e molto altro...
             </p>
           </NeuContainer>
         </div>
         <div class="p-2 col-12 col-md-6 col-lg-3">
-          <NeuContainer class="p-2 text-center">
+          <NeuContainer class="p-2 text-center h-100">
             <img class="my-3" src="@/assets/homepage-activity.svg" />
             <h3 style="color: #27AE60; font-weight: 600">Organizza</h3>
             <p>
-              Conserva foto, progetti, disegni, registrazioni, video e molto
-              altro
+              Crea le tue attività, assegnale ad uno o più membri e rispettare
+              le scadenze sarà una garanzia
             </p>
           </NeuContainer>
         </div>
         <div class="p-2 col-12 col-md-6 col-lg-3">
-          <NeuContainer class="p-2 text-center">
+          <NeuContainer class="p-2 text-center h-100">
             <img class="my-3" src="@/assets/homepage-calendar.svg" />
             <h3 style="color: #EB5757; font-weight: 600">Pianifica</h3>
             <p>
-              Conserva foto, progetti, disegni, registrazioni, video e molto
-              altro
+              Usa un intero calendario per te ed il tuo gruppo di lavoro, la
+              pianificazione potrà essere così condivisa
             </p>
           </NeuContainer>
         </div>
         <div class="p-2 col-12 col-md-6 col-lg-3">
-          <NeuContainer class="p-2 text-center">
+          <NeuContainer class="p-2 text-center h-100">
             <img class="my-3" src="@/assets/homepage-team.svg" />
             <h3 style="color: #F2C94C; font-weight: 600">Collabora</h3>
             <p>
-              Conserva foto, progetti, disegni, registrazioni, video e molto
-              altro
+              La collaborazione è fondamentale in gruppo di lavoro. Aggiungi e
+              rimuovi membri in modo semplice e rapido
             </p>
           </NeuContainer>
         </div>
