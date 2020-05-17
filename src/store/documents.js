@@ -11,6 +11,7 @@ const getters = {
 // Metodi che puoi eseguire sullo store (methods)
 const actions = {
   async fetchTree({ commit }, workgroupId) {
+    state.tree = null;
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/tree`;
     const data = await fetch(url, {
       credentials: "include"
