@@ -117,7 +117,7 @@
         </li>
         <li
           class="my-2 px-2 d-flex align-items-center add-workgroup"
-          @click="handleNewWorkgroup"
+          @click="addingWorkgroup = true"
           style="position: relative"
         >
           <div class="w-100" v-tooltip:right="'Crea nuovo'">
@@ -198,10 +198,6 @@ export default {
     toggleExpand() {
       this.compressed = !this.compressed;
       localStorage.setItem("navbar-compressed", this.compressed);
-    },
-    handleNewWorkgroup() {
-      this.compressed = false;
-      this.addingWorkgroup = true;
     }
   },
   computed: {
