@@ -63,20 +63,34 @@
             </div>
             <div class="row mt-3 px-2 d-none d-md-flex">
               <div class="header col-3 p-0">
-                <p style="cursor:pointer" @click="orderBy = 'nome'">Nome</p>
+                <p class="m-0" style="cursor:pointer" @click="orderBy = 'nome'">
+                  Nome
+                </p>
               </div>
               <div class="header col-3 p-0">
-                <p style="cursor:pointer" @click="orderBy = 'creatore'">
+                <p
+                  class="m-0"
+                  style="cursor:pointer"
+                  @click="orderBy = 'creatore'"
+                >
                   Creatore
                 </p>
               </div>
               <div class="header col-3 p-0">
-                <p style="cursor:pointer" @click="orderBy = 'dataCreazione'">
+                <p
+                  class="m-0"
+                  style="cursor:pointer"
+                  @click="orderBy = 'dataCreazione'"
+                >
                   Data
                 </p>
               </div>
               <div class="header col-3 p-0">
-                <p style="cursor:pointer" @click="orderBy = 'dimensione'">
+                <p
+                  class="m-0"
+                  style="cursor:pointer"
+                  @click="orderBy = 'dimensione'"
+                >
                   Dimensione
                 </p>
               </div>
@@ -386,6 +400,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  color: var(--text-color-bg);
 }
 .documents {
   overflow: hidden auto;

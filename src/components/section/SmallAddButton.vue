@@ -27,6 +27,7 @@ button.small-add-btn {
   font-size: 11px;
   border: 1px dashed var(--color);
   fill: var(--color);
+  background-color: transparent;
   outline: none;
   transition: transform 200ms;
   white-space: nowrap;

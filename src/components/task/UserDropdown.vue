@@ -10,12 +10,12 @@
       type="text"
       placeholder="Cerca utente..."
       v-model="keyword"
-    ></NeuInput>
+    />
     <transition-group class="my-2" name="user-dropdown__element-fade" tag="ul">
       <li
         v-for="user in shownUsers"
         :key="user.id"
-        class="d-flex align-items-center user-dropdown__element px-2"
+        class="d-flex align-items-center user-dropdown__element px-2 rounded-pill"
         @click.stop="$emit('select-user', user)"
       >
         <Avatar
@@ -23,9 +23,9 @@
           :firstname="user.firstname"
           :lastname="user.lastname"
         />
-        <span class="mx-1 text-nowrap"
-          >{{ user.firstname }} {{ user.lastname }}</span
-        >
+        <span class="mx-1 text-nowrap">
+          {{ user.firstname }} {{ user.lastname }}
+        </span>
       </li>
     </transition-group>
 
@@ -90,6 +90,7 @@ export default {
 
 .user-dropdown__element:hover {
   background-color: var(--primary);
+  color: var(--text-color-primary);
   cursor: pointer;
 }
 

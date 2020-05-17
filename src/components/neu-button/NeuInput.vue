@@ -50,5 +50,6 @@ input:focus {
   height: 50px;
   font-size: 18px;
   font-weight: 600;
+  color: var(--primary);
 }
 </style>

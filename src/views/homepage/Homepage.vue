@@ -2,7 +2,7 @@
   <div class="homepage h-100 d-flex flex-column overflow-auto">
     <header class="container-fluid row align-items-center m-0 p-2 pb-3 pb-lg-2">
       <Logo
-        class="col-12 col-lg-8 pb-3 pb-lg-0 d-flex justify-content-center justify-content-lg-start"
+        class="col-12 col-lg pb-3 pb-lg-0 d-flex justify-content-center justify-content-lg-start"
       />
       <router-link to="/login" class="col-6 col-lg-2">
         <NeuButton class="w-100" color="#2F80ED">Accedi</NeuButton>
@@ -14,9 +14,16 @@
           color="white"
           :shadowRadius="2"
           :shadowBlur="6"
-          >Registrati</NeuButton
         >
+          Registrati
+        </NeuButton>
       </router-link>
+      <span
+        class="col-auto rounded-circle d-flex align-items-center justify-content-center dark-btn"
+        @click="changeTheme"
+      >
+        🌙
+      </span>
     </header>
     <main
       class="flex-grow-1 d-flex align-items-center flex-column position-relative"
@@ -86,9 +93,12 @@ import Logo from "@/components/logo/Logo";
 import NeuButton from "@/components/neu-button/NeuButton";
 import NeuContainer from "@/components/neu-button/NeuContainer";
 
+import { mapActions } from "vuex";
+
 export default {
   name: "Homepage",
-  components: { Logo, NeuButton, NeuContainer }
+  components: { Logo, NeuButton, NeuContainer },
+  methods: mapActions(["changeTheme"])
 };
 </script>
 
@@ -98,6 +108,7 @@ main > h1 {
   font-size: 5vw;
   z-index: 100;
   max-width: 80%;
+  color: var(--homepage-text-color);
 }
 @media (max-width: 992px) {
   main > h1 {
@@ -119,5 +130,16 @@ main > h1 {
   right: 0;
   width: 10%;
   max-height: 100%;
+}
+
+.dark-btn {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: all 500ms;
+  cursor: pointer;
+}
+.dark-btn:hover {
+  background-color: #222;
 }
 </style>

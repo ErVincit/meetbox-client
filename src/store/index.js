@@ -6,6 +6,7 @@ import tasks from "./tasks";
 import calendar from "./calendar";
 import workgroup from "./workgroup";
 import documents from "./documents";
+import theme from "./theme";
 
 Vue.use(Vuex);
 
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     tasks,
     calendar,
     workgroup,
-    documents
+    documents,
+    theme
   }
 });

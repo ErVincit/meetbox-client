@@ -84,7 +84,7 @@
         </div>
         <NeuButton
           class="col mx-auto mt-5 mt-3 w-50"
-          color="#1c4885"
+          color="var(--primary)"
           style="height: 50px;"
           @click="newWorkgroup"
         >
@@ -201,6 +201,12 @@ export default {
 </script>
 
 <style>
+h1 {
+  color: var(--text-color-primary);
+}
+h3 {
+  color: var(--text-color-bg);
+}
 h1 > span {
   font-family: Open Sans;
   font-style: normal;

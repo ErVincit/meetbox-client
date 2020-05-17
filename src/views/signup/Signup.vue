@@ -77,7 +77,7 @@ import NeuContainer from "@/components/neu-button/NeuContainer";
 import NeuInput from "@/components/neu-button/NeuInput";
 import RedirectWindow from "@/components/signup/RedirectWindow";
 
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Signup",
@@ -109,6 +109,7 @@ export default {
       if (validated) await this.redirect();
     }
   },
+  computed: mapGetters(["workgroups"]),
   methods: {
     ...mapActions(["validateUser", "signupUser", "fetchWorkgroups"]),
     async onSubmit() {

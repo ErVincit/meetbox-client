@@ -12,6 +12,12 @@
     <NeuButton class="p-2 mx-2" @click="signout">
       <p class="m-0 w-100 text-center">Esci</p>
     </NeuButton>
+    <span
+      class="col-auto rounded-circle d-flex align-items-center justify-content-center dark-btn"
+      @click="changeTheme"
+    >
+      🌙
+    </span>
     <Alert
       v-if="alertShowed"
       :type="alertType"
@@ -47,7 +53,7 @@ export default {
     if (!this.currentUser) await this.validateUser();
   },
   methods: {
-    ...mapActions(["validateUser", "signoutUser"]),
+    ...mapActions(["validateUser", "signoutUser", "changeTheme"]),
     async signout() {
       this.showAlert("info", "Disconnessione in corso...");
       await this.signoutUser();
@@ -70,5 +76,15 @@ export default {
 
 .user-info .neu-button button {
   width: 100px;
+}
+
+.user-info .dark-btn {
+  width: 50px;
+  height: 50px;
+  transition: all 500ms;
+  cursor: pointer;
+}
+.user-info .dark-btn:hover {
+  background-color: rgba(0, 0, 0, 0.6);
 }
 </style>

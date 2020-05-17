@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "NeuContainer",
   props: {
@@ -27,12 +28,18 @@ export default {
     disabled: { type: Boolean, default: false }
   },
   computed: {
+    ...mapGetters(["isLightTheme"]),
     style() {
-      const darkColor = this.computeColor(this.backgroundColor, -1 * 0.15);
-      const lightColor = this.computeColor(this.backgroundColor, 0.15);
+      const background =
+        this.isLightTheme || this.backgroundColor !== "#efeeee"
+          ? this.backgroundColor
+          : "#333333";
+      const value = this.isLightTheme ? 0.15 : 0.6;
+      const darkColor = this.computeColor(background, -1 * value);
+      const lightColor = this.computeColor(background, value);
 
       return {
-        "--background-color": this.backgroundColor,
+        "--background-color": background,
         "--color": this.color,
         "--dark-color": darkColor,
         "--light-color": lightColor,

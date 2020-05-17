@@ -82,8 +82,9 @@
       </div>
       <div class="d-flex">
         <NeuButton
-          class="col mx-auto m-2 mt-3"
-          color="#1c4885"
+          class="col-5 mx-auto m-2 mt-3"
+          backgroundColor="var(--primary)"
+          color="var(--text-color-primary)"
           style="height: 35px;"
           @click="changeLabel"
         >
@@ -91,8 +92,8 @@
         </NeuButton>
         <NeuButton
           v-if="editingLabel"
-          class="col mx-auto m-2 mt-3"
-          color="#ff0000"
+          class="col-5 mx-auto m-2 mt-3"
+          color="var(--danger)"
           style="height: 35px;"
           @click="removeLabel"
         >

@@ -16,6 +16,7 @@
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
+          style="background-color: transparent"
         >
           <img src="@/assets/kebab-icon.svg" />
         </button>

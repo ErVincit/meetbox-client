@@ -29,8 +29,9 @@ button.big-add-btn {
   text-align: center;
   cursor: pointer;
   border-radius: 10px;
-  border: 1px solid var(--big-add-border);
+  border: 1px solid var(--color);
   fill: var(--color);
+  background-color: transparent;
   outline: none;
   transition: transform 200ms;
   white-space: nowrap;
