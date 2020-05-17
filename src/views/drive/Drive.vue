@@ -415,6 +415,7 @@ export default {
   border: 4px dashed var(--file-drop-border);
   border-radius: 10px;
   position: absolute;
+  color: var(--text-color-bg);
   background-color: var(--primary-bg-color);
   top: 0;
   left: 0;
