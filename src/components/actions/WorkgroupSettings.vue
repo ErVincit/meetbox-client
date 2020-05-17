@@ -12,11 +12,17 @@
     <div class="mt-3">
       <p class="col m-0">Immagine:</p>
       <div class="d-flex align-items-center px-2 mt-1">
-        <img class="rounded-circle" :src="image" width="50" height="50" />
+        <img
+          class="rounded-circle"
+          :src="currentWorkgroup.image"
+          width="50"
+          height="50"
+        />
         <NeuInput
           class="col px-0 mx-2"
-          v-model="image"
+          v-model="currentWorkgroup.image"
           placeholder="URL immagine"
+          @blur="changeWorkgroup"
         />
       </div>
     </div>
@@ -25,8 +31,9 @@
       <div class="d-flex align-items-center px-2 mt-1">
         <NeuInput
           class="col px-0 mx-2"
-          v-model="name"
+          v-model="currentWorkgroup.name"
           placeholder="es. Mio workgroup"
+          @blur="changeWorkgroup"
         />
       </div>
     </div>
@@ -123,16 +130,15 @@ export default {
     },
     members() {
       return this.currentWorkgroup.members;
-    },
-    image() {
-      return this.currentWorkgroup.image;
-    },
-    name() {
-      return this.currentWorkgroup.name;
     }
   },
   methods: {
-    ...mapActions(["deleteWorkgroup", "addMember", "deleteMember"]),
+    ...mapActions([
+      "deleteWorkgroup",
+      "addMember",
+      "deleteMember",
+      "editWorkgroup"
+    ]),
     exit() {
       this.$emit("exit");
     },
@@ -181,6 +187,16 @@ export default {
         member.firstname + " ora non fa più parte del gruppo di lavoro 😟"
       );
       setTimeout(() => (this.alertShowed = false), 3000);
+    },
+    async changeWorkgroup() {
+      const { workgroupId } = this.$route.params;
+      await this.editWorkgroup({
+        workgroupId,
+        editObject: {
+          name: this.currentWorkgroup.name,
+          image: this.currentWorkgroup.image
+        }
+      });
     },
     async removeWorkgroup() {
       if (this.workgroups.length === 1) {

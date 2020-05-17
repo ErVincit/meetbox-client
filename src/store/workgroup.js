@@ -39,6 +39,18 @@ const actions = {
     if (json.error) console.error(json);
     else commit("removeWorkgroup", json.data);
   },
+  async editWorkgroup({ commit }, { workgroupId, editObject }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/edit`;
+    const data = await fetch(url, {
+      credentials: "include",
+      method: "PUT",
+      body: JSON.stringify(editObject),
+      headers: { "Content-Type": "application/json" }
+    });
+    const json = await data.json();
+    if (json.error) console.error(json);
+    else commit("setWorkgroup", json.data);
+  },
   async addMember({ commit }, { workgroupId, memberId }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/member/${memberId}`;
     const data = await fetch(url, {
@@ -102,6 +114,10 @@ const mutations = {
   removeWorkgroup: (state, workgroupId) => {
     const index = state.workgroups.findIndex(wg => wg.id === workgroupId);
     state.workgroups.splice(index, 1);
+  },
+  setWorkgroup: (state, workgroup) => {
+    const index = state.workgroups.findIndex(wg => wg.id === workgroup.id);
+    state.workgroups[index] = workgroup;
   },
   newMember: (state, { workgroupId, member }) => {
     console.log(workgroupId, state.workgroups);
