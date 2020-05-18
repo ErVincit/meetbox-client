@@ -156,6 +156,10 @@
           <div
             class="position-relative overflow-auto w-100 m-0 p-0 flex-grow-1 mb-2"
           >
+            <Loading
+              :show="loading"
+              style="position: absolute; left: 50%; top: 50%; z-index: 1000; transform: translate(-50%, -50%)"
+            />
             <div class="position-absolute h-100 w-100 p-0 m-0">
               <div
                 class="background d-flex m-0 p-0"
@@ -263,6 +267,7 @@ import EventCreator from "@/components/calendar/EventCreator";
 import Actions from "@/components/actions/Actions";
 import EventFilter from "@/components/calendar/EventFilter";
 import LeftNavBar from "@/components/page-header/LeftNavBar";
+import Loading from "@/components/loading/Loading";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -292,7 +297,8 @@ export default {
   created() {
     const { workgroupId } = this.$route.params;
     this.initCalendar();
-    this.fetchEvents({ workgroupId });
+    this.loading = true;
+    this.fetchEvents({ workgroupId }).then(() => (this.loading = false));
     this.calendarIdentifier = calendarUtils.calendarWeeklyPosition(
       this.currentDate
     );
@@ -305,7 +311,8 @@ export default {
     Actions,
     EventCreator,
     EventFilter,
-    LeftNavBar
+    LeftNavBar,
+    Loading
   },
   methods: {
     handleMaxEventSize(newSize) {
@@ -529,7 +536,8 @@ export default {
       showMaxEventSize: false,
       maxEventsSize: null,
       showEventFilter: false,
-      openNavBar: false
+      openNavBar: false,
+      loading: false
     };
   },
   mounted() {
