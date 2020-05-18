@@ -5,7 +5,9 @@
         class="container-fluid h-100 d-flex flex-column align-items-center"
         @submit.prevent="onSubmit"
       >
-        <Logo class="flex-grow-1 my-5 my-md-0 d-flex align-items-center" />
+        <router-link to="/">
+          <Logo class="flex-grow-1 my-5 my-md-0 d-flex align-items-center" />
+        </router-link>
         <NeuInput
           class="my-4 w-75"
           type="email"

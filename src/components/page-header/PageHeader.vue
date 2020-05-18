@@ -30,6 +30,9 @@
           class="dropdown-menu"
           aria-labelledby="optionsDropdownBtn"
         >
+          <a class="dropdown-item m-0" @click="changeTheme">
+            Attiva modalità {{ isLightTheme ? "dark" : "light" }}
+          </a>
           <a class="dropdown-item m-0" @click="signout">Disconnetti utente</a>
           <a class="dropdown-item m-0" @click="showSettings = true">
             Impostazioni workgroup
@@ -67,9 +70,9 @@ export default {
       showSettings: false
     };
   },
-  computed: mapGetters(["currentUser"]),
+  computed: mapGetters(["currentUser", "isLightTheme"]),
   methods: {
-    ...mapActions(["validateUser", "signoutUser"]),
+    ...mapActions(["validateUser", "signoutUser", "changeTheme"]),
     async signout() {
       this.showAlert("info", "Disconnessione in corso...");
       await this.signoutUser();

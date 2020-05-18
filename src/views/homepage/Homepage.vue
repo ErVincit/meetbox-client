@@ -110,9 +110,30 @@ main > h1 {
   max-width: 80%;
   color: var(--homepage-text-color);
 }
+
+.dark-btn {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: all 500ms;
+  cursor: pointer;
+}
+
+.dark-btn:hover {
+  background-color: #222;
+}
+
 @media (max-width: 992px) {
   main > h1 {
     font-size: 8vw;
+  }
+  .dark-btn {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
   }
 }
 
@@ -130,16 +151,5 @@ main > h1 {
   right: 0;
   width: 10%;
   max-height: 100%;
-}
-
-.dark-btn {
-  width: 50px;
-  height: 50px;
-  background-color: rgba(0, 0, 0, 0.3);
-  transition: all 500ms;
-  cursor: pointer;
-}
-.dark-btn:hover {
-  background-color: #222;
 }
 </style>
