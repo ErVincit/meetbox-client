@@ -193,7 +193,9 @@ export default {
       }
 
       const { workgroupId } = this.$route.params;
-      await this.addEvent({ workgroupId, event: this.event });
+      const event = Object.assign({}, this.event);
+      event.members = event.members.map(m => m.id);
+      await this.addEvent({ workgroupId, event });
       this.$emit("hideEventCreator");
       this.cleanEvent();
     },
