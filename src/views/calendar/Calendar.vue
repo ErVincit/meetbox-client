@@ -240,23 +240,12 @@
       @newFilteredUsers="handleFilteredMember"
       @maxEventSize="handleMaxEventSize"
     />
-
-    <div
-      v-if="deletedEventMessage"
-      class="fixed-bottom alert mt-3 alert-warning alert-dismissible fade show"
-      role="alert"
-    >
-      L'evento "{{ eventToShow.title }}" &egrave; stato cancellato
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-        @click.stop="deletedEventMessage = false"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
+    <Alert
+      :type="alertType"
+      :message="alertMessage"
+      v-if="alertShowed"
+      @close="alertShowed = false"
+    />
   </div>
 </template>
 
@@ -270,6 +259,7 @@ import Actions from "@/components/actions/Actions";
 import EventFilter from "@/components/calendar/EventFilter";
 import LeftNavBar from "@/components/page-header/LeftNavBar";
 import Loading from "@/components/loading/Loading";
+import Alert from "@/components/alert/Alert";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -314,9 +304,15 @@ export default {
     EventCreator,
     EventFilter,
     LeftNavBar,
-    Loading
+    Loading,
+    Alert
   },
   methods: {
+    showAlert(type, message) {
+      this.alertType = type;
+      this.alertMessage = message;
+      this.alertShowed = true;
+    },
     handleMaxEventSize(newSize) {
       switch (newSize) {
         case "24ore":
@@ -389,10 +385,8 @@ export default {
       this.showEventInspector = false;
       this.showEventFilter = false;
       this.showEventCreator = false;
-      this.deletedEventMessage = true;
-      setTimeout(() => {
-        this.deletedEventMessage = false;
-      }, 5000);
+      this.showAlert("success", "Evento cancellato con successo");
+      setTimeout(() => (this.alertShowed = false), 5000);
     },
     anormal() {
       if (this.maxEventsSize === "nessuno") this.showMaxEventSize = false;
@@ -542,7 +536,10 @@ export default {
       maxEventsSize: null,
       showEventFilter: false,
       openNavBar: false,
-      loading: false
+      loading: false,
+      alertType: "",
+      alertShowed: false,
+      alertMessage: ""
     };
   },
   mounted() {
@@ -565,10 +562,11 @@ export default {
   right: 0;
   width: 15%;
   font-size: 0.8rem;
+  color: var(--text-color-bg);
 }
 
 .filterName {
-  color: var(--secondary);
+  color: var(--primary);
 }
 
 .calendar_identifier {

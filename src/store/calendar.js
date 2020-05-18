@@ -51,7 +51,6 @@ const actions = {
       console.log(json);
     }
   },
-  // eslint-disable-next-line no-unused-vars
   async editEvent({ commit }, { workgroupId, event, oldEvent }) {
     //Faccio richiesta
     oldEvent.timestampBegin = new Date(oldEvent.timestampBegin);
@@ -98,7 +97,7 @@ const actions = {
       }
     );
     const json = await response.json();
-    if (response.status == 200) {
+    if (response.ok) {
       if (!json.error) {
         commit("removeEvent", {
           event

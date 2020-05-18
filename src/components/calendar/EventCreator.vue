@@ -96,22 +96,12 @@
         </div>
       </div>
     </div>
-    <div
-      v-if="error"
-      class="alert mt-3 alert-warning alert-dismissible fade show"
-      role="alert"
-    >
-      <strong>Attenzione!</strong> {{ errorText }}
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-        @click.stop="error = false"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
+    <Alert
+      v-if="alertShowed"
+      :type="alertType"
+      :message="alertMessage"
+      @close="alertShowed = false"
+    />
   </NeuContainer>
 </template>
 
@@ -124,6 +114,7 @@ import NeuInput from "@/components/neu-button/NeuInput";
 import BigAddButton from "@/components/section/BigAddButton";
 import Avatar from "@/components/avatar/Avatar";
 import UserDropdown from "@/components/task/UserDropdown";
+import Alert from "@/components/alert/Alert";
 
 import calendarUtils from "@/views/calendar/calendar_utils";
 
@@ -136,12 +127,12 @@ export default {
     NeuTextarea,
     NeuInput,
     UserDropdown,
+    Alert,
     NeuButton
   },
   data() {
     return {
       showUserDropdown: false,
-      error: false,
       event: {
         id: 0,
         title: "",
@@ -149,7 +140,10 @@ export default {
         timestampEnd: new Date(),
         description: "",
         members: []
-      }
+      },
+      alertShowed: false,
+      alertType: "",
+      alertMessage: ""
     };
   },
   created() {
@@ -160,6 +154,11 @@ export default {
   },
   methods: {
     ...mapActions(["addEvent"]),
+    showAlert(type, message) {
+      this.alertType = type;
+      this.alertMessage = message;
+      this.alertShowed = true;
+    },
     addMember(member) {
       for (let i = 0; i < this.event.members.length; i++)
         if (member.id == this.event.members[i].id) return;
@@ -170,28 +169,27 @@ export default {
     },
     async createEvent() {
       if (this.event.title == "") {
-        this.error = false;
-        this.errorText = "Devi impostare un titolo all'evento";
-        this.error = true;
+        this.showAlert("warning", "Devi impostare un titolo all'evento");
         return;
       }
       const now = new Date();
       if (this.event.timestampBegin <= now) {
-        this.error = false;
-        this.errorText =
-          "La data e ora di inizio devono essere maggiore di ora";
-        this.error = true;
+        this.showAlert(
+          "warning",
+          "La data e ora di inizio devono essere maggiore di ora"
+        );
         return;
       }
       if (this.event.timestampBegin >= this.event.timestampEnd) {
         //TODO: Impostare durata minima evento
-        this.error = false;
-        this.errorText =
-          "La data e ora di inizio devono essere maggiore di ora";
-        this.error = true;
+        this.showAlert(
+          "warning",
+          "La data e ora di inizio devono essere maggiore di ora"
+        );
         return;
       }
 
+      this.showAlert("info", "Creazione in corso...");
       const { workgroupId } = this.$route.params;
       const event = Object.assign({}, this.event);
       event.members = event.members.map(m => m.id);
@@ -213,21 +211,21 @@ export default {
     checkDate() {
       const now = new Date();
       if (this.event.timestampBegin <= now) {
-        this.error = false;
-        this.errorText =
-          "La data e ora di inizio devono essere maggiore di ora";
-        this.error = true;
+        this.showAlert(
+          "warning",
+          "La data e ora di inizio devono essere maggiore di ora"
+        );
         return;
       }
       if (this.event.timestampBegin >= this.event.timestampEnd) {
         //TODO: Impostare durata minima evento
-        this.error = false;
-        this.errorText =
-          "La data e ora di inizio devono essere maggiore di ora";
-        this.error = true;
+        this.showAlert(
+          "warning",
+          "La data e ora di inizio devono essere maggiore di ora"
+        );
         return;
       }
-      this.error = false;
+      this.alertShowed = false;
     },
     getMember(idUser) {
       for (let i = 0; i < this.workgroupMembers.length; i++)

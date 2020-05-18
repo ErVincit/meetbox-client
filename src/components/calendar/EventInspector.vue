@@ -23,7 +23,7 @@
       <NeuButton
         v-if="isErasable"
         class="col-auto my-3 my-lg-0 px-2"
-        @click="deleteEvent"
+        @click.stop="deleteEvent"
       >
         🗑️ Elimina
       </NeuButton>
@@ -128,22 +128,12 @@
         </div>
       </div>
     </div>
-    <div
-      v-if="error"
-      class="alert mt-3 alert-warning alert-dismissible fade show"
-      role="alert"
-    >
-      <strong>Attenzione!</strong> {{ errorText }}
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-        @click.stop="error = false"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
+    <Alert
+      :type="alertType"
+      v-if="alertShowed"
+      @close="alertShowed = false"
+      :message="alertMessage"
+    />
   </NeuContainer>
 </template>
 
@@ -156,6 +146,7 @@ import NeuButton from "@/components/neu-button/NeuButton";
 import BigAddButton from "@/components/section/BigAddButton";
 import Avatar from "@/components/avatar/Avatar";
 import UserDropdown from "@/components/task/UserDropdown";
+import Alert from "@/components/alert/Alert";
 
 import calendarUtils from "@/views/calendar/calendar_utils";
 
@@ -168,6 +159,7 @@ export default {
     NeuTextarea,
     NeuInput,
     UserDropdown,
+    Alert,
     NeuButton
   },
   props: ["event"],
@@ -188,8 +180,9 @@ export default {
         description: this.event.description,
         members: this.event.members
       },
-      error: false,
-      errorText: "",
+      alertShowed: false,
+      alertType: "",
+      alertMessage: "",
       deleted: false,
       noDescription: "Nessuna descrizione presente"
     };
@@ -214,11 +207,10 @@ export default {
     },
     async setTitle() {
       if (this.ourEvent.title == "") {
-        this.error = false;
-        this.errorText = "Il titolo dell'evento non può essere vuoto";
-        this.error = true;
+        this.showAlert("warning", "Il titolo dell'evento non può essere vuoto");
         return;
       }
+      this.alertShowed = false;
       const { workgroupId } = this.$route.params;
       const newEvent = {
         id: this.ourEvent.id,
@@ -257,12 +249,13 @@ export default {
     },
     async deleteEvent() {
       this.deleted = true;
-      this.$emit("deletedEvent");
       const { workgroupId } = this.$route.params;
+      this.showAlert("info", "Eliminazione in corso...");
       await this.removeEvent({
         workgroupId,
         event: this.event
       });
+      this.$emit("deletedEvent");
     },
     async changeDate() {
       const now = new Date();
@@ -270,27 +263,24 @@ export default {
         this.ourEvent.timestampBegin <= now &&
         !this.isTimestampBeginEditable
       ) {
-        this.error = false;
-        this.errorText = "L'evento non puo iniziare prima di adesso";
-        this.error = true;
+        this.showAlert("warning", "L'evento non puo iniziare prima di adesso");
         return;
       }
 
       if (this.ourEvent.timestampEnd <= now) {
-        this.error = false;
-        this.errorText = "L'evento non puo finire prima di adesso";
-        this.error = true;
+        this.showAlert("warning", "L'evento non puo finire prima di adesso");
         return;
       }
 
       if (this.ourEvent.timestampBegin >= this.ourEvent.timestampEnd) {
-        this.error = false;
-        this.errorText = "L'evento deve iniziare prima della sua fine";
-        this.error = true;
+        this.showAlert(
+          "warning",
+          "L'evento deve iniziare prima della sua fine"
+        );
         return;
       }
 
-      this.error = false;
+      this.alertShowed = false;
 
       const newEvent = {
         id: this.ourEvent.id,
@@ -309,6 +299,11 @@ export default {
         if (this.workgroupMembers[i].id == idUser)
           return this.workgroupMembers[i];
       return { firstname: "Nessun", lastname: "risultato" };
+    },
+    showAlert(type, message) {
+      this.alertType = type;
+      this.alertMessage = message;
+      this.alertShowed = true;
     }
   },
   computed: {
