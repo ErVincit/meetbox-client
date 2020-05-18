@@ -46,6 +46,10 @@
             :key="member.id"
             :member="member"
             @remove="removeMember"
+            :dontClose="
+              member.id !== currentUser.id &&
+                currentWorkgroup.owner !== currentUser.id
+            "
           />
         </div>
         <div class="dropdown">
@@ -121,7 +125,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["workgroups"]),
+    ...mapGetters(["currentUser", "workgroups"]),
     currentWorkgroup() {
       const { workgroupId } = this.$route.params;
       if (this.workgroups)
