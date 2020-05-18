@@ -97,7 +97,6 @@
       :message="alertMessage"
       @close="alertShowed = false"
       :type="alertType"
-      :timeout="5000"
     />
     <img
       id="draw-right"

@@ -102,11 +102,10 @@
       </div>
     </div>
     <Alert
-      v-if="message !== null"
-      :message="message"
-      @close="message = null"
+      v-if="alertShowed"
+      :message="alertMessage"
+      @close="alertShowed = false"
       :type="alertType"
-      :timeout="alertTimeout"
     />
   </NeuContainer>
 </template>
@@ -144,9 +143,9 @@ export default {
       addingLabel: false,
       labelToEdit: EMPTY_LABEL,
       colors,
-      message: null,
-      alertType: "",
-      alertTimeout: null
+      alertMessage: null,
+      alertShowed: false,
+      alertType: ""
     };
   },
   computed: {
@@ -164,9 +163,8 @@ export default {
     },
     async changeLabel() {
       if (!this.labelToEdit.color) {
-        this.alertType = "warning";
-        this.alertTimeout = 5000;
-        this.message = "Devi selezionare un colore";
+        this.showAlert("warning", "Devi selezionare un colore");
+        setTimeout(() => (this.alertShowed = false), 5000);
       } else {
         if (this.editingLabel) {
           const { workgroupId } = this.$route.params;
@@ -177,13 +175,12 @@ export default {
           });
         } else {
           const { workgroupId } = this.$route.params;
-          this.alertType = "info";
-          this.message = "Creazione in corso...";
+          this.showAlert("info", "Creazione in corso...");
           await this.createLabel({
             workgroupId,
             label: this.labelToEdit
           });
-          this.message = null;
+          this.alertShowed = false;
         }
         this.exitManagement();
       }
@@ -191,17 +188,17 @@ export default {
     async removeLabel() {
       if (this.labelToEdit.id !== this.idLabel) {
         const { workgroupId } = this.$route.params;
-        this.alertType = "info";
-        this.message = "Eliminazione in corso...";
+        this.showAlert("info", "Eliminazione in corso...");
         this.clearLabel(this.labelToEdit.id);
         await this.deleteLabel({ workgroupId, labelId: this.labelToEdit.id });
-        this.message = null;
+        this.alertShowed = false;
         this.exitManagement();
       } else {
-        this.alertType = "danger";
-        this.alertTimeout = 5000;
-        this.message =
-          "Non è possibile rimuovere un'etichetta attiva attualmente";
+        this.showAlert(
+          "danger",
+          "Non è possibile rimuovere un'etichetta attiva attualmente"
+        );
+        setTimeout(() => (this.alertShowed = false), 5000);
       }
     },
     selectColor(color) {
@@ -213,6 +210,11 @@ export default {
       this.labelToEdit = EMPTY_LABEL;
       this.editingLabel = false;
       this.addingLabel = false;
+    },
+    showAlert(type, message) {
+      this.alertType = type;
+      this.alertMessage = message;
+      this.alertShowed = true;
     }
   }
 };

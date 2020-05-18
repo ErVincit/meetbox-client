@@ -44,7 +44,6 @@
       @close="alertShowed = false"
       v-if="alertShowed"
       :message="alertMessage"
-      :timeout="alertTimeout"
     />
   </NeuContainer>
 </template>
@@ -66,7 +65,6 @@ export default {
       name: "",
       alertType: "",
       alertMessage: "",
-      alertTimeout: null,
       alertShowed: false
     };
   },
@@ -84,13 +82,13 @@ export default {
       this.$emit("exit");
     },
     async newWorkgroup() {
-      if (!this.name)
+      if (!this.name) {
         this.showAlert(
-          "info",
-          "Devi inserire un nome per creare un gruppo di lavoro",
-          3000
+          "warning",
+          "Devi inserire un nome per creare un gruppo di lavoro"
         );
-      else {
+        setTimeout(() => (this.alertShowed = false), 5000);
+      } else {
         this.showAlert("info", "Creazione in corso...");
         const data = await this.createWorkgroup({
           name: this.name,
@@ -101,10 +99,9 @@ export default {
         this.$router.push(`/${data.id}/drive`);
       }
     },
-    showAlert(type, message, timeout) {
+    showAlert(type, message) {
       this.alertType = type;
       this.alertMessage = message;
-      this.alertTimeout = timeout;
       this.alertShowed = true;
     }
   }

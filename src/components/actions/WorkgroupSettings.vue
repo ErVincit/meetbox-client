@@ -96,7 +96,6 @@
       :type="alertType"
       v-if="alertShowed"
       :message="alertMessage"
-      :timeout="alertTimeout"
       @close="alertShowed = false"
     />
   </NeuContainer>
@@ -118,7 +117,6 @@ export default {
     return {
       alertShowed: false,
       alertMessage: "",
-      alertTimeout: null,
       alertType: "",
       searchMembers: [],
       memberEmail: ""
@@ -218,10 +216,9 @@ export default {
       this.exit();
       this.$router.push(`/${workgroup.id}/drive`);
     },
-    showAlert(type, message, timeout) {
+    showAlert(type, message) {
       this.alertType = type;
       this.alertMessage = message;
-      this.alertTimeout = timeout;
       this.alertShowed = true;
     }
   }
