@@ -36,6 +36,10 @@ export default {
 </script>
 
 <style scoped>
+.member {
+  color: var(--text-color-bg);
+}
+
 .close:hover {
   color: var(--danger);
   cursor: pointer;
