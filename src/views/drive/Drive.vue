@@ -164,7 +164,9 @@
           <img src="@/assets/moveIcon.svg" v-tooltip:left="'Sposta file'" />
         </NeuButton>
         <NeuButton
-          v-if="editmode && filesSelected.length === 1"
+          v-if="
+            editmode && filesSelected.length === 1 && !filesSelected[0].isfolder
+          "
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
           @click="switchEditMemb"
@@ -274,8 +276,13 @@ export default {
         this.alertMessage =
           "Caricamento in corso..." + count + "/" + files.length;
       }
-      this.alertShowed = false;
-      files = [];
+      this.showAlert(
+        "success",
+        "File creato con successo, ora puoi condividere il file cliccandoci sopra e modificando i membri"
+      );
+      setTimeout(() => (this.alertShowed = false), 5000);
+      // Clear the input file
+      this.$refs.file.value = "";
     },
     handleClick(document) {
       this.editmode = true;
@@ -327,6 +334,7 @@ export default {
       }
       this.alertShowed = false;
       this.filesSelected = [];
+      this.editmode = false;
     },
     async addFolder() {
       const { workgroupId } = this.$route.params;

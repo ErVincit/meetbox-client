@@ -19,7 +19,7 @@ const actions = {
     const json = await data.json();
     commit("setTree", json.result);
   },
-  async uploadDocument({ dispatch }, { workgroupId, members, folder, file }) {
+  async uploadDocument({ dispatch }, { workgroupId, folder, file }) {
     const formData = new FormData();
     formData.append("fileToUpload", file);
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/upload`;
@@ -34,12 +34,12 @@ const actions = {
       isFolder: false,
       isNote: false,
       workgroup: workgroupId,
-      members,
+      members: [],
       path: json.path,
       size: json.size
     };
     if (folder !== "root") creationDetails.folder = folder;
-    dispatch("addDocument", { workgroupId, folder, creationDetails });
+    await dispatch("addDocument", { workgroupId, folder, creationDetails });
   },
   async removeDocument({ commit }, { workgroupId, documentId }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${documentId}`;
@@ -73,7 +73,23 @@ const actions = {
     const json = await response.json();
     if (json.error) throw new Error(json.message);
     const document = json.data;
-    commit("addFolder", { document, folder });
+    commit("addDocument", { document, folder });
+  },
+  async editMembers({ commit }, { workgroupId, documentId, editObject }) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${documentId}/edit`;
+    const response = await fetch(url, {
+      credentials: "include",
+      body: JSON.stringify(editObject),
+      headers: { "Content-Type": "application/json" },
+      method: "PUT"
+    });
+    const json = await response.json();
+    if (json.error) console.error(json);
+    else {
+      const document = json.data;
+      commit("deleteDocument", document.id);
+      commit("addDocument", { document, folder: document.folder });
+    }
   }
 };
 
@@ -93,6 +109,7 @@ const mutations = {
     for (const folder of values)
       for (const doc of folder) {
         if (doc.id === documentId) {
+          if (!doc.folder) doc.folder = "root";
           state.tree[doc.folder] = state.tree[doc.folder].filter(
             doc => doc.id !== documentId
           );
@@ -106,7 +123,7 @@ const mutations = {
         if (doc.id === documentId) doc.name = name;
       }
   },
-  addFolder: (state, { document, folder }) => {
+  addDocument: (state, { document, folder }) => {
     if (!document.folder) folder = "root";
     if (state.tree[folder]) state.tree[folder].push(document);
     else Vue.set(state.tree, folder, [document]);
