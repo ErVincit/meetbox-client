@@ -120,16 +120,12 @@ const mutations = {
     state.workgroups[index] = workgroup;
   },
   newMember: (state, { workgroupId, member }) => {
-    console.log(workgroupId, state.workgroups);
     const workgroup = state.workgroups.find(wg => wg.id === workgroupId);
-    console.log(workgroup);
     workgroup.members.push(member);
   },
   removeMember: (state, { workgroupId, memberId }) => {
-    console.log(workgroupId, memberId);
     const workgroup = state.workgroups.find(wg => wg.id === workgroupId);
     const memberIndex = workgroup.members.findIndex(m => m.id === memberId);
-    console.log(workgroup);
     workgroup.members.splice(memberIndex, 1);
   },
   setLabel: (state, label) => {
