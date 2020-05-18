@@ -85,6 +85,43 @@ const actions = {
       }
     }
   },
+  async editEventShortcut({ commit }, { workgroupId, event, oldEvent }) {
+    oldEvent.timestampBegin = new Date(oldEvent.timestampBegin);
+    oldEvent.timestampEnd = new Date(oldEvent.timestampEnd);
+
+    if (event.hasNext || event.hasPrevious) {
+      event.timestampBegin = new Date(event.originalBegin);
+      event.timestampEnd = new Date(event.originalEnd);
+    }
+    const newCompleteEvent = Object.assign({}, event);
+    newCompleteEvent.description = oldEvent.description;
+    newCompleteEvent.title = oldEvent.title;
+    newCompleteEvent.owner = oldEvent.owner;
+    newCompleteEvent.members = oldEvent.members;
+    newCompleteEvent.workgroup = oldEvent.workgroup;
+
+    commit("changeEvent", {
+      event: newCompleteEvent,
+      oldEvent
+    });
+    const response = await fetch(
+      `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/calendar/event/${event.id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(event),
+        headers: { "Content-Type": "application/json" },
+        credentials: "include"
+      }
+    );
+    const json = await response.json();
+    if (response.status == 200 && json.error) {
+      console.log("ERRORE:", json);
+      commit("changeEvent", {
+        event: oldEvent,
+        oldEvent: newCompleteEvent
+      });
+    }
+  },
 
   async removeEvent({ commit }, { workgroupId, event }) {
     const response = await fetch(

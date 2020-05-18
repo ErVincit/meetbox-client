@@ -154,7 +154,7 @@ export default {
             event.timestampBegin = event.originalBegin;
             event.timestampEnd = event.originalEnd;
           }
-          await this.$store.dispatch("editEvent", {
+          await this.$store.dispatch("editEventShortcut", {
             workgroupId,
             event: newEvent,
             oldEvent: event
@@ -188,7 +188,7 @@ export default {
             timestampBegin,
             timestampEnd
           };
-          await this.editEvent({
+          await this.editEventShortcut({
             workgroupId,
             event: newEvent,
             oldEvent: event
@@ -383,7 +383,7 @@ export default {
           timestampBegin,
           timestampEnd
         };
-        await this.editEvent({
+        await this.editEventShortcut({
           workgroupId,
           event: newEvent,
           oldEvent: event
@@ -404,7 +404,7 @@ export default {
       const length = ((hours * 60 + minutes) * this.rowSizeX) / (24 * 60);
       return length - max;
     },
-    ...mapActions(["editEvent"])
+    ...mapActions(["editEventShortcut"])
   },
   computed: {
     ...mapGetters(["currentUser"]),
