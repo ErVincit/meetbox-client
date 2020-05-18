@@ -10,7 +10,9 @@
     >
       <LeftNavBar class="h-100" :open="openNavBar" />
       <main class="main_column_calendar h-100 col d-flex flex-column">
-        <p class="m-0 title_page d-none d-lg-block">Calendario</p>
+        <p class="m-0 title_page d-none d-lg-block">
+          Calendario {{ currentYear }}
+        </p>
         <hr class="m-0" />
         <div
           class="calendar_container d-flex flex-column justify-content-center px-1 flex-grow-1 overflow-hidden"
@@ -429,6 +431,9 @@ export default {
   },
   computed: {
     ...mapGetters(["calendar"]),
+    currentYear() {
+      return this.currentDate.getFullYear();
+    },
     textFilteredMembers: function() {
       if (this.filteredMembers.length === 0) return "";
       var text = "Mostro ";
