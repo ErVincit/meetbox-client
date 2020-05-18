@@ -9,7 +9,7 @@
       style="height: calc(100% - 100px)"
     >
       <LeftNavBar class="h-100" :open="openNavBar" />
-      <main class="col d-flex flex-column h-100 px-4">
+      <main class="col d-flex flex-column h-100 px-4 overflow-hidden">
         <p class="page__title m-0 d-none d-lg-block">Attività</p>
         <hr class="m-0" />
         <div
