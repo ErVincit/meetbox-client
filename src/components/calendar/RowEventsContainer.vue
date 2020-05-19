@@ -5,6 +5,7 @@
       :key="row[0].id"
       :row="row"
       @showEvent="handleShowEvent"
+      @alert="handleAlert"
     >
     </RowEvents>
   </div>
@@ -44,6 +45,9 @@ export default {
     }
   },
   methods: {
+    handleAlert(message) {
+      this.$emit("alert", message);
+    },
     handleShowEvent(event) {
       this.$emit("showEvent", event);
     }

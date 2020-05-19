@@ -195,6 +195,7 @@
                 :nameDay="day.nameDay"
                 :day="day.day"
                 @showEvent="showEvent(...arguments)"
+                @alert="handleAlert"
               >
               </CalendarRow>
             </div>
@@ -308,6 +309,9 @@ export default {
     Alert
   },
   methods: {
+    handleAlert(message) {
+      this.showAlert("warning", message);
+    },
     showAlert(type, message) {
       this.alertType = type;
       this.alertMessage = message;

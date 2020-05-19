@@ -192,6 +192,10 @@ export default {
         } else {
           this.newHour = now.getHours();
           this.newMinutes = now.getMinutes();
+          this.$emit(
+            "alert",
+            "Impossibile spostare l'evento in una data passata"
+          );
         }
       } else if (newPos >= superMax) {
         this.target.style.left = superMax + "px";
@@ -282,6 +286,11 @@ export default {
         } else {
           this.newHour = now.getHours();
           this.newMinutes = now.getMinutes();
+
+          this.$emit(
+            "alert",
+            "Impossibile far iniziare l'evento in una data passata"
+          );
         }
         target.style.width =
           this.widthCalculator(
@@ -334,9 +343,7 @@ export default {
           (MINIMUM_MINUTE_WIDTH_SLIDER * this.rowSizeX) / (24 * 60);
         const now = new Date();
         if (this.event.timestampBegin < now)
-          min =
-            calendarUtils.minutesToPosition(now, this.rowSizeX) +
-            (MINIMUM_MINUTE_WIDTH_SLIDER * this.rowSizeX) / (24 * 60);
+          min = calendarUtils.minutesToPosition(now, this.rowSizeX);
         if (min <= newPos && newPos <= this.rowSizeX) {
           const { hours, minutes } = calendarUtils.positionToHours(
             newPos,
@@ -356,11 +363,15 @@ export default {
             target.style.width =
               this.widthCalculator(0, MINIMUM_MINUTE_WIDTH_SLIDER) + "px";
           } else {
-            now.setMinutes(now.getMinutes() + MINIMUM_MINUTE_WIDTH_SLIDER);
+            now.setMinutes(now.getMinutes());
             this.newEndHour = now.getHours();
             this.newEndMinutes = now.getMinutes();
             target.style.width =
               this.widthCalculator(this.newEndHour, this.newEndMinutes) + "px";
+            this.$emit(
+              "alert",
+              "Impossibile far finire l'evento in una data passata"
+            );
           }
         } else if (newPos >= this.rowSizeX) {
           this.newEndHour = 23;
@@ -414,9 +425,12 @@ export default {
   computed: {
     ...mapGetters(["currentUser"]),
     isEditable() {
-      if (this.event.owner === this.currentUser.id) return true;
-      for (let i = 0; i < this.event.members.length; i++)
-        if (this.event.members[i].id === this.currentUser.id) return true;
+      if (this.currentUser && this.event) {
+        if (this.event.owner === this.currentUser.id) return true;
+        for (let i = 0; i < this.event.members.length; i++)
+          if (this.event.members[i].id === this.currentUser.id) return true;
+        return false;
+      }
       return false;
     },
     isMoovable() {

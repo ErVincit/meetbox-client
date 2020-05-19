@@ -7,6 +7,7 @@
       :events="dataprops"
       :rowSizeX="rowSizeX"
       @showEvent="handleShowEvent"
+      @alert="handleAlert"
     />
   </div>
 </template>
@@ -20,6 +21,9 @@ export default {
   props: ["dataprops", "rowSizeX", "nameDay", "day", "fullDayEvents"],
   components: { WeeksDay, RowEventsContainer },
   methods: {
+    handleAlert(message) {
+      this.$emit("alert", message);
+    },
     handleShowEvent(event) {
       this.$emit("showEvent", event);
     },
