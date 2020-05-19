@@ -1,7 +1,11 @@
 <template>
   <NeuContainer class="members-edit px-5 py-4" disableHover>
     <div>
-      <p class="col-auto highlight m-0 pb-2 pr-3 text-nowrap">Membri:</p>
+      <p class="col-auto highlight m-0 pb-2 pr-3 text-nowrap">Condiviso con:</p>
+      <p class="empty mt-3 mb-5" v-if="docFullMembers.length === 0">
+        Questo documento non è ancora stato condiviso con nessuno <br />
+        permetti a qualcun'altro di poterlo visualizzare
+      </p>
       <Member
         v-for="member in docFullMembers"
         :key="member.id"
@@ -10,7 +14,7 @@
       />
       <div class="dropdown justify-content-center">
         <BigAddButton
-          class="col mt-2"
+          class="col mt-3"
           id="membersDropdown"
           data-toggle="dropdown"
           aria-haspopup="true"
@@ -22,8 +26,11 @@
           aria-labelledby="membersDropdown"
           :users="workgroupMembers"
           :members="
-            workgroupMembers.filter(m => document.members.includes(m.id))
+            workgroupMembers.filter(
+              m => document.members.includes(m.id) || document.owner === m.id
+            )
           "
+          :membersD="document.owner"
           @select-user="addMember"
         />
       </div>
@@ -108,5 +115,10 @@ export default {
   transform: translate(-50%, -50%);
   z-index: 100;
   border: 4px dotted transparent;
+}
+.empty {
+  font-size: 14px;
+  text-align: center;
+  min-height: 80px;
 }
 </style>

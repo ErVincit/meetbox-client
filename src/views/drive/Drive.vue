@@ -65,6 +65,21 @@
               <div class="header col-3 p-0">
                 <p class="m-0" style="cursor:pointer" @click="orderBy = 'nome'">
                   Nome
+                  <svg
+                    width="16"
+                    height="10"
+                    viewBox="0 0 21 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    v-if="orderBy === 'nome'"
+                    class="mx-1"
+                  >
+                    <path
+                      d="M2 2L10.5 11L19 2"
+                      stroke="#787878"
+                      stroke-width="3"
+                    />
+                  </svg>
                 </p>
               </div>
               <div class="header col-3 p-0">
@@ -74,6 +89,21 @@
                   @click="orderBy = 'creatore'"
                 >
                   Creatore
+                  <svg
+                    width="16"
+                    height="10"
+                    viewBox="0 0 21 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    v-if="orderBy === 'creatore'"
+                    class="mx-1"
+                  >
+                    <path
+                      d="M2 2L10.5 11L19 2"
+                      stroke="#787878"
+                      stroke-width="3"
+                    />
+                  </svg>
                 </p>
               </div>
               <div class="header col-3 p-0">
@@ -83,6 +113,21 @@
                   @click="orderBy = 'dataCreazione'"
                 >
                   Data
+                  <svg
+                    width="16"
+                    height="10"
+                    viewBox="0 0 21 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    v-if="orderBy === 'dataCreazione'"
+                    class="mx-1"
+                  >
+                    <path
+                      d="M2 2L10.5 11L19 2"
+                      stroke="#787878"
+                      stroke-width="3"
+                    />
+                  </svg>
                 </p>
               </div>
               <div class="header col-3 p-0">
@@ -92,6 +137,21 @@
                   @click="orderBy = 'dimensione'"
                 >
                   Dimensione
+                  <svg
+                    width="16"
+                    height="10"
+                    viewBox="0 0 21 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    v-if="orderBy === 'dimensione'"
+                    class="mx-1"
+                  >
+                    <path
+                      d="M2 2L10.5 11L19 2"
+                      stroke="#787878"
+                      stroke-width="3"
+                    />
+                  </svg>
                 </p>
               </div>
             </div>
@@ -182,7 +242,10 @@
           style="width: 50px; height: 50px"
           @click="switchEditMemb"
         >
-          <img src="@/assets/membersIcon.svg" v-tooltip:left="'Membri'" />
+          <img
+            src="@/assets/membersIcon.svg"
+            v-tooltip:left="'Condiviso con...'"
+          />
         </NeuButton>
         <MembersEditing
           class="membersEdit"
