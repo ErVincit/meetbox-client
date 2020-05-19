@@ -26,7 +26,7 @@ import { mapActions, mapGetters } from "vuex";
 import calendarUtils from "@/views/calendar/calendar_utils";
 
 const MINIMUM_MINUTE_WIDTH_SLIDER = 15;
-const PADDING = 33;
+const PADDING = 16;
 
 export default {
   name: "EventCalendar",
