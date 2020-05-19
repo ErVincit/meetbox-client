@@ -9,13 +9,13 @@
     <div
       v-if="isleftResizable"
       class="event_resizer event_resizer_left"
-      @mousedown="handleMousedown($event, event)"
+      @mousedown.stop="handleLeftResizing($event, event)"
     ></div>
     {{ event.title }}
     <div
       v-if="isRightResizable"
       class="event_resizer event_resizer_right right"
-      @mousedown="handleRightResizing($event, event)"
+      @mousedown.stop="handleRightResizing($event, event)"
     ></div>
   </div>
 </template>
@@ -26,7 +26,7 @@ import { mapActions, mapGetters } from "vuex";
 import calendarUtils from "@/views/calendar/calendar_utils";
 
 const MINIMUM_MINUTE_WIDTH_SLIDER = 15;
-const PADDING = 16;
+const PADDING = 20;
 
 export default {
   name: "EventCalendar",
@@ -97,7 +97,6 @@ export default {
       // console.log("MouseDown!");
       // Elimina la possibilità all'utente di selezionare testo
       document.body.style.userSelect = "none";
-      const target = e.target.parentNode;
       if (
         e.target.className.split(" ").includes("event") &&
         calendarUtils.verifyAloneEvent(event) &&
@@ -162,40 +161,6 @@ export default {
           this.disableClick = false;
         };
         document.onmousemove = this.handleMousemove;
-      } else if (e.target.className.split(" ").includes("event_resizer_left")) {
-        // document.onmousemove = this.resizeMoovig;
-        document.onmousemove = e => {
-          this.handleResizingLeft(e, target);
-        };
-        document.onmouseup = async () => {
-          document.onmouseup = null;
-          document.onmousemove = null;
-          document.body.style.userSelect = "initial";
-          const timestampBegin = new Date(this.event.timestampBegin);
-          timestampBegin.setHours(this.newHour, this.newMinutes);
-          console.log("New begin time:", timestampBegin);
-          var timestampEnd = new Date(this.event.timestampEnd);
-          const { workgroupId } = this.$route.params;
-
-          //Se è un evento spezzettato
-          if (this.event.originalBegin && this.event.originalEnd) {
-            timestampEnd = new Date(this.event.originalEnd);
-          }
-          //Se è evento giornaliero
-
-          const newEvent = {
-            id: event.id,
-            timestampBegin,
-            timestampEnd
-          };
-          await this.editEventShortcut({
-            workgroupId,
-            event: newEvent,
-            oldEvent: event
-          });
-
-          this.disableClick = false;
-        };
       }
     },
     handleMousemove(e) {
@@ -233,15 +198,48 @@ export default {
         // TODO: Assegnare valore massimi
       }
     },
+    handleLeftResizing(e, event) {
+      const target = e.target.parentNode;
+      document.body.style.userSelect = "none";
+      document.onmousemove = e => {
+        this.handleResizingLeft(e, target);
+      };
+      document.onmouseup = async () => {
+        document.onmouseup = null;
+        document.onmousemove = null;
+        document.body.style.userSelect = "initial";
+        const timestampBegin = new Date(this.event.timestampBegin);
+        timestampBegin.setHours(this.newHour, this.newMinutes);
+        console.log("New begin time:", timestampBegin);
+        var timestampEnd = new Date(this.event.timestampEnd);
+        const { workgroupId } = this.$route.params;
+
+        //Se è un evento spezzettato
+        if (this.event.originalBegin && this.event.originalEnd) {
+          timestampEnd = new Date(this.event.originalEnd);
+        }
+        //Se è evento giornaliero
+
+        const newEvent = {
+          id: event.id,
+          timestampBegin,
+          timestampEnd
+        };
+        await this.editEventShortcut({
+          workgroupId,
+          event: newEvent,
+          oldEvent: event
+        });
+
+        this.disableClick = false;
+      };
+    },
     handleResizingLeft(e, target) {
       this.disableClick = true;
-      // let width = Number.parseInt(this.target.style.width.replace("px", ""));
-      // let left = Number.parseInt(this.target.style.left.replace("px", ""));
       const toLeft =
         document.getElementsByClassName("row__events_container")[0].offsetLeft +
         document.getElementsByClassName("main_column_calendar")[0].offsetLeft;
       const newPos = e.clientX - toLeft - PADDING;
-      // const superMax = left + width - (15 * this.rowSizeX) / (24 * 60);
       var superMax =
         this.rowSizeX -
         (MINIMUM_MINUTE_WIDTH_SLIDER * this.rowSizeX) / (24 * 60);
@@ -250,13 +248,19 @@ export default {
       var min = 0;
       if (calendarUtils.checkSameDay(this.event.timestampBegin, now))
         min = calendarUtils.minutesToPosition(now, this.rowSizeX);
-      if (calendarUtils.checkSameDay(this.event.timestampEnd, now))
+      if (
+        calendarUtils.checkSameDay(
+          this.event.timestampEnd,
+          this.event.timestampBegin
+        )
+      ) {
         superMax =
           calendarUtils.minutesToPosition(
             this.event.timestampEnd,
             this.rowSizeX
           ) -
           (MINIMUM_MINUTE_WIDTH_SLIDER * this.rowSizeX) / (24 * 60);
+      }
       if (min <= newPos && newPos <= superMax) {
         target.style.left = newPos + "px";
         const { hours, minutes } = calendarUtils.positionToHours(
@@ -315,6 +319,7 @@ export default {
       }
     },
     async handleRightResizing(e, event) {
+      document.body.style.userSelect = "none";
       const target = e.target.parentNode;
       document.onmousemove = e => {
         this.disableClick = true;
