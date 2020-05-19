@@ -46,7 +46,7 @@
         v-model="task.description"
         @blur="setDescription"
         placeholder="Inserisci qui una descrizione dell'attività..."
-      ></NeuTextarea>
+      />
       <div class="row mb-4">
         <div class="col-12 col-xl-6 d-flex align-items-center pb-3">
           <p class="col-auto highlight m-0 pr-3 text-nowrap">
@@ -66,7 +66,9 @@
                 :label="workgroupLabels.find(l => task.label === l.id)"
                 showName
               />
-              <BigAddButton v-else class="w-100">Aggiungi label</BigAddButton>
+              <BigAddButton v-else class="w-100">
+                Aggiungi etichetta
+              </BigAddButton>
             </div>
             <LabelDropdown
               aria-labelledby="labelsDropdown"
@@ -77,18 +79,27 @@
         </div>
         <div class="col-12 col-xl-6 d-flex align-items-center pb-3">
           <p class="col-auto highlight m-0 pr-3 text-nowrap">📅 Scadenza:</p>
-          <div class="col p-0" style="min-width: 0px">
-            <NeuInput
-              type="date"
-              class="mb-1"
-              v-model="deadlineDate"
-              @blur="setDeadline"
-            />
-            <NeuInput
-              type="time"
-              class="mt-1"
-              v-model="deadlineTime"
-              @blur="setDeadline"
+          <div class="dropdown col">
+            <div
+              class="w-100"
+              id="datetimeDropdown"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <NeuButton
+                v-if="task.deadline"
+                class="w-100 d-flex align-items-center px-2 h-100"
+              >
+                {{ deadlineString }}
+              </NeuButton>
+              <BigAddButton v-else class="w-100">
+                Aggiungi scadenza
+              </BigAddButton>
+            </div>
+            <DatetimeDropdown
+              aria-labelledby="datetimeDropdown"
+              @selected="setDeadline"
             />
           </div>
         </div>
@@ -166,6 +177,7 @@ import FileDropArea from "./FileDropArea";
 import UserDropdown from "./UserDropdown";
 import Label from "./Label";
 import LabelDropdown from "./LabelDropdown";
+import DatetimeDropdown from "./DatetimeDropdown";
 import Member from "./Member";
 import TaskAttachment from "./TaskAttachment";
 import Alert from "@/components/alert/Alert";
@@ -186,6 +198,7 @@ export default {
     NeuInput,
     Member,
     NeuTextarea,
+    DatetimeDropdown,
     TaskAttachment,
     Alert
   },
@@ -203,51 +216,14 @@ export default {
   },
   computed: {
     deadlineString() {
-      return this.task.deadline
-        ? calendarUtils.dateToString(new Date(this.task.deadline))
-        : "Aggiungi";
-    },
-    deadlineDate: {
-      get() {
-        // The deadline isn't set
-        if (!this.task.deadline) return null;
-        return calendarUtils.dateToDateType(new Date(this.task.deadline));
-      },
-      set(value) {
-        const date = this.task.deadline
-          ? new Date(this.task.deadline)
-          : new Date();
-        const array = value.split("-");
-        if (array.length != 3) return;
-        if (array[2].length > 2) return;
-        let intVal = parseInt(array[2]);
-        if (intVal < 0 || intVal > 31) return;
-        date.setDate(array[2]);
-        if (array[1].length > 2) return;
-        intVal = parseInt(array[1]);
-        if (intVal < 0 || intVal > 12) return;
-        date.setMonth(array[1]);
-        if (parseInt(array[0]) < 1900) return;
-        date.setFullYear(array[0]);
-        this.task.deadline = date.getTime();
-      }
-    },
-    deadlineTime: {
-      get() {
-        // The deadline isn't set
-        if (!this.task.deadline) return null;
-        return calendarUtils.dateToTimeType(new Date(this.task.deadline));
-      },
-      set(value) {
-        if (!value) return;
-        const date = this.task.deadline
-          ? new Date(this.task.deadline)
-          : new Date();
-        const time = value.split(":");
-        date.setHours(time[0]);
-        date.setMinutes(time[1]);
-        this.task.deadline = date;
-      }
+      const date = new Date(this.task.deadline);
+      return (
+        calendarUtils.dateToString(date) +
+        " " +
+        date.getHours() +
+        ":" +
+        date.getMinutes()
+      );
     },
     ...mapGetters(["workgroups"]),
     workgroupMembers() {
@@ -390,13 +366,14 @@ export default {
         editObject: { title: this.task.title }
       });
     },
-    setDeadline() {
+    async setDeadline(deadline) {
       const { workgroupId } = this.$route.params;
-      this.editTask({
+      this.task.deadline = deadline ? deadline.toString() : null;
+      await this.editTask({
         workgroupId,
         sectionId: this.sectionId,
         taskId: this.task.id,
-        editObject: { deadline: this.task.deadline }
+        editObject: { deadline }
       });
     },
     showAlert(type, message) {
