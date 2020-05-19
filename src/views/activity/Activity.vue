@@ -17,14 +17,24 @@
           style="overflow-x: auto; overflow-y: hidden"
         >
           <Loading :show="loading" />
-          <p
+          <div
             v-if="!loading && allTasks && allTasks.length == 0"
-            class="d-none d-lg-block mt-2 highlight"
-            style="font-size: 24px; color: #787878; max-width: 750px"
+            class="mt-4 w-100"
+            style="color: var(--text-color-bg)"
           >
-            Inizia subito a riempire questo spazio vuoto, crea una sezione con
-            il pulsante a destra!
-          </p>
+            <div class="m-5">
+              <h2 style="color: var(--primary); font-weight: 600">
+                Sembra non ci sia niente qui...
+              </h2>
+              <h4 class="mt-3" style="color: var(--text-color-bg)">
+                Potresti provare a creare una nuova sezione per le tue attività
+              </h4>
+            </div>
+            <img
+              src="@/assets/empty_activity.svg"
+              style="position: absolute; bottom: 10px; right: 20px; max-width: 50%; max-height: 60%"
+            />
+          </div>
           <draggable
             v-if="!loading"
             :list="allTasks"

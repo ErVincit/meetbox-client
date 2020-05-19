@@ -96,13 +96,24 @@
               </div>
             </div>
             <Loading :show="!tree" />
-            <p
+            <div
               v-if="tree && filteredDocuments && filteredDocuments.length === 0"
-              class="mt-4 w-100 text-center"
-              style="color:#787878"
+              class="mt-4 w-100"
+              style="color: var(--text-color-bg)"
             >
-              Nessun documento presente
-            </p>
+              <div class="m-5">
+                <h2 style="color: var(--primary); font-weight: 600">
+                  Sembra non ci sia niente qui...
+                </h2>
+                <h4 class="mt-3" style="color: var(--text-color-bg)">
+                  Potresti provare a caricare un documento o creare una cartella
+                </h4>
+              </div>
+              <img
+                src="@/assets/empty_drive.svg"
+                style="position: absolute; bottom: 10px; right: 20px; max-width: 50%; max-height: 60%"
+              />
+            </div>
             <div v-else-if="tree" class="documents h-100 p-2">
               <Document
                 v-for="document in filteredDocuments"

@@ -2,10 +2,11 @@
   <div class="w-100 h-100">
     <div class="d-flex flex-column align-items-center text-center">
       <Logo class="p-5" />
-      <h1 style="margin: 100px 10%">
-        😥 Ci dispiace, ma questa pagina non è disponibile
+      <img src="@/assets/404_image.svg" width="300px" height="300px" />
+      <h1 class="w-50 my-5" style="color: var(--text-color-bg)">
+        Sembra che la pagina che stai cercando è stata rapita dagli 👽
       </h1>
-      <router-link to="/" class="w-50">
+      <router-link to="/" class="my-5 w-25">
         <NeuButton>Torna alla pagina principale</NeuButton>
       </router-link>
       <img id="draw-left" src="@/assets/homepage-draw-left.svg" />
@@ -22,6 +23,10 @@ export default { name: "NotFound", components: { Logo, NeuButton } };
 </script>
 
 <style scoped>
+.neu-button {
+  height: 50px;
+}
+
 #draw-left {
   position: absolute;
   top: 0;
