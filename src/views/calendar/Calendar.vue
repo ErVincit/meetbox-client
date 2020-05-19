@@ -162,9 +162,11 @@
               :show="loading"
               style="position: absolute; left: 50%; top: 50%; z-index: 1000; transform: translate(-50%, -50%)"
             />
-            <div class="position-absolute h-100 w-100 p-0 m-0">
+            <div
+              class="position-absolute h-100 w-100 p-0 m-0 d-flex flex-column"
+            >
               <div
-                class="background d-flex m-0 p-0"
+                class="background d-flex m-0 p-0 flex-grow-1"
                 v-for="day in days"
                 :key="day.day + 'back'"
               >
@@ -634,7 +636,6 @@ export default {
 }
 
 .background {
-  height: calc(100% / 7);
   width: 100%;
   border-bottom: 1px solid var(--grid-border);
   overflow: hidden;

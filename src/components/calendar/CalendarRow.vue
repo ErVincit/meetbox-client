@@ -5,7 +5,6 @@
     <WeeksDay :nameDay="nameDay" :day="day" />
     <RowEventsContainer
       :events="dataprops"
-      :rowSizeX="rowSizeX"
       @showEvent="handleShowEvent"
       @alert="handleAlert"
     />
@@ -18,7 +17,7 @@ import WeeksDay from "@/components/calendar/WeeksDay";
 
 export default {
   name: "CalendarRow",
-  props: ["dataprops", "rowSizeX", "nameDay", "day", "fullDayEvents"],
+  props: ["dataprops", "nameDay", "day", "fullDayEvents"],
   components: { WeeksDay, RowEventsContainer },
   methods: {
     handleAlert(message) {
