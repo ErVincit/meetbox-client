@@ -6,6 +6,7 @@
       :eventProps="element"
       :rowWidth="rowSizeX"
       @showEvent="handleShowEvent"
+      @alert="handleAlert"
     />
   </div>
 </template>
@@ -33,6 +34,9 @@ export default {
     }
   },
   methods: {
+    handleAlert(message) {
+      this.$emit("alert", message);
+    },
     handleShowEvent(event) {
       this.$emit("showEvent", event);
     },

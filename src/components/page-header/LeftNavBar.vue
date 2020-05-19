@@ -101,6 +101,7 @@
         <li v-if="!workgroups"><Loading show hideMessage /></li>
         <li
           class="mt-2 px-2 d-flex align-items-center workgroup"
+          v-else
           :class="{ selected: currentWorkgroup.id === workgroup.id }"
           v-for="workgroup in workgroups"
           :key="workgroup.id"

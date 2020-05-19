@@ -160,9 +160,11 @@ const mutations = {
     section.tasks = section.tasks.filter(task => task.id !== taskId);
   },
   setTask: (state, { sectionId, task }) => {
-    const section = state.sections.find(section => section.id === sectionId);
+    const sectionIndex = state.sections.findIndex(sec => sec.id === sectionId);
+    const section = state.sections[sectionIndex];
     const taskIndex = section.tasks.findIndex(t => t.id === task.id);
     section.tasks[taskIndex] = task;
+    Vue.set(state.sections, sectionIndex, section);
   },
   clearLabel: (state, labelId) => {
     for (

@@ -187,6 +187,10 @@ export default {
       noDescription: "Nessuna descrizione presente"
     };
   },
+  mounted() {
+    if (this.isEventStarted)
+      this.showAlert("warning", "Data inizio immutabile. L'evento è in corso");
+  },
   methods: {
     ...mapActions(["editEvent", "removeEvent"]),
     async addMember(member) {
@@ -399,6 +403,9 @@ export default {
     },
     membersId() {
       return this.ourEvent.members.map(m => m.id);
+    },
+    isEventStarted() {
+      return this.event.timestampBegin <= new Date();
     }
   },
   watch: {
@@ -417,6 +424,12 @@ export default {
         description: event.description,
         members: this.event.members
       };
+      if (this.alertShowed) this.alertShowed = false;
+      if (this.isEventStarted)
+        this.showAlert(
+          "warning",
+          "Data inizio immutabile. L'evento è in corso"
+        );
     }
   }
 };
