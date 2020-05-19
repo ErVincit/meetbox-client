@@ -231,9 +231,15 @@
           v-if="editmode"
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
+          @click="moveFile"
         >
           <img src="@/assets/moveIcon.svg" v-tooltip:left="'Sposta file'" />
         </NeuButton>
+        <MoveTo
+          v-if="moveOn"
+          :document="filesSelected"
+          @close="moveOn = false"
+        />
         <NeuButton
           v-if="
             editmode && filesSelected.length === 1 && !filesSelected[0].isfolder
@@ -269,6 +275,7 @@ import Loading from "@/components/loading/Loading";
 import Breadcrumb from "./Breadcrumb";
 import Alert from "@/components/alert/Alert";
 import MembersEditing from "@/components/document/MembersEditing";
+import MoveTo from "@/components/document/MoveTo";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -285,7 +292,8 @@ export default {
     Breadcrumb,
     Loading,
     Alert,
-    MembersEditing
+    MembersEditing,
+    MoveTo
   },
   computed: {
     ...mapGetters(["tree", "currentUser", "workgroups"]),
@@ -463,6 +471,9 @@ export default {
     switchEditMemb() {
       this.editMembers = !this.editMembers;
     },
+    moveFile() {
+      this.moveOn = !this.moveOn;
+    },
     setPosition(pos) {
       this.currentPosition = pos + "";
     },
@@ -485,7 +496,8 @@ export default {
       alertMessage: "",
       openNavBar: false,
       orderBy: "def",
-      editMembers: false
+      editMembers: false,
+      moveOn: false
     };
   },
   created() {

@@ -90,6 +90,24 @@ const actions = {
       commit("deleteDocument", document.id);
       commit("addDocument", { document, folder: document.folder });
     }
+  },
+  async moveFile(
+    { commit },
+    { workgroupId, documentId, pastFolder, editObject }
+  ) {
+    const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${documentId}/edit`;
+    const response = await fetch(url, {
+      credentials: "include",
+      body: JSON.stringify(editObject),
+      headers: { "Content-Type": "application/json" },
+      method: "PUT"
+    });
+    const json = await response.json();
+    if (json.error) console.error(json);
+    else {
+      const document = json.data;
+      commit("moveTo", { document, pastFolder, folder: document.folder });
+    }
   }
 };
 
@@ -127,6 +145,10 @@ const mutations = {
     if (!document.folder) folder = "root";
     if (state.tree[folder]) state.tree[folder].push(document);
     else Vue.set(state.tree, folder, [document]);
+  },
+  moveTo: (state, { document, pastFolder, folder }) => {
+    state.tree[pastFolder].filter(doc => doc.id != document.id);
+    state.tree[folder].push(document);
   }
 };
 
