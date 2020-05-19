@@ -198,14 +198,23 @@ export default {
     toggleExpand() {
       this.compressed = !this.compressed;
       localStorage.setItem("navbar-compressed", this.compressed);
+    },
+    redirect() {
+      if (this.workgroups.length === 0) this.$router.push("/tutorial");
+      else this.$router.push("/" + this.workgroups[0].id + "/drive");
     }
   },
   computed: {
     ...mapGetters(["workgroups"]),
     currentWorkgroup() {
       const { workgroupId } = this.$route.params;
-      if (this.workgroups)
-        return this.workgroups.find(wg => wg.id === parseInt(workgroupId));
+      if (this.workgroups) {
+        const workgroup = this.workgroups.find(
+          wg => wg.id === parseInt(workgroupId)
+        );
+        if (workgroup) return workgroup;
+        else this.redirect();
+      }
       return null;
     }
   },

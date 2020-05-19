@@ -70,6 +70,12 @@ export default {
       showSettings: false
     };
   },
+  async mounted() {
+    if (!this.currentUser) {
+      const validated = await this.validateUser();
+      if (!validated) this.$router.push("/login");
+    }
+  },
   computed: mapGetters(["currentUser", "isLightTheme"]),
   methods: {
     ...mapActions(["validateUser", "signoutUser", "changeTheme"]),
