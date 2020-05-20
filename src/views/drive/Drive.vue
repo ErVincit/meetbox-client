@@ -73,7 +73,11 @@
             </div>
             <div class="row mt-3 px-2 d-none d-lg-flex">
               <div class="header col-3 p-0">
-                <p class="m-0" style="cursor:pointer" @click="orderBy = 'nome'">
+                <p
+                  class="m-0"
+                  style="cursor:pointer"
+                  @click="orderBy = orderBy === 'nome' ? 'def' : 'nome'"
+                >
                   Nome
                   <svg
                     width="16"
@@ -96,7 +100,7 @@
                 <p
                   class="m-0"
                   style="cursor:pointer"
-                  @click="orderBy = 'creatore'"
+                  @click="orderBy = orderBy === 'creatore' ? 'def' : 'creatore'"
                 >
                   Creatore
                   <svg
@@ -120,7 +124,10 @@
                 <p
                   class="m-0"
                   style="cursor:pointer"
-                  @click="orderBy = 'dataCreazione'"
+                  @click="
+                    orderBy =
+                      orderBy === 'dataCreazione' ? 'def' : 'dataCreazione'
+                  "
                 >
                   Data
                   <svg
@@ -144,7 +151,9 @@
                 <p
                   class="m-0"
                   style="cursor:pointer"
-                  @click="orderBy = 'dimensione'"
+                  @click="
+                    orderBy = orderBy === 'dimensione' ? 'def' : 'dimensione'
+                  "
                 >
                   Dimensione
                   <svg
@@ -516,6 +525,7 @@ export default {
       this.rename = true;
     },
     offEditName() {
+      this.rename = false;
       this.editmode = false;
       this.filesSelected = [];
     }
