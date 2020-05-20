@@ -496,7 +496,17 @@ export default {
       this.editMembers = !this.editMembers;
     },
     moveFile() {
-      this.moveOn = !this.moveOn;
+      if (
+        this.currentPosition === "root" &&
+        this.tree[this.currentPosition].filter(doc => doc.isfolder === true)
+          .length === 1
+      ) {
+        this.showAlert(
+          "warning",
+          "Non puoi spostare questo file in nessun'altra cartella"
+        );
+        setTimeout(() => (this.alertShowed = false), 5000);
+      } else this.moveOn = !this.moveOn;
     },
     moveDone() {
       this.moveOn = false;
