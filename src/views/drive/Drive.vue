@@ -202,6 +202,7 @@
                 @move-to="handleMobileMoveTo"
                 @delete="handleMobileDelete"
                 @rename="handleMobileRename"
+                @editOff="offEditName"
               />
             </div>
           </div>
@@ -241,13 +242,12 @@
           <img src="@/assets/editIcon.svg" />
         </NeuButton>
         <NeuButton
-          v-if="editmode"
+          v-if="editmode && filesSelected.length === 1"
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
           @click="moveFile"
-          v-tooltip:left="'Sposta file'"
         >
-          <img src="@/assets/moveIcon.svg" />
+          <img src="@/assets/moveIcon.svg" v-tooltip:left="'Sposta file'" />
         </NeuButton>
         <NeuButton
           v-if="
@@ -261,7 +261,12 @@
           <img src="@/assets/membersIcon.svg" />
         </NeuButton>
       </Actions>
-      <MoveTo v-if="moveOn" :document="filesSelected" @close="moveOn = false" />
+      <MoveTo
+        v-if="moveOn"
+        :document="filesSelected[0]"
+        @close="moveOn = false"
+        @done="moveDone"
+      />
       <MembersEditing
         class="membersEdit"
         v-if="editMembers"
@@ -386,16 +391,18 @@ export default {
       }
     },
     handleDblClick(e, document) {
-      if (document.isfolder) {
-        this.currentPosition = document.id + "";
-        this.editmode = false;
-        this.filesSelected = [];
-      } else {
-        const { workgroupId } = this.$route.params;
-        window.open(
-          `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${document.id}/download`,
-          "_blank"
-        );
+      if (!this.editmode) {
+        if (document.isfolder) {
+          this.currentPosition = document.id + "";
+          this.editmode = false;
+          this.filesSelected = [];
+        } else {
+          const { workgroupId } = this.$route.params;
+          window.open(
+            `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${document.id}/download`,
+            "_blank"
+          );
+        }
       }
     },
     handleFileDrop(files) {
@@ -482,6 +489,11 @@ export default {
     moveFile() {
       this.moveOn = !this.moveOn;
     },
+    moveDone() {
+      this.moveOn = false;
+      this.showAlert("success", "File spostato con successo!");
+      setTimeout(() => (this.alertShowed = false), 5000);
+    },
     setPosition(pos) {
       this.currentPosition = pos + "";
     },
@@ -502,6 +514,10 @@ export default {
       this.filesSelected.push(document);
       this.editmode = true;
       this.rename = true;
+    },
+    offEditName() {
+      this.editmode = false;
+      this.filesSelected = [];
     }
   },
   data() {

@@ -16,6 +16,7 @@
           v-model="document.name"
           :disabled="!edit"
           :backgroundHidden="!edit"
+          @keyup.enter="editTitle"
           @blur="editTitle"
           @click.stop
         />
@@ -34,17 +35,13 @@
       >
         <button
           style="width: 30px; height: 30px; cursor: pointer; border: none; background-color: transparent"
-          id="workgroupDropdownBtn"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
         >
           <img src="@/assets/kebab-icon.svg" />
         </button>
-        <NeuContainer
-          class="dropdown-menu px-2"
-          aria-labelledby="workgroupDropdownBtn"
-        >
+        <NeuContainer class="dropdown-menu px-2">
           <a
             class="dropdown-item m-0 px-3 rounded-pill"
             @click="$emit('move-to', document)"
@@ -159,6 +156,7 @@ export default {
         documentId: this.document.id,
         editObject: { name: this.document.name }
       });
+      this.$emit("editOff");
     }
   }
 };
