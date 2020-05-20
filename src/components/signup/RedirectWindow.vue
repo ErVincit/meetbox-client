@@ -35,6 +35,16 @@ export default {
   transform: translate(-50%, -50%);
   z-index: 1000;
 }
+@media (max-width: 768px) {
+  .redirect-window {
+    top: 0;
+    left: 0;
+    transform: unset;
+    width: 100% !important;
+    height: 100%;
+  }
+}
+
 .hightlight {
   color: var(--primary);
 }
