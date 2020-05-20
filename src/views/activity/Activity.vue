@@ -58,7 +58,7 @@
           </draggable>
           <div class="d-flex h-100 align-items-start">
             <NeuContainer v-if="!loading" class="p-3 mr-4 d-flex d-lg-none">
-              <BigAddButton @click.stop>
+              <BigAddButton @click.stop="createSection">
                 Aggiungi una nuova sezione
               </BigAddButton>
             </NeuContainer>
