@@ -47,6 +47,16 @@
               @change="addFiles($refs.file.files)"
             />
           </div>
+          <div
+            class="col-12 col-md-4 my-2 justify-content-end d-flex d-lg-none"
+          >
+            <NeuButton class="w-100 rounded-pill" @click="addFolder">
+              <div class="d-flex justify-content-center align-items-center">
+                <img class="mr-3" src="@/assets/addIcon.svg" />
+                <p class="carica m-0">Crea cartella</p>
+              </div>
+            </NeuButton>
+          </div>
         </div>
         <FileDropArea
           @file-enter="draggingFile = true"
