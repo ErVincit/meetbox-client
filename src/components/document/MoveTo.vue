@@ -1,6 +1,16 @@
 <template>
   <NeuContainer class="pos-edit px-5 py-4" disableHover>
-    <p class="col-auto highlight m-0 pb-2 pr-3 text-nowrap">Sposta in:</p>
+    <div class="d-flex align-items-center">
+      <p class="col highlight m-0 pb-2 pr-3 text-nowrap">Sposta in:</p>
+      <button
+        type="button"
+        class="close d-block d-lg-none p-2"
+        aria-label="Close"
+        @click="$emit('close')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <div
       class="d-flex justify-content-start align-items-center"
       v-if="folderName !== 'root'"
@@ -170,6 +180,17 @@ export default {
   transform: translate(-50%, -50%);
   z-index: 100;
   border: 4px dotted transparent;
+}
+@media (max-width: 768px) {
+  .pos-edit {
+    min-width: unset;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    transform: unset;
+    top: 0;
+    left: 0;
+  }
 }
 .folder {
   border: 1px solid transparent;

@@ -71,7 +71,7 @@
             >
               Rilascia il file per caricarlo sul Drive
             </div>
-            <div class="row mt-3 px-2 d-none d-md-flex">
+            <div class="row mt-3 px-2 d-none d-lg-flex">
               <div class="header col-3 p-0">
                 <p class="m-0" style="cursor:pointer" @click="orderBy = 'nome'">
                   Nome
@@ -197,8 +197,11 @@
                     rename
                 "
                 :document="document"
-                @click.stop="handleClick(document)"
+                @click="handleClick(document)"
                 @dblclick.stop="handleDblClick($event, document)"
+                @move-to="handleMobileMoveTo"
+                @delete="handleMobileDelete"
+                @rename="handleMobileRename"
               />
             </div>
           </div>
@@ -246,11 +249,6 @@
         >
           <img src="@/assets/moveIcon.svg" />
         </NeuButton>
-        <MoveTo
-          v-if="moveOn"
-          :document="filesSelected"
-          @close="moveOn = false"
-        />
         <NeuButton
           v-if="
             editmode && filesSelected.length === 1 && !filesSelected[0].isfolder
@@ -262,12 +260,13 @@
         >
           <img src="@/assets/membersIcon.svg" />
         </NeuButton>
-        <MembersEditing
-          class="membersEdit"
-          v-if="editMembers"
-          :document="filesSelected[0]"
-        />
       </Actions>
+      <MoveTo v-if="moveOn" :document="filesSelected" @close="moveOn = false" />
+      <MembersEditing
+        class="membersEdit"
+        v-if="editMembers"
+        :document="filesSelected[0]"
+      />
     </div>
   </div>
 </template>
@@ -490,6 +489,19 @@ export default {
       this.alertType = type;
       this.alertMessage = message;
       this.alertShowed = true;
+    },
+    handleMobileMoveTo(document) {
+      this.filesSelected.push(document);
+      this.moveFile();
+    },
+    async handleMobileDelete(document) {
+      this.filesSelected.push(document);
+      await this.deleteDocument();
+    },
+    handleMobileRename(document) {
+      this.filesSelected.push(document);
+      this.editmode = true;
+      this.rename = true;
     }
   },
   data() {

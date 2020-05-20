@@ -5,7 +5,7 @@
     v-on="$listeners"
   >
     <div class="row px-2">
-      <div class="document-col justify-content-start col-12 col-md-3">
+      <div class="document-col justify-content-start col col-lg-3">
         <img
           class="mx-2"
           style="width: 40px"
@@ -20,14 +20,50 @@
           @click.stop
         />
       </div>
-      <div class="document-col col-3 d-none d-md-flex">
+      <div class="document-col col-3 d-none d-lg-flex">
         {{ memberName }}
       </div>
-      <div class="document-col col-3 d-none d-md-flex">
+      <div class="document-col col-3 d-none d-lg-flex">
         {{ data }}
       </div>
-      <div class="document-col col-3 d-none d-md-flex">
+      <div class="document-col col-3 d-none d-lg-flex">
         {{ size }}
+      </div>
+      <div
+        class="dropdown d-flex flex-column justify-content-center align-items-center col-auto d-block d-lg-none mr-2"
+      >
+        <button
+          style="width: 30px; height: 30px; cursor: pointer; border: none; background-color: transparent"
+          id="workgroupDropdownBtn"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <img src="@/assets/kebab-icon.svg" />
+        </button>
+        <NeuContainer
+          class="dropdown-menu px-2"
+          aria-labelledby="workgroupDropdownBtn"
+        >
+          <a
+            class="dropdown-item m-0 px-3 rounded-pill"
+            @click="$emit('move-to', document)"
+          >
+            Sposta in...
+          </a>
+          <a
+            class="dropdown-item m-0 px-3 rounded-pill"
+            @click="$emit('rename', document)"
+          >
+            Rinomina
+          </a>
+          <a
+            class="dropdown-item m-0 px-3 rounded-pill danger"
+            @click="$emit('delete', document)"
+          >
+            Elimina
+          </a>
+        </NeuContainer>
       </div>
     </div>
   </NeuContainer>
