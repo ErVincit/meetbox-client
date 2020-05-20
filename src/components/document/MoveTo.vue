@@ -3,7 +3,7 @@
     <p class="col-auto highlight m-0 pb-2 pr-3 text-nowrap">Sposta in:</p>
     <div
       class="d-flex justify-content-start align-items-center"
-      v-if="folderName !== 'root'"
+      v-if="currentPosition !== 'root'"
     >
       <svg
         width="12"
@@ -32,14 +32,9 @@
     <NeuContainer
       v-for="folder in folders"
       :key="folder.id"
-      :class="{
-        selected:
-          selectedFolder.length !== 0 && folder.id === selectedFolder[0].id
-      }"
       class="mt-3 rounded-pill folder"
       v-bind="$attrs"
       v-on="$listeners"
-      @click.stop="handleClick(folder)"
       @dblclick.stop="handleDblClick($event, folder)"
     >
       <div class="row px-2">
@@ -64,7 +59,7 @@
         :shadowRadius="0"
         :shadowBlur="0"
         @click="Move"
-        >Sposta</NeuButton
+        >Sposta qui</NeuButton
       >
     </div>
     <Alert
@@ -84,14 +79,14 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   name: "MoveTo",
   components: { NeuContainer, NeuButton, Alert },
-  props: { document: Array },
+  props: { document: Object },
   computed: {
     ...mapGetters(["tree"]),
     folders() {
       //if (!this.folders.includes(this.currentPosition)) return [];
       if (this.tree) {
         const folders = this.tree[this.currentPosition].filter(
-          doc => doc.isfolder === true && doc.id !== this.document[0].id ///!!!!!!!!!!!!da modificare rendere compatibile se più di un documento
+          doc => doc.isfolder === true && doc.id !== this.document.id
         );
         return folders;
       }
@@ -101,7 +96,6 @@ export default {
   data() {
     return {
       currentPosition: "root",
-      selectedFolder: [],
       folderName: "root",
       folderFatherId: "",
       folderFather: "",
@@ -112,41 +106,45 @@ export default {
   },
   methods: {
     ...mapActions(["fetchTree", "moveFile"]),
-    handleClick(folder) {
-      if (this.selectedFolder.length === 0) this.selectedFolder.push(folder);
-      else {
-        if (this.selectedFolder[0].id !== folder.id) {
-          this.selectedFolder = [];
-          this.selectedFolder.push(folder);
-        } else this.selectedFolder = [];
-      }
-    },
     handleDblClick(e, folder) {
-      this.folderFatherId = this.currentPosition;
-      this.folderFather = this.folderName;
       this.currentPosition = folder.id + "";
       this.folderName = folder.name + "";
     },
     goBack() {
-      this.currentPosition = this.folderFatherId;
-      this.folderName = this.folderFather;
+      const previousPositionId = this.findPreviousPosition(
+        this.currentPosition
+      );
+      const previousPositionName = this.findPreviousPositionName(
+        previousPositionId
+      );
+      this.currentPosition = previousPositionId;
+      this.folderName = previousPositionName;
+    },
+    findPreviousPosition(currentPosition) {
+      const values = Object.values(this.tree);
+      for (const folder of values)
+        for (const doc of folder)
+          if (doc.id == currentPosition) return doc.folder;
+    },
+    findPreviousPositionName(positionId) {
+      const values = Object.values(this.tree);
+      for (const folder of values)
+        for (const doc of folder) if (doc.id == positionId) return doc.name;
     },
     async Move() {
-      if (this.selectedFolder.length > 0) {
-        const { workgroupId } = this.$route.params;
-        const pastFolder = this.document[0].folder;
-        this.showAlert(
-          "info",
-          "Spostamento in corso..." + this.document.length
-        );
+      const { workgroupId } = this.$route.params;
+      const pastFolder = this.document.folder;
+      if (this.currentPosition == pastFolder) {
+        this.showAlert("warning", "Il file si trova già in questa cartella!");
+        setTimeout(() => (this.alertShowed = false), 5000);
+      } else {
+        this.showAlert("info", "Spostamento in corso...");
         await this.moveFile({
           workgroupId,
-          documentId: this.document[0].id,
+          documentId: this.document.id,
           pastFolder,
-          editObject: { folder: this.selectedFolder[0].id }
+          editObject: { folder: this.currentPosition }
         });
-        this.showAlert("success", "File spostato con successo!");
-        this.alertShowed = false;
         this.$emit("close");
       }
     },
