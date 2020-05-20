@@ -16,6 +16,7 @@
           v-model="document.name"
           :disabled="!edit"
           :backgroundHidden="!edit"
+          @keyup.enter="editTitle"
           @blur="editTitle"
           @click.stop
         />
@@ -123,6 +124,7 @@ export default {
         documentId: this.document.id,
         editObject: { name: this.document.name }
       });
+      this.$emit("editOff");
     }
   }
 };

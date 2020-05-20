@@ -189,6 +189,7 @@
                 :document="document"
                 @click.stop="handleClick(document)"
                 @dblclick.stop="handleDblClick($event, document)"
+                @editOff="offEditName"
               />
             </div>
           </div>
@@ -372,16 +373,18 @@ export default {
       }
     },
     handleDblClick(e, document) {
-      if (document.isfolder) {
-        this.currentPosition = document.id + "";
-        this.editmode = false;
-        this.filesSelected = [];
-      } else {
-        const { workgroupId } = this.$route.params;
-        window.open(
-          `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${document.id}/download`,
-          "_blank"
-        );
+      if (!this.editmode) {
+        if (document.isfolder) {
+          this.currentPosition = document.id + "";
+          this.editmode = false;
+          this.filesSelected = [];
+        } else {
+          const { workgroupId } = this.$route.params;
+          window.open(
+            `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${document.id}/download`,
+            "_blank"
+          );
+        }
       }
     },
     handleFileDrop(files) {
@@ -480,6 +483,10 @@ export default {
       this.alertType = type;
       this.alertMessage = message;
       this.alertShowed = true;
+    },
+    offEditName() {
+      this.editmode = false;
+      this.filesSelected = [];
     }
   },
   data() {
