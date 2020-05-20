@@ -209,16 +209,18 @@
           @click.stop="createEvent"
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
+          v-tooltip:left="'Crea evento'"
         >
-          <img src="@/assets/addIcon.svg" v-tooltip:left="'Crea evento'" />
+          <img src="@/assets/addIcon.svg" />
         </NeuButton>
 
         <NeuButton
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
           @click.stop="handleShowEventFilter"
+          v-tooltip:left="'Filtra'"
         >
-          <img src="@/assets/filterIcon.svg" v-tooltip:left="'Filtra'" />
+          <img src="@/assets/filterIcon.svg" />
         </NeuButton>
       </Actions>
     </div>

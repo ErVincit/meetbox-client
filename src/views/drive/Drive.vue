@@ -200,40 +200,41 @@
           />
         </FileDropArea>
       </main>
-      <Actions>
+      <Actions class="drive_actions">
         <NeuButton
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
           @click="addFolder"
+          v-tooltip:left="'Crea nuova cartella'"
         >
-          <img
-            src="@/assets/addIcon.svg"
-            v-tooltip:left="'Crea nuova cartella'"
-          />
+          <img src="@/assets/addIcon.svg" />
         </NeuButton>
         <NeuButton
           v-if="editmode"
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
           @click="deleteDocument"
+          v-tooltip:left="'Elimina file'"
         >
-          <img src="@/assets/deleteIcon.svg" v-tooltip:left="'Elimina file'" />
+          <img src="@/assets/deleteIcon.svg" />
         </NeuButton>
         <NeuButton
           v-if="editmode && filesSelected.length === 1"
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
           @click="editName"
+          v-tooltip:left="'Rinomina'"
         >
-          <img src="@/assets/editIcon.svg" v-tooltip:left="'Rinomina'" />
+          <img src="@/assets/editIcon.svg" />
         </NeuButton>
         <NeuButton
           v-if="editmode"
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
           @click="moveFile"
+          v-tooltip:left="'Sposta file'"
         >
-          <img src="@/assets/moveIcon.svg" v-tooltip:left="'Sposta file'" />
+          <img src="@/assets/moveIcon.svg" />
         </NeuButton>
         <MoveTo
           v-if="moveOn"
@@ -247,11 +248,9 @@
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
           @click="switchEditMemb"
+          v-tooltip:left="'Condiviso con...'"
         >
-          <img
-            src="@/assets/membersIcon.svg"
-            v-tooltip:left="'Condiviso con...'"
-          />
+          <img src="@/assets/membersIcon.svg" />
         </NeuButton>
         <MembersEditing
           class="membersEdit"
@@ -566,5 +565,11 @@ export default {
 }
 .search-bar input {
   height: 40px !important;
+}
+
+.drive_actions .neu-button > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
