@@ -159,9 +159,17 @@ export default {
       else this.searchMembers = json.data;
     },
     async newWorkgroup() {
-      const { name, image } = this;
+      const { name, imageURL } = this;
+      if (!name || !imageURL) {
+        this.showAlert(
+          "warning",
+          "Devi inserire entrambi i campi nome e immagine"
+        );
+        setTimeout(() => (this.alertShowed = false), 3000);
+        return;
+      }
       this.showAlert("info", "Creazione gruppo di lavoro in corso...");
-      const workgroup = await this.createWorkgroup({ name, image });
+      const workgroup = await this.createWorkgroup({ name, image: imageURL });
       this.showAlert("info", "Aggiungendo membri...");
       let count = 0;
       for (const member of this.selectedMembers) {
