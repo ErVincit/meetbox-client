@@ -188,7 +188,7 @@ export default {
     };
   },
   mounted() {
-    if (this.isEventStarted)
+    if (this.isEventStarted && this.event.timestampEnd >= new Date())
       this.showAlert("warning", "Data inizio immutabile. L'evento è in corso");
   },
   methods: {
@@ -425,7 +425,7 @@ export default {
         members: this.event.members
       };
       if (this.alertShowed) this.alertShowed = false;
-      if (this.isEventStarted)
+      if (this.isEventStarted && this.event.timestampEnd >= new Date())
         this.showAlert(
           "warning",
           "Data inizio immutabile. L'evento è in corso"
