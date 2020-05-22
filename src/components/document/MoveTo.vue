@@ -150,13 +150,11 @@ export default {
         setTimeout(() => (this.alertShowed = false), 5000);
       } else {
         this.showAlert("info", "Spostamento in corso...");
-        let folder = this.currentPosition;
-        if (folder === "root") folder = null;
         await this.moveFile({
           workgroupId,
           documentId: this.document.id,
           pastFolder,
-          editObject: { folder: folder }
+          editObject: { folder: this.currentPosition }
         });
         this.$emit("done");
       }
