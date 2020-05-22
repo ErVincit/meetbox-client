@@ -148,6 +148,7 @@ const mutations = {
   },
   moveTo: (state, { document, pastFolder, folder }) => {
     state.tree[pastFolder].filter(doc => doc.id != document.id);
+    if (!folder) folder = "root";
     state.tree[folder].push(document);
   }
 };
