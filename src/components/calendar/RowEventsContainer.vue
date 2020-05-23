@@ -1,9 +1,10 @@
 <template>
   <div class="row__events_container position-relative col">
     <RowEvents
-      v-for="row in rows"
+      v-for="(row, index) in rows"
       :key="row[0].id"
       :row="row"
+      :rowLine="index"
       @showEvent="handleShowEvent"
       @alert="handleAlert"
     >

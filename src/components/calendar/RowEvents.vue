@@ -5,6 +5,7 @@
       :key="element.id"
       :eventProps="element"
       :rowWidth="rowSizeX"
+      :rowLine="rowLine"
       @showEvent="handleShowEvent"
       @alert="handleAlert"
     />
@@ -16,7 +17,7 @@ import EventCalendar from "@/components/calendar/EventCalendar";
 
 export default {
   name: "RowEvents",
-  props: ["row"],
+  props: ["row", "rowLine"],
   components: { EventCalendar },
   data: function() {
     return {

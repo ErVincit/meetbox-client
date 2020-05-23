@@ -15,8 +15,6 @@
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import EventDay from "@/components/calendar/EventDay";
 
-// import calendarUtils from "@/views/calendar/calendar_utils";
-
 export default {
   name: "DailyEvents",
   components: { NeuContainer, EventDay },

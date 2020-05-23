@@ -1,22 +1,34 @@
 <template>
-  <div
-    ref="event"
-    class="position-absolute event"
-    @mousedown="handleMousedown($event, event)"
-    @click.stop="handleShowEvent"
-    v-on="$listeners"
-  >
+  <div>
     <div
-      v-if="isleftResizable"
-      class="event_resizer event_resizer_left"
-      @mousedown.stop="handleLeftResizing($event, event)"
-    ></div>
-    {{ event.title }}
+      v-if="showDailyEvents"
+      ref="event"
+      class="position-absolute event"
+      @click.stop="handleShowDailyEvents"
+      v-on="$listeners"
+    >
+      Altro...
+    </div>
     <div
-      v-if="isRightResizable"
-      class="event_resizer event_resizer_right right"
-      @mousedown.stop="handleRightResizing($event, event)"
-    ></div>
+      v-else
+      ref="event"
+      class="position-absolute event"
+      @mousedown="handleMousedown($event, event)"
+      @click.stop="handleShowEvent"
+      v-on="$listeners"
+    >
+      <div
+        v-if="isleftResizable"
+        class="event_resizer event_resizer_left"
+        @mousedown.stop="handleLeftResizing($event, event)"
+      ></div>
+      {{ event.title }}
+      <div
+        v-if="isRightResizable"
+        class="event_resizer event_resizer_right right"
+        @mousedown.stop="handleRightResizing($event, event)"
+      ></div>
+    </div>
   </div>
 </template>
 
@@ -30,9 +42,10 @@ const PADDING = 20;
 
 export default {
   name: "EventCalendar",
-  props: ["eventProps", "rowWidth"],
+  props: ["eventProps", "rowWidth", "rowLine"],
   mounted() {
-    this.$refs.event.style["background-color"] = this.event.color;
+    if (!this.showDailyEvents)
+      this.$refs.event.style["background-color"] = this.event.color;
     const max =
       ((this.event.timestampBegin.getHours() * 60 +
         this.event.timestampBegin.getMinutes()) *
@@ -74,6 +87,9 @@ export default {
     // console.log("Updato", this.event.title, this.event);
   },
   methods: {
+    handleShowDailyEvents() {
+      this.$emit("showDailyEvents", this.event);
+    },
     setEventLeght() {
       this.event.timestampBegin = new Date(this.event.timestampBegin);
       this.event.timestampEnd = new Date(this.event.timestampEnd);
@@ -454,6 +470,9 @@ export default {
         !this.eventProps.hasNext &&
         this.event.timestampEnd > new Date()
       );
+    },
+    showDailyEvents() {
+      return this.rowLine >= 3;
     }
   }
 };
