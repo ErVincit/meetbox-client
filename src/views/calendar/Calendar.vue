@@ -554,7 +554,10 @@ export default {
       return calendarUtils.compactWeeklyPosition(this.currentDate);
     },
     day() {
-      return Object.assign({}, this.days[this.weekDay]);
+      const obj = Object.assign({}, this.days[this.weekDay]);
+      obj.events = Array.from(obj.events);
+      obj.events.sort((a, b) => (a.timestampBegin > b.timestampBegin ? 1 : -1));
+      return obj;
     }
   },
   data() {
