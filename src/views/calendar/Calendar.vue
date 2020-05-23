@@ -203,6 +203,14 @@
             </div>
           </div>
         </div>
+
+        <DailyEvents
+          ref="daily_events"
+          v-if="showDailyEvents"
+          :day="day"
+          @hideEventInspector="showEventInspector = false"
+          @deletedEvent="handleDeletedEvent"
+        />
       </main>
       <Actions class="h-100">
         <NeuButton
@@ -245,6 +253,7 @@
       @newFilteredUsers="handleFilteredMember"
       @maxEventSize="handleMaxEventSize"
     />
+
     <Alert
       :type="alertType"
       :message="alertMessage"
@@ -265,6 +274,7 @@ import EventFilter from "@/components/calendar/EventFilter";
 import LeftNavBar from "@/components/page-header/LeftNavBar";
 import Loading from "@/components/loading/Loading";
 import Alert from "@/components/alert/Alert";
+import DailyEvents from "@/components/calendar/DailyEvents";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -310,7 +320,8 @@ export default {
     EventFilter,
     LeftNavBar,
     Loading,
-    Alert
+    Alert,
+    DailyEvents
   },
   methods: {
     handleAlert(message) {
@@ -523,6 +534,9 @@ export default {
     },
     compactName() {
       return calendarUtils.compactWeeklyPosition(this.currentDate);
+    },
+    day() {
+      return Object.assign({}, this.days[this.weekDay]);
     }
   },
   data() {
@@ -547,7 +561,9 @@ export default {
       loading: false,
       alertType: "",
       alertShowed: false,
-      alertMessage: ""
+      alertMessage: "",
+      weekDay: 0,
+      showDailyEvents: false
     };
   },
   mounted() {

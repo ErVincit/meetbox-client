@@ -447,6 +447,7 @@ export default {
   z-index: 100;
   border: 4px dotted transparent;
 }
+
 @media (max-width: 768px) {
   .event-inspector {
     min-width: unset;
