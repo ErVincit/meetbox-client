@@ -147,6 +147,7 @@ const mutations = {
     else Vue.set(state.tree, folder, [document]);
   },
   moveTo: (state, { document, pastFolder, folder }) => {
+    if (!document.folder) folder = "root";
     state.tree[pastFolder].filter(doc => doc.id != document.id);
     state.tree[folder].push(document);
   }
