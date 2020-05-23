@@ -198,7 +198,7 @@
                 :day="day.day"
                 :timestamp="day.timestamp"
                 @showDailyEvents="handleShowDailyEvents"
-                @showEvent="showEvent(...arguments)"
+                @showEvent="handleShowEventInspector(...arguments)"
                 @alert="handleAlert"
               >
               </CalendarRow>
@@ -336,6 +336,9 @@ export default {
     },
     handleShowDailyEvents(weekDay) {
       this.weekDay = weekDay;
+      if (this.showEventInspector) this.showEventInspector = false;
+      if (this.showEventCreator) this.showEventCreator = false;
+      if (this.showEventFilter) this.showEventFilter = false;
       this.showDailyEvents = true;
     },
     handleAlert(message) {
@@ -376,11 +379,13 @@ export default {
     handleShowEventFilter() {
       if (this.showEventInspector) this.showEventInspector = false;
       if (this.showEventCreator) this.showEventCreator = false;
+      if (this.showDailyEvents) this.showDailyEvents = false;
       this.showEventFilter = true;
     },
     createEvent() {
       if (this.showEventInspector) this.showEventInspector = false;
       if (this.showEventFilter) this.showEventFilter = false;
+      if (this.showDailyEvents) this.showDailyEvents = false;
       this.showEventCreator = true;
     },
     handlePrevious() {
@@ -408,9 +413,10 @@ export default {
         );
       }
     },
-    showEvent(event) {
+    handleShowEventInspector(event) {
       this.showEventCreator = false;
       this.showEventFilter = false;
+      this.showDailyEvents = false;
       this.showEventInspector = true;
       this.eventToShow = event;
     },
@@ -471,7 +477,7 @@ export default {
         }
         if (this.filteredMembers.length >= 2) {
           const pos = this.filteredMembers.length - 2;
-          text += " e altr" + (pos === 1 ? "o " : "i ") + pos;
+          text += " +" + pos;
         }
       } else {
         for (let i = 0; i < this.filteredMembers.length; i++) {
