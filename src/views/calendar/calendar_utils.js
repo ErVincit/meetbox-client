@@ -8,10 +8,12 @@ exports.createCalendar = () => {
     for (var month = 0; month < 12; month++) {
       tempCalendar[year][month] = {};
       for (var day = 1; day <= this.daysInMonth(month, year); day++) {
+        const date = new Date(year, month, day);
         tempCalendar[year][month][day] = {
           events: [],
-          nameDay: this.getNameDay(new Date(year, month, day)),
-          day
+          nameDay: this.getNameDay(date),
+          day,
+          timestamp: date
         };
       }
     }

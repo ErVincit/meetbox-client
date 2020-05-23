@@ -5,6 +5,7 @@
     <WeeksDay :nameDay="nameDay" :day="day" />
     <RowEventsContainer
       :events="dataprops"
+      @showDailyEvents="handleShowDailyEvents"
       @showEvent="handleShowEvent"
       @alert="handleAlert"
     />
@@ -17,9 +18,16 @@ import WeeksDay from "@/components/calendar/WeeksDay";
 
 export default {
   name: "CalendarRow",
-  props: ["dataprops", "nameDay", "day", "fullDayEvents"],
+  props: ["dataprops", "nameDay", "day", "fullDayEvents", "timestamp"],
   components: { WeeksDay, RowEventsContainer },
   methods: {
+    handleShowDailyEvents() {
+      var temp = 0;
+      if (this.timestamp.getDay() - 1 >= 0)
+        temp = (this.timestamp.getDay() - 1) % 7;
+      else temp = 7 - 1;
+      this.$emit("showDailyEvents", temp);
+    },
     handleAlert(message) {
       this.$emit("alert", message);
     },

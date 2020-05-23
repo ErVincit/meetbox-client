@@ -1,6 +1,11 @@
 <template>
   <NeuContainer class="daily_events p-4" disableHover>
-    <h1 class="title_eventsday">{{ this.day.nameDay + " " + this.day.day }}</h1>
+    <div class="d-flex justify-content-between">
+      <h1 class="title_eventsday">
+        {{ this.day.nameDay + " " + this.day.day }}
+      </h1>
+      <span @click="hanldeHideDailyEvents">X</span>
+    </div>
     <EventDay
       v-for="event in day.events"
       :key="event.id"
@@ -19,7 +24,11 @@ export default {
   name: "DailyEvents",
   components: { NeuContainer, EventDay },
   props: ["day"],
-  methods: {},
+  methods: {
+    hanldeHideDailyEvents() {
+      this.$emit("hideDailyEvents");
+    }
+  },
   mounted() {
     this.myDay = this.day;
   },

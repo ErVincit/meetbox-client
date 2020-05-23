@@ -251,7 +251,6 @@ export default {
     },
     inputBeginTime: {
       get() {
-        console.log("Posteriore", this.event.timestampBegin);
         return calendarUtils.dateToTimeType(this.event.timestampBegin);
       },
       set(val) {
@@ -261,7 +260,6 @@ export default {
         const timestampBegin = new Date(this.event.timestampBegin);
         timestampBegin.setHours(h, m);
         this.event.timestampBegin = timestampBegin;
-        console.log(this.event.timestampBegin);
         this.checkDate();
       }
     },

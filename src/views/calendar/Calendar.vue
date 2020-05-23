@@ -196,6 +196,8 @@
                 :fullDayEvents="day.fullDayEvents"
                 :nameDay="day.nameDay"
                 :day="day.day"
+                :timestamp="day.timestamp"
+                @showDailyEvents="handleShowDailyEvents"
                 @showEvent="showEvent(...arguments)"
                 @alert="handleAlert"
               >
@@ -208,7 +210,7 @@
           ref="daily_events"
           v-if="showDailyEvents"
           :day="day"
-          @hideEventInspector="showEventInspector = false"
+          @hideDailyEvents="hideDailyEvents"
           @deletedEvent="handleDeletedEvent"
         />
       </main>
@@ -284,7 +286,8 @@ const handleOutsideClick = function(event) {
   if (
     !this.showEventInspector &&
     !this.showEventCreator &&
-    !this.showEventFilter
+    !this.showEventFilter &&
+    !this.showDailyEvents
   )
     return;
   else if (this.showEventInspector) {
@@ -296,6 +299,9 @@ const handleOutsideClick = function(event) {
   } else if (this.showEventFilter) {
     const eventFilter = this.$refs["event_filter"].$vnode.elm;
     if (!eventFilter.contains(event.target)) this.showEventFilter = false;
+  } else if (this.showDailyEvents) {
+    const dailyEvent = this.$refs["daily_events"].$vnode.elm;
+    if (!dailyEvent.contains(event.target)) this.showDailyEvents = false;
   }
 };
 
@@ -324,6 +330,14 @@ export default {
     DailyEvents
   },
   methods: {
+    hideDailyEvents() {
+      this.showDailyEvents = false;
+      this.fromDailyEvents = false;
+    },
+    handleShowDailyEvents(weekDay) {
+      this.weekDay = weekDay;
+      this.showDailyEvents = true;
+    },
     handleAlert(message) {
       this.showAlert("warning", message);
     },

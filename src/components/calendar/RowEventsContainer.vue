@@ -5,6 +5,7 @@
       :key="row[0].id"
       :row="row"
       :rowLine="index"
+      @showDailyEvents="handleShowDailyEvents"
       @showEvent="handleShowEvent"
       @alert="handleAlert"
     >
@@ -41,6 +42,9 @@ export default {
     }
   },
   methods: {
+    handleShowDailyEvents(weekDay) {
+      this.$emit("showDailyEvents", weekDay);
+    },
     handleAlert(message) {
       this.$emit("alert", message);
     },

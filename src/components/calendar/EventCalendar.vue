@@ -83,9 +83,6 @@ export default {
       this.setEventLeght(event);
     }
   },
-  updated() {
-    // console.log("Updato", this.event.title, this.event);
-  },
   methods: {
     handleShowDailyEvents() {
       this.$emit("showDailyEvents", this.event);

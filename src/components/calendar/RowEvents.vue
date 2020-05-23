@@ -6,6 +6,7 @@
       :eventProps="element"
       :rowWidth="rowSizeX"
       :rowLine="rowLine"
+      @showDailyEvents="handleShowDailyEvents"
       @showEvent="handleShowEvent"
       @alert="handleAlert"
     />
@@ -35,6 +36,9 @@ export default {
     }
   },
   methods: {
+    handleShowDailyEvents(weekDay) {
+      this.$emit("showDailyEvents", weekDay);
+    },
     handleAlert(message) {
       this.$emit("alert", message);
     },
