@@ -1,7 +1,12 @@
 <template>
   <NeuContainer class="m-3" @click.stop="handleShowEvent">
     <div class="d-flex">
-      <div class="ml-3 px-2">
+      <Label
+        class="ml-3"
+        :showName="false"
+        :label="{ name: '', color: event.color.substring(1) }"
+      />
+      <div class="px-2">
         <p class="m-0">{{ timeBegin }}</p>
         <p class="m-0">{{ timeEnd }}</p>
       </div>
@@ -16,14 +21,16 @@
 
 <script>
 import NeuContainer from "@/components/neu-button/NeuContainer";
+import Label from "@/components/task/Label";
 
 import calendarUtils from "@/views/calendar/calendar_utils";
 
 export default {
   name: "EventDay",
   props: ["day", "nameDay", "event"],
-  components: { NeuContainer },
+  components: { NeuContainer, Label },
   mounted() {
+    console.log(this.event.color);
     this.myEvent = Object.assign({}, this.event);
   },
   methods: {

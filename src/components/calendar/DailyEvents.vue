@@ -2,7 +2,7 @@
   <NeuContainer class="daily_events p-4" disableHover>
     <div class="d-flex justify-content-between">
       <h1 class="title_eventsday">
-        {{ this.day.nameDay + " " + this.day.day }}
+        {{ title }}
       </h1>
       <span @click="hanldeHideDailyEvents">X</span>
     </div>
@@ -20,6 +20,8 @@
 <script>
 import NeuContainer from "@/components/neu-button/NeuContainer";
 import EventDay from "@/components/calendar/EventDay";
+
+import calendarUtils from "@/views/calendar/calendar_utils";
 
 export default {
   name: "DailyEvents",
@@ -46,6 +48,17 @@ export default {
       myDay: {},
       rows: []
     };
+  },
+  computed: {
+    title() {
+      return (
+        this.day.nameDay +
+        " " +
+        this.day.day +
+        " " +
+        calendarUtils.getMonthName(this.day.timestamp.getMonth())
+      );
+    }
   }
 };
 </script>
