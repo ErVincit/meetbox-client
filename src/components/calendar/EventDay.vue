@@ -1,5 +1,5 @@
 <template>
-  <NeuContainer class="m-3">
+  <NeuContainer class="m-3" @click.stop="handleShowEvent">
     <div class="d-flex">
       <div class="ml-3 px-2">
         <p class="m-0">{{ timeBegin }}</p>
@@ -25,6 +25,11 @@ export default {
   components: { NeuContainer },
   mounted() {
     this.myEvent = Object.assign({}, this.event);
+  },
+  methods: {
+    handleShowEvent() {
+      this.$emit("showEvent", this.event);
+    }
   },
   watch: {
     event(value) {

@@ -12,6 +12,7 @@
       :day="day.day"
       :nameDay="day.nameDay"
       :event="event"
+      @showEvent="handleShowEvent"
     />
   </NeuContainer>
 </template>
@@ -25,6 +26,9 @@ export default {
   components: { NeuContainer, EventDay },
   props: ["day"],
   methods: {
+    handleShowEvent(event) {
+      this.$emit("showEvent", event);
+    },
     hanldeHideDailyEvents() {
       this.$emit("hideDailyEvents");
     }

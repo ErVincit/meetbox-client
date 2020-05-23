@@ -210,6 +210,7 @@
           ref="daily_events"
           v-if="showDailyEvents"
           :day="day"
+          @showEvent="handleShowEventInspector(...arguments)"
           @hideDailyEvents="hideDailyEvents"
           @deletedEvent="handleDeletedEvent"
         />
@@ -432,7 +433,6 @@ export default {
       else this.showMaxEventSize = true;
     },
     analisys(e) {
-      // console.log(e);
       if (e.originalBegin && e.originalEnd) {
         if (
           e.originalEnd.getTime() - e.originalBegin.getTime() <=
@@ -510,13 +510,11 @@ export default {
         const max = today.getDate() + 7 - todayDay;
         const tempDate = new Date(today.getFullYear(), today.getMonth(), min);
         const maxDate = new Date(today.getFullYear(), today.getMonth(), max);
-        // console.log(this.maxEventsSize);
         if (this.maxEventsSize && this.maxEventsSize !== null) {
           while (tempDate <= maxDate) {
             const events = this.calendar[tempDate.getFullYear()][
               tempDate.getMonth()
             ][tempDate.getDate()].events.filter(this.analisys);
-            // console.log("Events:", events);
             const day = this.calendar[tempDate.getFullYear()][
               tempDate.getMonth()
             ][tempDate.getDate()];
@@ -689,9 +687,7 @@ export default {
 .event-container {
   width: 100%;
 }
-/* .time_container {
-  width: calc(100% / 8);
-} */
+
 .mr {
   border-right: 1px solid var(--grid-border);
 }
@@ -706,15 +702,9 @@ export default {
 .space-header {
   height: 5px;
 }
-/* .first {
-  transform: translateX(-50%);
-} */
+
 .pos-time {
   font-size: 16px;
   color: var(--text-color-bg);
 }
-/* .last {
-  right: 0;
-  transform: translateX(+50%);
-} */
 </style>
