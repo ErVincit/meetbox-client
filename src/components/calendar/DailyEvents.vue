@@ -1,10 +1,17 @@
 <template>
   <NeuContainer class="daily_events p-4" disableHover>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex">
       <h1 class="title_eventsday">
         {{ title }}
       </h1>
-      <span @click="hanldeHideDailyEvents">X</span>
+      <button
+        type="button"
+        class="close col-1 d-block d-md-none p-2"
+        aria-label="Close"
+        @click="handleHideDailyEvents"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
     <EventDay
       v-for="event in day.events"
@@ -31,7 +38,7 @@ export default {
     handleShowEvent(event) {
       this.$emit("showEvent", event);
     },
-    hanldeHideDailyEvents() {
+    handleHideDailyEvents() {
       this.$emit("hideDailyEvents");
     }
   },

@@ -2,7 +2,7 @@
   <NeuContainer class="m-3" @click.stop="handleShowEvent">
     <div class="d-flex">
       <Label
-        class="ml-3"
+        class="ml-3 my-1"
         :showName="false"
         :label="{ name: '', color: event.color.substring(1) }"
       />
