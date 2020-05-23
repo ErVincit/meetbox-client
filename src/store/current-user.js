@@ -30,7 +30,8 @@ const actions = {
     });
     if (response.ok) {
       const json = await response.json();
-      commit("setCurrentUser", json.data);
+      if (!json.error) commit("setCurrentUser", json.data);
+      else return false;
       return true;
     }
     return false;
