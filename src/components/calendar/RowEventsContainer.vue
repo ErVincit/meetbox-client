@@ -42,8 +42,8 @@ export default {
     }
   },
   methods: {
-    handleShowDailyEvents(weekDay) {
-      this.$emit("showDailyEvents", weekDay);
+    handleShowDailyEvents() {
+      this.$emit("showDailyEvents");
     },
     handleAlert(message) {
       this.$emit("alert", message);

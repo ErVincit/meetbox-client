@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     handleShowDailyEvents() {
-      this.$emit("showDailyEvents", this.event);
+      this.$emit("showDailyEvents");
     },
     setEventLeght() {
       this.event.timestampBegin = new Date(this.event.timestampBegin);

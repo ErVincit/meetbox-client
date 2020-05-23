@@ -30,7 +30,6 @@ export default {
   props: ["day", "nameDay", "event"],
   components: { NeuContainer, Label },
   mounted() {
-    console.log(this.event.color);
     this.myEvent = Object.assign({}, this.event);
   },
   methods: {
