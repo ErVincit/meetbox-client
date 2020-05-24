@@ -26,7 +26,7 @@
           >
             <NeuInput
               type="text"
-              placeholder="Cerca..."
+              placeholder="Cerca qui..."
               v-model="researchString"
               class="w-100 search-bar"
             />
@@ -394,16 +394,15 @@ export default {
       if (index === -1) this.filesSelected.push(document);
       else this.filesSelected.splice(index, 1);
       if (this.filesSelected.length === 0) {
+        this.rename = false;
         this.editMembers = false;
         this.editmode = false;
-        this.rename = false;
       }
     },
     handleDblClick(e, document) {
       if (!this.editmode) {
         if (document.isfolder) {
           this.currentPosition = document.id + "";
-          this.editmode = false;
           this.filesSelected = [];
         } else {
           const { workgroupId } = this.$route.params;
@@ -498,6 +497,7 @@ export default {
     moveFile() {
       if (
         this.currentPosition === "root" &&
+        this.filesSelected[0].isfolder &&
         this.tree[this.currentPosition].filter(doc => doc.isfolder === true)
           .length === 1
       ) {
@@ -510,6 +510,8 @@ export default {
     },
     moveDone() {
       this.moveOn = false;
+      this.editmode = false;
+      this.filesSelected = [];
       this.showAlert("success", "File spostato con successo!");
       setTimeout(() => (this.alertShowed = false), 5000);
     },
