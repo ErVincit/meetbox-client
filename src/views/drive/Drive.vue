@@ -176,7 +176,12 @@
             </div>
             <Loading :show="!tree" />
             <div
-              v-if="tree && filteredDocuments && filteredDocuments.length === 0"
+              v-if="
+                tree &&
+                  researchString.length === 0 &&
+                  filteredDocuments &&
+                  filteredDocuments.length === 0
+              "
               class="mt-4 w-100"
               style="color: var(--text-color-bg)"
             >
@@ -192,6 +197,22 @@
                 src="@/assets/empty_drive.svg"
                 style="position: absolute; bottom: 10px; right: 20px; max-width: 50%; max-height: 60%"
               />
+            </div>
+            <div
+              v-else-if="
+                tree && filteredDocuments && filteredDocuments.length === 0
+              "
+              class="mt-4 w-100"
+              style="color: var(--text-color-bg)"
+            >
+              <div class="m-5">
+                <h2 style="color: var(--primary); font-weight: 600">
+                  Nessun risultato
+                </h2>
+                <h4 class="mt-3" style="color: var(--text-color-bg)">
+                  Non esiste nessun documento con il nome "{{ researchString }}"
+                </h4>
+              </div>
             </div>
             <div v-else-if="tree" class="documents h-100 p-2">
               <Document
@@ -227,7 +248,7 @@
         <NeuButton
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
-          @click="addFolder"
+          @click.stop="addFolder"
           v-tooltip:left="'Crea nuova cartella'"
         >
           <img src="@/assets/addIcon.svg" />
@@ -236,7 +257,7 @@
           v-if="editmode"
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
-          @click="deleteDocument"
+          @click.stop="deleteDocument"
           v-tooltip:left="'Elimina file'"
         >
           <img src="@/assets/deleteIcon.svg" />
@@ -245,7 +266,7 @@
           v-if="editmode && filesSelected.length === 1"
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
-          @click="editName"
+          @click.stop="editName"
           v-tooltip:left="'Rinomina'"
         >
           <img src="@/assets/editIcon.svg" />
@@ -254,7 +275,7 @@
           v-if="editmode && filesSelected.length === 1"
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
-          @click="moveFile"
+          @click.stop="moveFile"
         >
           <img src="@/assets/moveIcon.svg" v-tooltip:left="'Sposta file'" />
         </NeuButton>
@@ -264,7 +285,7 @@
           "
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
-          @click="switchEditMemb"
+          @click.stop="switchEditMemb"
           v-tooltip:left="'Condiviso con...'"
         >
           <img src="@/assets/membersIcon.svg" />
@@ -273,11 +294,13 @@
       <MoveTo
         v-if="moveOn"
         :document="filesSelected[0]"
+        ref="move-on"
         @close="moveOn = false"
         @done="moveDone"
       />
       <MembersEditing
         class="membersEdit"
+        ref="edit-members"
         v-if="editMembers"
         :document="filesSelected[0]"
       />
@@ -301,6 +324,20 @@ import MoveTo from "@/components/document/MoveTo";
 
 import { mapGetters, mapActions } from "vuex";
 
+const handleOutsideClick = function(event) {
+  if (!this.moveOn && !this.editMembers) return;
+
+  if (this.moveOn) {
+    const element = this.$refs["move-on"].$el;
+    if (element && !element.contains(event.target)) this.moveOn = false;
+  }
+
+  if (this.editMembers) {
+    const element = this.$refs["edit-members"].$el;
+    if (element && !element.contains(event.target)) this.editMembers = false;
+  }
+};
+
 export default {
   name: "Drive",
   components: {
@@ -316,6 +353,12 @@ export default {
     Alert,
     MembersEditing,
     MoveTo
+  },
+  mounted() {
+    document.addEventListener("click", handleOutsideClick.bind(this));
+  },
+  destroyed() {
+    document.removeEventListener("click", handleOutsideClick.bind(this));
   },
   computed: {
     ...mapGetters(["tree", "currentUser", "workgroups"]),
@@ -367,23 +410,30 @@ export default {
       "uploadDocument"
     ]),
     async addFiles(files) {
+      this.rename = false;
+      this.moveOn = false;
+      this.editMembers = false;
       const { workgroupId } = this.$route.params;
       this.showAlert("info", "Caricamento in corso...0/" + files.length);
       let count = 0;
-      for (const file of files) {
-        await this.uploadDocument({
-          workgroupId,
-          folder: this.currentPosition,
-          file
-        });
-        count++;
-        this.alertMessage =
-          "Caricamento in corso..." + count + "/" + files.length;
+      try {
+        for (const file of files) {
+          await this.uploadDocument({
+            workgroupId,
+            folder: this.currentPosition,
+            file
+          });
+          count++;
+          this.alertMessage =
+            "Caricamento in corso..." + count + "/" + files.length;
+        }
+        this.showAlert(
+          "success",
+          "File creato con successo, ora puoi condividere il file cliccandoci sopra e modificando i membri"
+        );
+      } catch (err) {
+        this.showAlert("danger", err.message);
       }
-      this.showAlert(
-        "success",
-        "File creato con successo, ora puoi condividere il file cliccandoci sopra e modificando i membri"
-      );
       setTimeout(() => (this.alertShowed = false), 5000);
       // Clear the input file
       this.$refs.file.value = "";
@@ -425,6 +475,9 @@ export default {
       return owner.firstname + " " + owner.lastname;
     },
     async deleteDocument() {
+      this.rename = false;
+      this.moveOn = false;
+      this.editMembers = false;
       const { workgroupId } = this.$route.params;
       this.showAlert(
         "info",
@@ -442,6 +495,9 @@ export default {
       this.editmode = false;
     },
     async addFolder() {
+      this.rename = false;
+      this.moveOn = false;
+      this.editMembers = false;
       const { workgroupId } = this.$route.params;
       const documents = this.tree[this.currentPosition]
         ? this.tree[this.currentPosition]
@@ -466,7 +522,6 @@ export default {
       if (folder === "root")
         await this.addDocument({
           workgroupId,
-          folder,
           creationDetails: {
             name: name,
             isFolder: isFolder,
@@ -477,7 +532,6 @@ export default {
       else
         await this.addDocument({
           workgroupId,
-          folder,
           creationDetails: {
             name: name,
             isFolder: isFolder,
@@ -489,12 +543,18 @@ export default {
       this.alertShowed = false;
     },
     editName() {
+      this.moveOn = false;
+      this.editMembers = false;
       this.rename = !this.rename;
     },
     switchEditMemb() {
+      this.rename = false;
+      this.moveOn = false;
       this.editMembers = !this.editMembers;
     },
     moveFile() {
+      this.rename = false;
+      this.editMembers = false;
       if (
         this.currentPosition === "root" &&
         this.filesSelected[0].isfolder &&
@@ -516,6 +576,11 @@ export default {
       setTimeout(() => (this.alertShowed = false), 5000);
     },
     setPosition(pos) {
+      this.moveOn = false;
+      this.editMembers = false;
+      this.filesSelected = [];
+      this.rename = false;
+      this.editmode = false;
       this.currentPosition = pos + "";
     },
     showAlert(type, message) {
@@ -538,8 +603,8 @@ export default {
     },
     offEditName() {
       this.rename = false;
-      this.editmode = false;
       this.filesSelected = [];
+      this.editmode = false;
     }
   },
   data() {

@@ -16,7 +16,7 @@
           v-model="document.name"
           :disabled="!edit"
           :backgroundHidden="!edit"
-          @keyup.enter="editTitle"
+          @keypress.enter="editTitle"
           @blur="editTitle"
           @click.stop
         />
@@ -149,14 +149,16 @@ export default {
       } while (Math.abs(bytes) >= thresh && u < units.length - 1);
       return bytes.toFixed(1) + " " + units[u];
     },
-    async editTitle() {
+    async editTitle(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.$emit("editOff");
       const { workgroupId } = this.$route.params;
       await this.editName({
         workgroupId,
         documentId: this.document.id,
         editObject: { name: this.document.name }
       });
-      this.$emit("editOff");
     }
   }
 };

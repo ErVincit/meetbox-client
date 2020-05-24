@@ -17,7 +17,8 @@ const actions = {
       credentials: "include"
     });
     const json = await data.json();
-    commit("setTree", json.result);
+    if (json.error) console.error(json);
+    else commit("setTree", json.result);
   },
   async uploadDocument({ dispatch }, { workgroupId, folder, file }) {
     const formData = new FormData();
@@ -29,6 +30,7 @@ const actions = {
       credentials: "include"
     });
     const json = await response.json();
+    if (json.error) throw new Error(json.message);
     const creationDetails = {
       name: file.name,
       isFolder: false,
@@ -62,7 +64,7 @@ const actions = {
     const name = editObject.name;
     commit("editTitle", { documentId, name });
   },
-  async addDocument({ commit }, { workgroupId, folder, creationDetails }) {
+  async addDocument({ commit }, { workgroupId, creationDetails }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/create`;
     const response = await fetch(url, {
       credentials: "include",
@@ -73,7 +75,7 @@ const actions = {
     const json = await response.json();
     if (json.error) throw new Error(json.message);
     const document = json.data;
-    commit("addDocument", { document, folder });
+    commit("addDocument", document);
   },
   async editMembers({ commit }, { workgroupId, documentId, editObject }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/drive/document/${documentId}/edit`;
@@ -88,7 +90,7 @@ const actions = {
     else {
       const document = json.data;
       commit("deleteDocument", document.id);
-      commit("addDocument", { document, folder: document.folder });
+      commit("addDocument", document);
     }
   },
   async moveFile(
@@ -141,15 +143,17 @@ const mutations = {
         if (doc.id === documentId) doc.name = name;
       }
   },
-  addDocument: (state, { document, folder }) => {
-    if (!document.folder) folder = "root";
-    if (state.tree[folder]) state.tree[folder].push(document);
-    else Vue.set(state.tree, folder, [document]);
+  addDocument: (state, document) => {
+    if (!document.folder) document.folder = "root";
+    if (state.tree[document.folder]) state.tree[document.folder].push(document);
+    else Vue.set(state.tree, document.folder, [document]);
   },
   moveTo: (state, { document, pastFolder, folder }) => {
     if (!document.pastFolder) pastFolder = "root";
     if (!document.folder) folder = "root";
-    state.tree[pastFolder].filter(doc => doc.id != document.id);
+    state.tree[pastFolder] = state.tree[pastFolder].filter(
+      doc => doc.id != document.id
+    );
     state.tree[folder].push(document);
   }
 };

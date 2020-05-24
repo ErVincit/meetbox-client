@@ -11,10 +11,7 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div
-      class="d-flex justify-content-start align-items-center"
-      v-if="currentPosition !== 'root'"
-    >
+    <div class="d-flex justify-content-start align-items-center">
       <svg
         width="12"
         height="10"
@@ -23,6 +20,7 @@
         xmlns="http://www.w3.org/2000/svg"
         @click="goBack"
         style="cursor:pointer"
+        v-if="currentPosition !== 'root'"
       >
         <path
           fill-rule="evenodd"
