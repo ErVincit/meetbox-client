@@ -107,7 +107,6 @@ export default {
       }
     },
     handleMousedown(e, event) {
-      // console.log("MouseDown!");
       // Elimina la possibilità all'utente di selezionare testo
       document.body.style.userSelect = "none";
       if (
@@ -118,9 +117,6 @@ export default {
         this.offSet = e.offsetX;
         this.target = e.target;
         document.onmouseup = async () => {
-          // console.log("MouseUp!");
-          // Fare cose se selezionato un evento : OK
-          // Fare cose viene selezionata la row : TODO
           document.onmouseup = null;
           document.onmousemove = null;
           this.target = null;
@@ -129,12 +125,6 @@ export default {
           // Gestisco store per eventuali modifiche
           const { workgroupId } = this.$route.params;
           const timestampBegin = new Date(event.timestampBegin);
-          console.log(
-            "Selected: hour:",
-            this.newHour,
-            "minute",
-            this.newMinutes
-          );
           // Controllo se è cambiato qualcosa
           if (
             timestampBegin.getHours() == this.newHour &&
@@ -227,7 +217,6 @@ export default {
         document.body.style.userSelect = "initial";
         const timestampBegin = new Date(this.event.timestampBegin);
         timestampBegin.setHours(this.newHour, this.newMinutes);
-        console.log("New begin time:", timestampBegin);
         var timestampEnd = new Date(this.event.timestampEnd);
         const { workgroupId } = this.$route.params;
 
@@ -399,7 +388,6 @@ export default {
         var timestampBegin = new Date(this.event.timestampBegin);
         const timestampEnd = new Date(this.event.timestampEnd);
         timestampEnd.setHours(this.newEndHour, this.newEndMinutes);
-        console.log("New end time:", timestampBegin, timestampEnd);
         const { workgroupId } = this.$route.params;
 
         //Se è un evento spezzettato

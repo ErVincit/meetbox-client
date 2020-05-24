@@ -49,8 +49,6 @@ const actions = {
       credentials: "include",
       method: "DELETE"
     });
-    // const json = await data.json();
-    // console.log(json);
     commit("deleteDocument", documentId);
   },
   async editName({ commit }, { workgroupId, documentId, editObject }) {

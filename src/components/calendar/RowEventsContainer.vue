@@ -5,6 +5,7 @@
       :key="row[0].id"
       :row="row"
       :rowLine="index"
+      :changed="changed"
       @showDailyEvents="handleShowDailyEvents"
       @showEvent="handleShowEvent"
       @alert="handleAlert"
@@ -20,7 +21,7 @@ import calendarUtils from "@/views/calendar/calendar_utils";
 
 export default {
   name: "RowEventsContainer",
-  props: ["events"],
+  props: ["events", "changed"],
   components: { RowEvents },
   mounted() {
     this.rows = calendarUtils.handleEventCollision(this.events);
@@ -39,6 +40,9 @@ export default {
   watch: {
     events: function(newEvents) {
       this.rows = calendarUtils.handleEventCollision(newEvents);
+    },
+    changed(value) {
+      this.changed = value;
     }
   },
   methods: {

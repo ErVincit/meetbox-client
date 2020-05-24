@@ -5,6 +5,7 @@
     <WeeksDay :nameDay="nameDay" :day="day" />
     <RowEventsContainer
       :events="dataprops"
+      :changed="changed"
       @showDailyEvents="handleShowDailyEvents"
       @showEvent="handleShowEvent"
       @alert="handleAlert"
@@ -18,7 +19,14 @@ import WeeksDay from "@/components/calendar/WeeksDay";
 
 export default {
   name: "CalendarRow",
-  props: ["dataprops", "nameDay", "day", "fullDayEvents", "timestamp"],
+  props: [
+    "dataprops",
+    "nameDay",
+    "day",
+    "fullDayEvents",
+    "timestamp",
+    "changed"
+  ],
   components: { WeeksDay, RowEventsContainer },
   methods: {
     handleShowDailyEvents() {
@@ -33,6 +41,11 @@ export default {
     },
     handleShowEvent(event) {
       this.$emit("showEvent", event);
+    }
+  },
+  watch: {
+    changed(value) {
+      this.changed = value;
     }
   }
 };

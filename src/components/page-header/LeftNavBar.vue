@@ -200,6 +200,7 @@ export default {
     ...mapActions(["fetchWorkgroups"]),
     toggleExpand() {
       this.compressed = !this.compressed;
+      this.$emit("expand-change");
       localStorage.setItem("navbar-compressed", this.compressed);
     },
     redirect() {

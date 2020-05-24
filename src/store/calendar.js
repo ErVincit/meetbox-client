@@ -28,8 +28,6 @@ const actions = {
     const json = await response.json();
     if (!json.error) {
       commit("setEvents", json.data);
-    } else {
-      console.log(json);
     }
   },
   async addEvent({ commit }, { workgroupId, event }) {
@@ -47,8 +45,6 @@ const actions = {
       json.data.timestampBegin = new Date(json.data.timestampBegin);
       json.data.timestampEnd = new Date(json.data.timestampEnd);
       commit("newEvent", json.data);
-    } else {
-      console.log(json);
     }
   },
   async editEvent({ commit }, { workgroupId, event, oldEvent }) {
@@ -56,9 +52,7 @@ const actions = {
     oldEvent.timestampBegin = new Date(oldEvent.timestampBegin);
     oldEvent.timestampEnd = new Date(oldEvent.timestampEnd);
 
-    //TODO: Passare intero giorno dell'evento
     if (event.hasNext || event.hasPrevious) {
-      // console.log("Sto passando al server un giorno segmentato");
       event.timestampBegin = new Date(event.originalBegin);
       event.timestampEnd = new Date(event.originalEnd);
     }
@@ -80,8 +74,6 @@ const actions = {
           event: json.data,
           oldEvent
         });
-      } else {
-        console.log("ERRORE:", json);
       }
     }
   },
@@ -115,7 +107,6 @@ const actions = {
     );
     const json = await response.json();
     if (response.status == 200 && json.error) {
-      console.log("ERRORE:", json);
       commit("changeEvent", {
         event: oldEvent,
         oldEvent: newCompleteEvent
@@ -139,8 +130,6 @@ const actions = {
         commit("removeEvent", {
           event
         });
-      } else {
-        console.log("ERRORE:", json);
       }
     }
   }

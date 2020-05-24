@@ -154,21 +154,18 @@ exports.inCollision = (list, event) => {
       list[listElement].timestampEnd < event.timestampEnd
     ) {
       collision = true;
-      // console.log("CONDIZIONE 1", event.id);
       break;
     } else if (
       list[listElement].timestampEnd >= event.timestampEnd &&
       list[listElement].timestampBegin < event.timestampEnd
     ) {
       collision = true;
-      // console.log("CONDIZIONE 2", event.id);
       break;
     } else if (
       list[listElement].timestampBegin <= event.timestampBegin &&
       list[listElement].timestampEnd >= event.timestampEnd
     ) {
       collision = true;
-      // console.log("CONDIZIONE 3", event.id);
       break;
     }
   }
@@ -367,12 +364,7 @@ exports.handleDeletePrevious = (calendar, event) => {
         tempDate.getDate()
       ].events.splice(index, 1);
       // Il ciclo dovrebbe poi finire se hasPrevious è false
-    } else {
-      console.log(
-        "ERRORE: L'elemento che si vuole cancellare non è presente nella lista di eventi di appartenenza. Settaggio errato di qualche booleano hasPrevious"
-      );
-      break;
-    }
+    } else break;
   }
   return calendar;
 };
@@ -396,12 +388,7 @@ exports.handleDeleteNext = (calendar, event) => {
         tempDate.getDate()
       ].events.splice(index, 1);
       // Il ciclo dovrebbe poi finire se hasPrevious è false
-    } else {
-      console.log(
-        "ERRORE: L'elemento che si vuole cancellare non è presente nella lista di eventi di appartenenza. Settaggio errato di qualche booleano hasNext"
-      );
-      break;
-    }
+    } else break;
   }
   return calendar;
 };
@@ -418,10 +405,6 @@ exports.deleteEvent = (calendar, event) => {
     calendar[date.getFullYear()][date.getMonth()][date.getDate()].events.splice(
       index,
       1
-    );
-  } else {
-    console.log(
-      "ERRORE: L'elemento che si vuole cancellare non è presente nella lista di eventi di appartenenza"
     );
   }
   return calendar;

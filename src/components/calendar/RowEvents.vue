@@ -18,7 +18,7 @@ import EventCalendar from "@/components/calendar/EventCalendar";
 
 export default {
   name: "RowEvents",
-  props: ["row", "rowLine"],
+  props: ["row", "rowLine", "changed"],
   components: { EventCalendar },
   data: function() {
     return {
@@ -33,6 +33,10 @@ export default {
   watch: {
     row: function(newVal) {
       this.row = newVal;
+    },
+    changed(value) {
+      this.changed = value;
+      this.setActualRowSize();
     }
   },
   methods: {

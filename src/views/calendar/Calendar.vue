@@ -8,7 +8,11 @@
       class="row flex-grow-1"
       style="height: calc(100% - 100px)"
     >
-      <LeftNavBar class="h-100" :open="openNavBar" />
+      <LeftNavBar
+        class="h-100"
+        :open="openNavBar"
+        @expand-change="compressed = !compressed"
+      />
       <main class="main_column_calendar h-100 col d-flex flex-column">
         <p class="m-0 title_page d-none d-lg-block">
           Calendario {{ currentYear }}
@@ -197,6 +201,7 @@
                 :nameDay="day.nameDay"
                 :day="day.day"
                 :timestamp="day.timestamp"
+                :changed="compressed"
                 @showDailyEvents="handleShowDailyEvents"
                 @showEvent="handleShowEventInspector(...arguments)"
                 @alert="handleAlert"
@@ -584,7 +589,8 @@ export default {
       alertShowed: false,
       alertMessage: "",
       weekDay: 0,
-      showDailyEvents: false
+      showDailyEvents: false,
+      compressed: localStorage.getItem("navbar-compressed")
     };
   },
   mounted() {
