@@ -18,17 +18,26 @@
         >
           <Loading :show="loading" />
           <div
-            v-if="!loading && allTasks && allTasks.length == 0"
+            v-if="!loading && allTasks && allTasks.length === 0"
             class="mt-4 w-100"
             style="color: var(--text-color-bg)"
           >
-            <div class="m-5">
-              <h2 style="color: var(--primary); font-weight: 600">
+            <div
+              class="m-5 d-flex flex-column justify-content-center align-items-center"
+            >
+              <h2 class="w-100" style="color: var(--primary); font-weight: 600">
                 Sembra non ci sia niente qui...
               </h2>
-              <h4 class="mt-3" style="color: var(--text-color-bg)">
+              <h4 class="w-100 mt-3" style="color: var(--text-color-bg)">
                 Potresti provare a creare una nuova sezione per le tue attività
               </h4>
+              <NeuButton
+                class="mt-4 px-2 d-block d-lg-none"
+                style="max-width: 400px; z-index: 1000"
+                @click.stop="createSection"
+              >
+                Crea nuova sezione
+              </NeuButton>
             </div>
             <img
               src="@/assets/empty_activity.svg"
@@ -57,7 +66,10 @@
             />
           </draggable>
           <div class="d-flex h-100 align-items-start">
-            <NeuContainer v-if="!loading" class="p-3 mr-4 d-flex d-lg-none">
+            <NeuContainer
+              v-if="!loading && allTasks && allTasks.length !== 0"
+              class="p-3 mr-4 d-flex d-lg-none"
+            >
               <BigAddButton @click.stop="createSection">
                 Aggiungi una nuova sezione
               </BigAddButton>
