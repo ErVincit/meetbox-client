@@ -1,6 +1,6 @@
 <template>
   <NeuContainer class="daily_events p-4" disableHover>
-    <div class="d-flex">
+    <div class="d-flex justify-content-between">
       <h1 class="title_eventsday">
         {{ title }}
       </h1>

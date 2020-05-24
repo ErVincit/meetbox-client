@@ -93,7 +93,7 @@
     </NeuContainer>
 
     <NeuContainer
-      class="mt-3"
+      class="mt-3 w-100"
       style="overflow-y: auto; overflow-x: hidden"
       disableHover
     >
@@ -114,7 +114,9 @@
           "
         >
           <img class="rounded-circle" :src="workgroup.image" />
-          <span v-if="!compressed" class="px-2">{{ workgroup.name }}</span>
+          <span v-if="!compressed" class="px-2 text-truncate">{{
+            workgroup.name
+          }}</span>
         </li>
         <li
           class="my-2 px-2 d-flex align-items-center add-workgroup"
