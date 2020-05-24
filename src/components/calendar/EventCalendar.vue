@@ -496,6 +496,18 @@ export default {
   cursor: pointer;
 }
 
+.event_calendar_title {
+  width: auto;
+}
+
+.event_resizer_left {
+  z-index: 10;
+}
+
+.event_resizer_right {
+  z-index: 10;
+}
+
 .event_resizer {
   position: absolute;
   height: 100%;

@@ -188,7 +188,7 @@ export default {
     };
   },
   mounted() {
-    if (this.isEventStarted && this.event.timestampEnd >= new Date())
+    if (this.isEventInProgress)
       this.showAlert("warning", "Data inizio immutabile. L'evento è in corso");
   },
   methods: {
@@ -372,7 +372,8 @@ export default {
     },
     isEditable() {
       if (this.deleted) return false;
-      if (this.event.timestampEnd < new Date()) return false;
+      if (this.event.timestampEnd < new Date() && !this.event.originalEnd)
+        return false;
       if (this.event.owner == this.currentUser.id) return true;
       for (let i = 0; i < this.event.members.length; i++)
         if (this.event.members[i].id == this.currentUser.id) return true;
@@ -405,7 +406,14 @@ export default {
       return this.ourEvent.members.map(m => m.id);
     },
     isEventStarted() {
+      if (this.event.originalBegin)
+        return this.event.originalBegin <= new Date();
       return this.event.timestampBegin <= new Date();
+    },
+    isEventInProgress() {
+      if (this.event.originalEnd)
+        return this.isEventStarted && this.event.originalEnd >= new Date();
+      return this.isEventStarted && this.event.timestampEnd >= new Date();
     }
   },
   watch: {
@@ -425,7 +433,7 @@ export default {
         members: this.event.members
       };
       if (this.alertShowed) this.alertShowed = false;
-      if (this.isEventStarted && this.event.timestampEnd >= new Date())
+      if (this.isEventInProgress)
         this.showAlert(
           "warning",
           "Data inizio immutabile. L'evento è in corso"
