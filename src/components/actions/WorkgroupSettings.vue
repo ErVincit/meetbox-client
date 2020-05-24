@@ -84,7 +84,10 @@
         </div>
       </div>
     </div>
-    <div class="mt-3 d-flex justify-content-center">
+    <div
+      class="mt-3 d-flex justify-content-center"
+      v-if="currentWorkgroup.owner === currentUser.id"
+    >
       <button
         class="mx-4 mt-5 mb-2 delete-btn rounded-pill"
         @click="removeWorkgroup"
@@ -178,17 +181,35 @@ export default {
       setTimeout(() => (this.alertShowed = false), 3000);
     },
     async removeMember(member) {
-      this.showAlert("info", "Salutando " + member.firstname + "...👋");
-      const { workgroupId } = this.$route.params;
-      await this.deleteMember({
-        workgroupId: parseInt(workgroupId),
-        memberId: member.id
-      });
-      this.showAlert(
-        "success",
-        member.firstname + " ora non fa più parte del gruppo di lavoro 😟"
-      );
-      setTimeout(() => (this.alertShowed = false), 3000);
+      if (
+        this.currentWorkgroup.owner !== this.currentUser.id &&
+        member.id !== this.currentUser.id
+      ) {
+        this.showAlert(
+          "danger",
+          "Solo il proprietario del gruppo può eliminare gli altri membri"
+        );
+        setTimeout(() => (this.alertShowed = false), 3000);
+        return;
+      }
+      if (this.currentWorkgroup.owner === member.id) {
+        await this.removeWorkgroup();
+      } else {
+        this.showAlert("info", "Salutando " + member.firstname + "...👋");
+        const { workgroupId } = this.$route.params;
+        await this.deleteMember({
+          workgroupId: parseInt(workgroupId),
+          memberId: member.id
+        });
+        if (this.currentWorkgroup.owner !== this.currentUser) this.redirect();
+        else {
+          this.showAlert(
+            "success",
+            member.firstname + " ora non fa più parte del gruppo di lavoro 😟"
+          );
+          setTimeout(() => (this.alertShowed = false), 3000);
+        }
+      }
     },
     async changeWorkgroup() {
       const { workgroupId } = this.$route.params;
@@ -212,6 +233,9 @@ export default {
       this.showAlert("info", "Eliminazione in corso...");
       const { workgroupId } = this.$route.params;
       await this.deleteWorkgroup(workgroupId);
+      this.redirect();
+    },
+    redirect() {
       const workgroup = this.workgroups[0];
       this.exit();
       this.$router.push(`/${workgroup.id}/drive`);

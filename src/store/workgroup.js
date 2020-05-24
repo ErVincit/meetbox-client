@@ -67,7 +67,9 @@ const actions = {
       credentials: "include",
       method: "DELETE"
     });
-    if (response.ok) commit("removeMember", { workgroupId, memberId });
+    const json = await response.json();
+    if (json.error) console.error(json);
+    else commit("removeMember", { workgroupId, memberId });
   },
   async editLabel({ commit }, { workgroupId, labelId, editObject }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/label/${labelId}/edit`;
