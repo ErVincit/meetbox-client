@@ -209,7 +209,7 @@ export default {
 
 <style>
 h1 {
-  color: var(--text-color-primary);
+  color: var(--homepage-text-color);
 }
 h3 {
   color: var(--text-color-bg);
