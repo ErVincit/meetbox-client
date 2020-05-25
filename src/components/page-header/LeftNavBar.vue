@@ -160,7 +160,6 @@
       class="mt-3 p-2 w-100 expand-btn"
       style="height: auto"
       @click="toggleExpand"
-      v-tooltip:right="compressed ? 'Espandi' : 'Comprimi'"
     >
       <svg
         style="padding: 5px"
