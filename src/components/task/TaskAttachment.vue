@@ -27,7 +27,7 @@ export default {
   components: { NeuContainer },
   computed: {
     icon() {
-      var ext = this.document.name.split(".").pop();
+      var ext = this.attachment.name.split(".").pop();
       switch (ext) {
         case "mp3":
           return require("@/assets/audioIcon.svg");
