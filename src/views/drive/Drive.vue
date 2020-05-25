@@ -276,8 +276,9 @@
           class="d-flex justify-content-center align-items-center mt-3"
           style="width: 50px; height: 50px"
           @click.stop="moveFile"
+          v-tooltip:left="'Sposta file'"
         >
-          <img src="@/assets/moveIcon.svg" v-tooltip:left="'Sposta file'" />
+          <img src="@/assets/moveIcon.svg" />
         </NeuButton>
         <NeuButton
           v-if="
