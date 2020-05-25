@@ -101,7 +101,7 @@ export default {
         "Autenticazione completata. Rindirizzamento in corso..."
       );
       await this.fetchWorkgroups();
-      if (this.workgroups.length === 0) this.$router.push("/tutorial");
+      if (this.workgroups.length === 0) this.$router.push("/welcome");
       else this.$router.push("/" + this.workgroups[0].id + "/drive");
     },
     showAlert(type, message) {

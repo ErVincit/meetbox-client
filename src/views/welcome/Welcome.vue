@@ -1,6 +1,6 @@
 <template>
   <Loading class="w-100 h-100 justify-content-center" v-if="loading" show />
-  <div v-else class="tutorial d-flex overflow-auto h-100">
+  <div v-else class="welcome d-flex overflow-auto h-100">
     <img
       id="draw-left"
       class="d-none d-md-block"
@@ -117,7 +117,7 @@ import Alert from "@/components/alert/Alert";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "Tutorial",
+  name: "Welcome",
   components: { Loading, NeuInput, NeuButton, Member, NeuContainer, Alert },
   data() {
     return {
@@ -225,19 +225,19 @@ h1 > span {
   color: var(--primary);
 }
 
-.tutorial .neu-input input {
+.welcome .neu-input input {
   height: 40px;
 }
-.tutorial img {
+.welcome img {
   object-fit: cover;
 }
-.tutorial .search-box .member:first {
+.welcome .search-box .member:first {
   margin-top: 8px;
 }
-.tutorial .search-box .member:last-child {
+.welcome .search-box .member:last-child {
   margin-bottom: 8px;
 }
-.tutorial .search-box .member:hover {
+.welcome .search-box .member:hover {
   background-color: var(--primary);
   color: var(--text-color-primary);
   cursor: pointer;

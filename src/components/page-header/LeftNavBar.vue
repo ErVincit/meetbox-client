@@ -203,7 +203,7 @@ export default {
       localStorage.setItem("navbar-compressed", this.compressed);
     },
     redirect() {
-      if (this.workgroups.length === 0) this.$router.push("/tutorial");
+      if (this.workgroups.length === 0) this.$router.push("/welcome");
       else this.$router.push("/" + this.workgroups[0].id + "/drive");
     }
   },

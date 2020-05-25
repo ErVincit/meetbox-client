@@ -8,7 +8,7 @@ import Activity from "@/views/activity/Activity";
 import Calendar from "@/views/calendar/Calendar";
 import Drive from "@/views/drive/Drive";
 import NotFound from "@/views/not-found/NotFound";
-import Tutorial from "@/views/tutorial/Tutorial";
+import Welcome from "@/views/welcome/Welcome";
 
 Vue.use(VueRouter);
 
@@ -29,9 +29,9 @@ const routes = [
     component: Signup
   },
   {
-    path: "/tutorial",
-    name: "tutorial",
-    component: Tutorial
+    path: "/welcome",
+    name: "welcome",
+    component: Welcome
   },
   {
     path: "/:workgroupId/activity",
