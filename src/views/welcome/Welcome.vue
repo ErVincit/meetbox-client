@@ -135,7 +135,8 @@ export default {
   computed: {
     ...mapGetters(["currentUser"]),
     imageURL() {
-      if (this.image.trim().length === 0) return require("@/assets/logo.svg");
+      if (this.image.trim().length === 0)
+        return "https://meet-box.herokuapp.com/img/logo";
       return this.image;
     }
   },
