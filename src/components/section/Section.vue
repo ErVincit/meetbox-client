@@ -5,6 +5,8 @@
       <NeuInput
         class="m-0 col rounded-pill p-0"
         v-model="section.title"
+        ref="sectionName"
+        @keypress.enter="$refs.sectionName.$el.querySelector('input').blur()"
         @blur="setTitle"
         @focus="$emit('start-editing')"
         backgroundHidden
@@ -89,10 +91,11 @@
         </div>
         <form @submit.prevent="handleAddingTask">
           <NeuTextarea
+            ref="addTextarea"
             v-model="newTaskTitle"
             placeholder="Inserisci il titolo per questa attività..."
             class="add-task__title mb-2"
-            @keyup="handleTextareaKeyup"
+            @keypress.enter="handleAddingTask"
             autofocus
           />
         </form>
@@ -213,6 +216,9 @@ export default {
     },
     startAddingTask() {
       this.addingTask = true;
+      this.$nextTick(() =>
+        this.$refs.addTextarea.$el.querySelector("textarea").focus()
+      );
       this.$emit("start-editing");
     },
     async handleAddingTask() {
@@ -251,9 +257,6 @@ export default {
       this.newTaskTitle = "";
       this.newTaskMembers = [];
       this.newTaskLabel = null;
-    },
-    handleTextareaKeyup(event) {
-      if (event.keyCode === 13) this.handleAddingTask();
     },
     handleDragStart({ oldDraggableIndex }) {
       this.dragging = true;

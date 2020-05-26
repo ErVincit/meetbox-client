@@ -3,11 +3,7 @@
     <PageHeader @open-navbar="openNavBar = !openNavBar">
       <p class="page__title m-0 mx-2">Attività</p>
     </PageHeader>
-    <div
-      id="page-content"
-      class="row flex-grow-1"
-      style="height: calc(100% - 100px)"
-    >
+    <div class="row flex-grow-1" style="height: calc(100% - 100px)">
       <LeftNavBar class="h-100" :open="openNavBar" />
       <main class="col d-flex flex-column h-100 px-4 overflow-hidden">
         <p class="page__title m-0 d-none d-lg-block">Attività</p>
@@ -51,7 +47,7 @@
             ghost-class="ghost"
             @change="handleSectionMove"
             class="d-flex h-100 align-items-start"
-            draggable=".section"
+            draggable=".activity__section"
           >
             <Section
               v-for="section in allTasks"
@@ -91,7 +87,7 @@
         />
         <NeuContainer
           v-if="dragging"
-          class="trash"
+          class="trash d-none d-lg-flex justify-content-center align-items-center m-2 rounded"
           ref="trash"
           @drop="removeTask"
           @dragover.prevent
@@ -239,17 +235,11 @@ export default {
   width: calc(100% - 20px);
   min-height: 100px;
   height: auto !important;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px;
   border: 2px dashed var(--danger);
-  color: black !important;
-  border-radius: 30px;
 }
 
 .trash p {
-  font-size: 30px;
+  font-size: 2rem;
   color: var(--danger);
 }
 
