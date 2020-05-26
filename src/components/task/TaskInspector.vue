@@ -272,8 +272,13 @@ export default {
         taskId: this.task.id,
         editObject: { completed: this.task.completed }
       });
-      this.alertShowed = false;
-      this.$emit("hide");
+      if (this.task.completed) {
+        this.showAlert(
+          "success",
+          "Ottivo lavoro! Il task è stato completato 💪"
+        );
+        setTimeout(() => (this.alertShowed = false), 3000);
+      } else this.alertShowed = false;
     },
     async onFileDrop(files) {
       const { workgroupId } = this.$route.params;
@@ -291,7 +296,8 @@ export default {
         });
         count++;
       }
-      this.alertShowed = false;
+      this.showAlert("success", "Allegato aggiunto con successo! 👍");
+      setTimeout(() => (this.alertShowed = false), 3000);
       this.draggingFile = false;
     },
     async removeAttachment(attachment) {

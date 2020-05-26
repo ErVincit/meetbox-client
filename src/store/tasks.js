@@ -184,17 +184,29 @@ const mutations = {
     }
   },
   newAttachment: (state, { sectionId, taskId, document }) => {
-    const section = state.sections.find(section => section.id === sectionId);
-    const task = section.tasks.find(t => t.id === taskId);
+    const sectionIndex = state.sections.findIndex(
+      section => section.id === sectionId
+    );
+    const section = state.sections[sectionIndex];
+    const taskIndex = section.tasks.findIndex(t => t.id === taskId);
+    const task = section.tasks[taskIndex];
     task.attachments.push(document);
+    Vue.set(section.tasks, taskIndex, task);
+    Vue.set(state.sections, sectionIndex, section);
   },
   removeAttachment: (state, { sectionId, taskId, file }) => {
-    const section = state.sections.find(section => section.id === sectionId);
-    const task = section.tasks.find(t => t.id === taskId);
+    const sectionIndex = state.sections.findIndex(
+      section => section.id === sectionId
+    );
+    const section = state.sections[sectionIndex];
+    const taskIndex = section.tasks.findIndex(t => t.id === taskId);
+    const task = section.tasks[taskIndex];
     const attachmentIndex = task.attachments.findIndex(
       att => att.id === file.id
     );
     task.attachments.splice(attachmentIndex, 1);
+    Vue.set(section.tasks, taskIndex, task);
+    Vue.set(state.sections, sectionIndex, section);
   }
 };
 
