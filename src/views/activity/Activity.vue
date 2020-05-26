@@ -42,7 +42,7 @@
           </div>
           <draggable
             v-if="!loading"
-            :list="allTasks"
+            :list="taskList"
             :disabled="editingSection"
             ghost-class="ghost"
             @change="handleSectionMove"
@@ -50,7 +50,7 @@
             draggable=".activity__section"
           >
             <Section
-              v-for="section in allTasks"
+              v-for="section in taskList"
               :key="section.id"
               class="py-3 mr-4 mh-100 d-flex flex-column"
               :section="section"
@@ -147,7 +147,8 @@ export default {
       alertShowed: false,
       alertMessage: "",
       alertType: "",
-      openNavBar: false
+      openNavBar: false,
+      taskList: null
     };
   },
   components: {
@@ -174,6 +175,9 @@ export default {
       const { workgroupId } = this.$route.params;
       this.loading = true;
       this.fetchTasks(workgroupId).then(() => (this.loading = false));
+    },
+    allTasks(value) {
+      this.taskList = value;
     }
   },
   methods: {

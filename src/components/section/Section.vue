@@ -34,7 +34,7 @@
       </div>
     </div>
     <draggable
-      :list="section.tasks"
+      :list="taskList"
       :animation="200"
       group="tasks"
       @start="handleDragStart"
@@ -46,7 +46,7 @@
     >
       <Task
         class="mt-3 p-2 mx-3"
-        v-for="task in section.tasks"
+        v-for="task in taskList"
         :key="task.id"
         :task="task"
         :disableHover="dragging"
@@ -183,8 +183,14 @@ export default {
       alertMessage: "",
       alertType: "",
       dragging: false,
-      waitingAddTask: false
+      waitingAddTask: false,
+      taskList: this.section.tasks
     };
+  },
+  watch: {
+    section(value) {
+      this.taskList = value.tasks;
+    }
   },
   mounted() {
     document.addEventListener("click", handleOutsideClick.bind(this));
@@ -266,6 +272,10 @@ export default {
       const { workgroupId } = this.$route.params;
       if (added) {
         // Change task's section
+        console.debug("Aggiungo elemento", added.element);
+        console.debug("alla sezione", this.section.id);
+        console.debug("all'indice", added.newIndex);
+
         await this.editTask({
           workgroupId,
           sectionId: added.element.section,
