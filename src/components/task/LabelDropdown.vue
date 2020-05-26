@@ -121,14 +121,16 @@ import Alert from "@/components/alert/Alert";
 import { mapGetters, mapActions } from "vuex";
 
 const colors = [
-  "#7c7c7c",
-  "#0c7489",
-  "#c5dca0",
-  "#0f7173",
-  "#272932",
-  "#f05d5e",
-  "#d8a47f",
-  "#1c4885"
+  "#d36c27",
+  "#8060ab",
+  "#309291",
+  "#5b3108",
+  "#2e3ec5",
+  "#7a0147",
+  "#74c712",
+  "#fa3483",
+  "#b22126",
+  "#3918cf"
 ];
 
 const EMPTY_LABEL = { name: "", color: "" };

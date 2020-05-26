@@ -227,26 +227,16 @@ exports.checkFullDayEvent = (d1, d2) => {
 };
 
 const colors = [
-  "#c2a60a",
-  "#fb5041",
-  "#3483ba",
-  "#24894d",
-  "#9f3c31",
-  "#618e3e",
-  "#07b9c4",
-  "#3d2265",
-  "#a3228a",
-  "#b2fbc0",
-  "#d229a5",
-  "#39ea49",
-  "#1519d7",
-  "#68664c",
-  "#61dd97",
-  "#4ac882",
-  "#125f4f",
-  "#ca86bd",
-  "#7b3a4b",
-  "#7e838b"
+  "#d36c27",
+  "#8060ab",
+  "#309291",
+  "#5b3108",
+  "#2e3ec5",
+  "#7a0147",
+  "#74c712",
+  "#fa3483",
+  "#b22126",
+  "#3918cf"
 ];
 
 exports.interpolateCalendarEvents = (calendar, events) => {
