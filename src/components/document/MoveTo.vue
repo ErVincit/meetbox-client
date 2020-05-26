@@ -37,7 +37,13 @@
       </svg>
       <p class="my-0 mx-3">{{ folderName }}</p>
     </div>
+    <div v-if="folders.length === 0">
+      <p class="my-3 mx-3" style="text-align:center">
+        Nessuna cartella presente
+      </p>
+    </div>
     <NeuContainer
+      v-else
       v-for="folder in folders"
       :key="folder.id"
       class="mt-3 rounded-pill folder"
