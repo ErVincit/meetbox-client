@@ -179,6 +179,8 @@ export default {
         member.firstname + " ora fa parte del gruppo di lavoro 😊"
       );
       setTimeout(() => (this.alertShowed = false), 3000);
+      this.searchMembers = [];
+      this.memberEmail = "";
     },
     async removeMember(member) {
       if (
