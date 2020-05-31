@@ -11,7 +11,7 @@
         type="button"
         class="close col-1 d-block d-md-none p-2"
         aria-label="Close"
-        @click="showEventFilter = false"
+        @click="$emit('hideEventFilter')"
       >
         <span aria-hidden="true">&times;</span>
       </button>

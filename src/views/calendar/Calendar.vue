@@ -258,6 +258,7 @@
     <EventFilter
       ref="event_filter"
       :showEventFilter="showEventFilter"
+      @hideEventFilter="showEventFilter = false"
       @newFilteredUsers="handleFilteredMember"
       @maxEventSize="handleMaxEventSize"
     />
