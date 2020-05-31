@@ -33,3 +33,13 @@ Nella sezione delle attività puoi creare, rinominare, spostare ed eliminare una
 Nella sezione del calendario puoi creare, spostare, modificare e cancellare eventi (anche tramite rapide shortcut), filtrare eventi oppure aggiungere una descrizione e quali sono i partecipanti dell'evento.
 
 ![meetbox-calendar](images/meetbox-calendar.png)
+
+## Tecnologie
+All'interno del progetto sono state utilizzate le seguenti tecnologie:
+- HTML: per strutturare l'applicazione
+- JS: per realizzare la logica dell'applicazione
+- CSS: per realizzare l'aspetto grafico dell'applicazione
+- Vue: per facilitare la realizzazione della UI (User Interface)
+- Vuex: per la gestione dello store globale
+- Vue router: per la realizzazione di una SPA (Single Page App)
+- Bootstrap: per facilitare la realizzazione del layout sia da desktop che da mobile
