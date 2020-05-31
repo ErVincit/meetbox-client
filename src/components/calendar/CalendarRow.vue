@@ -17,6 +17,8 @@
 import RowEventsContainer from "@/components/calendar/RowEventsContainer";
 import WeeksDay from "@/components/calendar/WeeksDay";
 
+import calendarUtils from "@/views/calendar/calendar_utils";
+
 export default {
   name: "CalendarRow",
   props: [
@@ -30,11 +32,10 @@ export default {
   components: { WeeksDay, RowEventsContainer },
   methods: {
     handleShowDailyEvents() {
-      var temp = 0;
-      if (this.timestamp.getDay() - 1 >= 0)
-        temp = (this.timestamp.getDay() - 1) % 7;
-      else temp = 7 - 1;
-      this.$emit("showDailyEvents", temp);
+      this.$emit(
+        "showDailyEvents",
+        calendarUtils.getEuropeanPosition(this.timestamp)
+      );
     },
     handleAlert(message) {
       this.$emit("alert", message);

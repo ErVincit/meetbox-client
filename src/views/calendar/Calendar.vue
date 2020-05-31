@@ -507,14 +507,11 @@ export default {
     },
     days: function() {
       const settimana = [];
-      let today = this.currentDate;
-      let todayDay = today.getDay();
-
       if (this.calendar) {
-        const min = today.getDate() - todayDay + 1;
-        const max = today.getDate() + 7 - todayDay;
-        const tempDate = new Date(today.getFullYear(), today.getMonth(), min);
-        const maxDate = new Date(today.getFullYear(), today.getMonth(), max);
+        const { minDate, maxDate } = calendarUtils.getMinMaxDate(
+          this.currentDate
+        );
+        const tempDate = minDate;
         if (this.maxEventsSize && this.maxEventsSize !== null) {
           while (tempDate <= maxDate) {
             const events = this.calendar[tempDate.getFullYear()][
@@ -526,7 +523,6 @@ export default {
             const obj = Object.assign({}, day);
             obj.events = events;
             settimana.push(obj);
-            //Cambiare solo event con una filtered
             tempDate.setDate(tempDate.getDate() + 1);
           }
         } else {

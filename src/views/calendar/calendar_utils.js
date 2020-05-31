@@ -27,14 +27,7 @@ exports.daysInMonth = (month, year) => {
 };
 
 exports.calendarWeeklyPosition = date => {
-  let todayDay = date.getDay();
-
-  const min = date.getDate() - todayDay + 1;
-  const max = date.getDate() + 7 - todayDay;
-
-  const minDate = new Date(date.getFullYear(), date.getMonth(), min);
-  const maxDate = new Date(date.getFullYear(), date.getMonth(), max);
-
+  const { minDate, maxDate } = this.getMinMaxDate(date);
   return (
     minDate.getDate() +
     " " +
@@ -47,14 +40,7 @@ exports.calendarWeeklyPosition = date => {
 };
 
 exports.compactWeeklyPosition = date => {
-  let todayDay = date.getDay();
-
-  const min = date.getDate() - todayDay + 1;
-  const max = date.getDate() + 7 - todayDay;
-
-  const minDate = new Date(date.getFullYear(), date.getMonth(), min);
-  const maxDate = new Date(date.getFullYear(), date.getMonth(), max);
-
+  const { minDate, maxDate } = this.getMinMaxDate(date);
   return (
     minDate.getDate() +
     "-" +
@@ -139,8 +125,7 @@ exports.handleEventCollision = events => {
         list.push(newRow);
       }
     }
-
-    //TODO: Riordinare righe in base a larghezza
+    //TODO: Order by length
   }
   return list;
 };
@@ -398,4 +383,22 @@ exports.deleteEvent = (calendar, event) => {
     );
   }
   return calendar;
+};
+
+exports.getEuropeanPosition = date => {
+  var temp = 0;
+  if (date.getDay() - 1 >= 0) temp = (date.getDay() - 1) % 7;
+  else temp = 7 - 1;
+  return temp;
+};
+
+exports.getMinMaxDate = date => {
+  let todayDay = this.getEuropeanPosition(date);
+
+  const min = date.getDate() - todayDay;
+  const max = date.getDate() + 6 - todayDay;
+
+  const minDate = new Date(date.getFullYear(), date.getMonth(), min);
+  const maxDate = new Date(date.getFullYear(), date.getMonth(), max);
+  return { minDate, maxDate };
 };
