@@ -102,9 +102,14 @@
         <li
           class="mt-2 px-2 d-flex align-items-center workgroup"
           v-else
-          :class="{ selected: currentWorkgroup.id === workgroup.id }"
-          v-for="workgroup in workgroups"
-          :key="workgroup.id"
+          :class="{
+            selected:
+              currentWorkgroup &&
+              workgroup &&
+              currentWorkgroup.id === workgroup.id
+          }"
+          v-for="(workgroup, index) in workgroups"
+          :key="index"
           v-tooltip:right="workgroup.name"
           @click="
             $router.push({
@@ -204,7 +209,11 @@ export default {
     },
     redirect() {
       if (this.workgroups.length === 0) this.$router.push("/welcome");
-      else this.$router.push("/" + this.workgroups[0].id + "/drive");
+      else {
+        const workgroup = this.workgroups[0];
+        if (workgroup.id !== parseInt(this.$route.params.workgroupId))
+          this.$router.push(`/${workgroup.id}/drive`);
+      }
     }
   },
   computed: {

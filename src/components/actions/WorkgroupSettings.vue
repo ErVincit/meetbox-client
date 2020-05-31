@@ -17,6 +17,7 @@
           :src="currentWorkgroup.image"
           width="50"
           height="50"
+          style="object-fit: cover"
         />
         <NeuInput
           class="col px-0 mx-2"
@@ -201,7 +202,8 @@ export default {
         const { workgroupId } = this.$route.params;
         await this.deleteMember({
           workgroupId: parseInt(workgroupId),
-          memberId: member.id
+          memberId: member.id,
+          removeFromWorkgroups: this.currentUser !== this.currentWorkgroup.owner
         });
         if (this.currentWorkgroup.owner !== this.currentUser) this.redirect();
         else {
@@ -233,14 +235,14 @@ export default {
         return;
       }
       this.showAlert("info", "Eliminazione in corso...");
-      const { workgroupId } = this.$route.params;
-      await this.deleteWorkgroup(workgroupId);
+      await this.deleteWorkgroup(this.currentWorkgroup.id);
       this.redirect();
     },
     redirect() {
       const workgroup = this.workgroups[0];
       this.exit();
-      this.$router.push(`/${workgroup.id}/drive`);
+      if (workgroup.id !== parseInt(this.$route.params.workgroupId))
+        this.$router.push(`/${workgroup.id}/drive`);
     },
     showAlert(type, message) {
       this.alertType = type;

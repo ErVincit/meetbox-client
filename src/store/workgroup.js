@@ -37,7 +37,7 @@ const actions = {
     });
     const json = await data.json();
     if (json.error) console.error(json);
-    else commit("removeWorkgroup", json.data);
+    else commit("removeWorkgroup", json.data.id);
   },
   async editWorkgroup({ commit }, { workgroupId, editObject }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/edit`;
@@ -61,7 +61,10 @@ const actions = {
     if (json.error) console.error(json);
     else commit("newMember", { workgroupId, member: json.data });
   },
-  async deleteMember({ commit }, { workgroupId, memberId }) {
+  async deleteMember(
+    { commit },
+    { workgroupId, memberId, removeFromWorkgroups }
+  ) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/member/${memberId}`;
     const response = await fetch(url, {
       credentials: "include",
@@ -69,7 +72,10 @@ const actions = {
     });
     const json = await response.json();
     if (json.error) console.error(json);
-    else commit("removeMember", { workgroupId, memberId });
+    else {
+      commit("removeMember", { workgroupId, memberId });
+      if (removeFromWorkgroups) commit("removeWorkgroup", workgroupId);
+    }
   },
   async editLabel({ commit }, { workgroupId, labelId, editObject }) {
     const url = `${process.env.VUE_APP_SERVER_ADDRESS}/api/workgroup/${workgroupId}/activity/label/${labelId}/edit`;

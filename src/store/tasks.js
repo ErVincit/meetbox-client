@@ -157,7 +157,8 @@ const mutations = {
     state.sections.find(section => section.id === sectionId).tasks.push(task),
   removeTask: (state, { sectionId, taskId }) => {
     const section = state.sections.find(section => section.id === sectionId);
-    section.tasks = section.tasks.filter(task => task.id !== taskId);
+    const taskIndex = section.tasks.findIndex(task => task.id === taskId);
+    section.tasks.splice(taskIndex, 1);
   },
   setTask: (state, { sectionId, task }) => {
     const sectionIndex = state.sections.findIndex(sec => sec.id === sectionId);
